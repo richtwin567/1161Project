@@ -87,6 +87,28 @@ public class Citizen
     }
 
     /**
+     * Method created to provide access to getters of the {@link snid.Name Name} class in SNIDApp
+     * @return the name attribute of this Citizen
+     */
+    public Name getNameAttr(){
+        return name;
+    }
+
+    /**
+     * Creates a string with the citizen's name in the format:<br/>
+     * {@code BROWN, John Andrew} where "BROWN" is the last name, "John" is the
+     * first name and "Andrew" is the middle name.
+     *
+     * @return the name of the citizen.
+     */
+    public String getNameFull() {
+        //changed the format of the middle name from first initial to full name due 
+        //to instructions in part 2
+        return String.format("%s, %s %s", name.getLastName().toUpperCase(),
+                             name.getFirstName(), name.getMiddleName());
+    }
+
+    /**
      * Creates a string with the citizen's name in the format:<br/>
      * {@code BROWN, John A.} where "BROWN" is the last name, "John" is the
      * first name and "A." is the middle name initial.
@@ -94,8 +116,7 @@ public class Citizen
      * @return the name of the citizen.
      */
     public String getName() {
-        return String.format("%s, %s %c.", name.getLastName().toUpperCase(),
+        return String.format("%s, %s %s.", name.getLastName().toUpperCase(),
                              name.getFirstName(), name.getMiddleName().charAt(0));
     }
-
 }
