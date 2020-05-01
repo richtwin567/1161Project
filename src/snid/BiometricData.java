@@ -8,22 +8,22 @@ import java.security.InvalidParameterException;
  */
 public class BiometricData implements Biometric{
 
-    private String tag;
+    private char tag;
     private String value;
 
     /**
      * Constructor for biometric data
      * 
      * @param value The value for the DNA
-     * @param tag the type of Biometric data. Must be Either "F" for fingerprint or "D" for DNA
-     * @throws InvalidParameterException if the tag passed isn't "F" or "D" in {@code String} format
+     * @param tag The type of Biometric data. Must be Either 'F' for fingerprint or "D" for DNA
+     * @throws InvalidParameterException If the tag passed isn't 'F' or 'D'
      */
-    public BiometricData(String tag, String value) throws InvalidParameterException{
-        if (tag.equals("F") || tag.equals("D")){
+    public BiometricData(char tag, String value) throws InvalidParameterException{
+        if (tag=='F' || tag=='D'){
             this.tag = tag;
             this.value = value;
         }else{
-            throw new InvalidParameterException("\""+tag+"\" passed for tag. The tag must be \"F\" for fingerprint or \"D\" for DNA.");
+            throw new InvalidParameterException("'"+tag+"' passed for tag. The tag must be 'F' for fingerprint or 'D' for DNA.");
         }
     }
 
@@ -32,7 +32,7 @@ public class BiometricData implements Biometric{
      */
     @Override
     public String getTag() {
-        return tag;
+        return Character.toString(tag);
     }
 
     /**

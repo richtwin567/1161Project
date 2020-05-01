@@ -1,10 +1,13 @@
 package app;
 
 import java.util.ArrayList;
-import java.util.Collections;
-
+import snid.Biometric;
+import snid.BiometricData;
 import snid.Citizen;
 
+/**
+ * 
+ */
 public class SNIDApp {
 
     // SNIDDb to be used to populate citiens.
@@ -162,8 +165,18 @@ public class SNIDApp {
      * @return
      */
     public String search(char tag, String value) {
-
-
+        try {
+            BiometricData key = new BiometricData(tag, value);
+            for(Citizen citizen : citizens){
+                Biometric biodata = citizen.getBiometric(Character.toString(tag));
+                if (((BiometricData)biodata).match(key)==0){
+                    return String.format("%s,%s,%s,%s,%s", citizen.getId(), citizen.getGender()=='M' ? "Male" : "Female", citizen.getNameAttr().getFirstName(),citizen.getNameAttr().getMiddleName(), citizen.getNameAttr().getLastName());
+                }
+            }            
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
     }
 
     /**
