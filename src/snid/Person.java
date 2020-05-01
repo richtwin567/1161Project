@@ -1,7 +1,6 @@
 package snid;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * A class representing a Person.
@@ -11,8 +10,7 @@ import java.util.Random;
 public abstract class Person {
 
     private String id;
-    private static Random tail = new Random();
-    private static Random prefix = new Random();
+    private static int counter=1;
     private char gender;
     private int yob;
     private char lifeStatus;
@@ -162,11 +160,6 @@ public abstract class Person {
      * @return The person's unique ID as a String.
      */
     private String generateID() {
-        int[] arr = {prefix.ints(65, 90).findFirst().getAsInt(),
-                     prefix.ints(65, 90).findFirst().getAsInt(),
-                     prefix.ints(65, 90).findFirst().getAsInt(),
-                     prefix.ints(65, 90).findFirst().getAsInt()};//generate 4 random ints to convert to capital letters and assign them to an array
-        return String.format("%c%c%c%c%08d", (char) arr[0], (char) arr[1],
-                             (char) arr[2], (char) arr[3], tail.nextInt(100000000));//create an ID as a String  of 4 capital letters and 8 random digits
+        return String.format("%08d", counter++);//create an ID as a String  of 4 capital letters and 8 random digits
     }
 }

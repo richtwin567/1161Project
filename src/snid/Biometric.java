@@ -9,9 +9,9 @@ package snid;
 public interface Biometric {
 
     /**
-     * Gets the person's unique biometric tag
+     * Gets the type of biometric data. 'F' represents Fingerprint. 'D' represents DNA.
      *
-     * @return a String representing the biometric tag for that person
+     * @return a String representing the biometric type
      */
     public String getTag();
 
