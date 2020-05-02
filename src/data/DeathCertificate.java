@@ -7,6 +7,8 @@ public class DeathCertificate implements CivicDoc {
     private String cause;
     private String date;
     private String place;
+    private String refNo;
+    private static int counter=0;
 
     /**
      * @param id
@@ -19,6 +21,7 @@ public class DeathCertificate implements CivicDoc {
         this.cause = cause;
         this.date = date;
         this.place = place;
+        refNo = generateID();
     }
 
     /**
@@ -51,8 +54,10 @@ public class DeathCertificate implements CivicDoc {
 
     @Override
     public String getRefNo() {
-        // TODO Auto-generated method stub
-        return null;
+        return refNo;
     }
 
+    private String generateID(){
+        return String.format("%06d", counter++);
+    }
 }

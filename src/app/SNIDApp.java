@@ -49,7 +49,9 @@ public class SNIDApp {
                 tokens = data.getNext();
                 records.add(
                         new Citizen(tokens[0].charAt(0), Integer.parseInt(tokens[1]), tokens[2], tokens[3], tokens[4]));
+                //handle CivicDocs
             }
+            Collections.sort(records);
 
         } catch (FileNotFoundException f) {
             throw f;
