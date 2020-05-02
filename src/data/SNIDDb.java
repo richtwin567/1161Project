@@ -19,11 +19,16 @@ public class SNIDDb {
     /**
      * SNIDDb Constructor
      * 
-     * <p>Default Constructor for SNIDDb Object. An object which opens specified file for reading</p>
+     * <p>
+     * Default Constructor for SNIDDb Object. An object which opens specified file
+     * for reading
+     * </p>
+     * 
      * @param fileName - The name of the file to be opened for reading
-     * @param delimit - char which is used to seperate data in the file
+     * @param delimit  - char which is used to seperate data in the file
+     * @throws FileNotFoundException
      */
-    public SNIDDb(String fileName, char delimit){
+    public SNIDDb(String fileName, char delimit) throws FileNotFoundException {
         try{
             this.delimiter = delimit;
             this.fileName = fileName;
@@ -34,8 +39,9 @@ public class SNIDDb {
             reader = new BufferedReader(open);
 
         }catch(FileNotFoundException f){
-            System.err.println("Message: " + f.getMessage());
-            f.printStackTrace();
+            //System.err.println("Message: " + f.getMessage());
+            //f.printStackTrace();
+            throw f;
         }
     }
 
@@ -60,12 +66,15 @@ public class SNIDDb {
     // public FileWriter getFWriter(){ return null;}
     
     /**
-     * <p>Returns a boolean expression. If there is more data to be read in the file, it will return true otherwise it will
-     * return false</p>
+     * <p>
+     * Returns a boolean expression. If there is more data to be read in the file,
+     * it will return true otherwise it will return false
+     * </p>
      * 
-     * @return {@code boolean} 
+     * @return {@code boolean}
+     * @throws IOException
      */
-    public boolean hasNext(){
+    public boolean hasNext() throws IOException {
         try{
             
             currentLine = reader.readLine();
@@ -73,8 +82,9 @@ public class SNIDDb {
                 return true;
 
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            //System.out.println(i.getMessage());
+            //i.printStackTrace();
+            throw i;
         }
         
         return false;
@@ -85,6 +95,8 @@ public class SNIDDb {
      * the delimiter that was given to the constructor</p>
      * 
      * @return String Array of tokens
+     * @throws PatternSyntaxException
+     * @throws Exception
      */
     public String[] getNext(){
 
@@ -92,22 +104,21 @@ public class SNIDDb {
             return (currentLine.split(Character.toString(getDelimiter())));
 
         }catch(PatternSyntaxException p){
-            System.out.println("Message: " + p.getMessage());
-            p.printStackTrace();
+            throw p;
         }catch(Exception e){
-            System.out.println("Message: " + e.getMessage());
-            e.printStackTrace();
+            throw e;
         }
-
-        return (new String[1]);
-
     }
 
     /**
-     * <p>closes the file for reading.
-     * Reopens the file for writing [not appending]</p>
+     * <p>
+     * closes the file for reading. Reopens the file for writing [not appending]
+     * </p>
+     * 
+     * @throws IOException
+     * @throws FileNotFoundException
      */
-    public void rewrite(){
+    public void rewrite() throws FileNotFoundException, IOException {
         try{
 
             reader.close(); //closes the Buffered Reader
@@ -123,21 +134,28 @@ public class SNIDDb {
             writer = new BufferedWriter(opener);
 
         }catch(FileNotFoundException f){
-            System.out.println(f.getMessage());
-            f.printStackTrace();
+            /*System.out.println(f.getMessage());
+            f.printStackTrace();*/
+            throw f;
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            /*System.out.println(i.getMessage());
+            i.printStackTrace();*/
+            throw i;
         }
         
     }
 
     /**
-     * <p>Writes a line based on the array of Sting in the file separated by the delimiter</p>
+     * <p>
+     * Writes a line based on the array of Sting in the file separated by the
+     * delimiter
+     * </p>
+     * 
      * @param tokens - String Array full of tokens from a Citizen object
+     * @throws IOException
      */
-    //assumes that the data is in the same order as it would be when it is read
-    public void putNext(String[] tokens){
+    // assumes that the data is in the same order as it would be when it is read
+    public void putNext(String[] tokens) throws IOException {
         try{
             
             //places the data into the line format for storage using StringBuffer
@@ -151,16 +169,21 @@ public class SNIDDb {
             writer.flush();
 
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            /*System.out.println(i.getMessage());
+            i.printStackTrace();*/
+            throw i;
         }
 
     }
 
     /**
-     * <p>This method closes the file for writing. It sets the attributes back to null</p>
+     * <p>
+     * This method closes the file for writing. It sets the attributes back to null
+     * </p>
+     * 
+     * @throws IOException
      */
-    public void closeFile(){
+    public void closeFile() throws IOException {
         try{
             writer.close(); //closes the BufferedWriter object
             opener.close(); //closes the FileWriter object
@@ -171,8 +194,9 @@ public class SNIDDb {
             currentLine = null;
             
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            /*System.out.println(i.getMessage());
+            i.printStackTrace();*/
+            throw i;
         }
     }
 
