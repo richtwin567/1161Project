@@ -15,8 +15,6 @@ import snid.*;
 public class SNIDApp {
 
     // SNIDDb to be used to populate citiens.
-    private ArrayList<DeathCertificate> deathLog;
-    private ArrayList<MarriageCertificate> marriageLog;
     private ArrayList<Citizen> records;
     private SNIDDb data;
 
@@ -29,11 +27,13 @@ public class SNIDApp {
      * 
      * @param fileName  - Name of file
      * @param delimiter - character which separated data in the file
+     * @throws IndexOutOfBoundsException
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws Exception
      */
     public SNIDApp(String fileName, char delimiter) throws FileNotFoundException, IOException, Exception {
         records = new ArrayList<>();
-        deathLog = new ArrayList<>();
-        marriageLog = new ArrayList<>();
         try {
             File pas = new File(fileName);
             pas.createNewFile();
@@ -47,12 +47,24 @@ public class SNIDApp {
 
             while (data.hasNext()) {
                 tokens = data.getNext();
-                records.add(
-                        new Citizen(tokens[0].charAt(0), Integer.parseInt(tokens[1]), tokens[2], tokens[3], tokens[4]));
-                //handle CivicDocs
+                Citizen citizen = new Citizen(tokens[0].charAt(0), Integer.parseInt(tokens[1]), tokens[2], tokens[3],
+                        tokens[4]);
+
+                for (int i = 5; i < tokens.length; i++) {
+                    String[] docParts = tokens[i].split("\\|");
+                    if (docParts[0].equals("M")) {
+                        citizen.addPaper(new MarriageCertificate(docParts[1], docParts[2], docParts[3]));
+                    } else {
+                        citizen.addPaper(new DeathCertificate(docParts[1], docParts[2], docParts[3]));
+                    }
+                }
+                //TODO add biometric data from file
+                records.add(citizen);
             }
             Collections.sort(records);
 
+        } catch (IndexOutOfBoundsException o) {
+            throw o;
         } catch (FileNotFoundException f) {
             throw f;
         } catch (IOException i) {
@@ -71,10 +83,10 @@ public class SNIDApp {
     private Citizen searchDb(String id) {
         int m, l, f;
         f = 0;
-        l = records.size();
+        l = records.size() - 1;
         try {
             while (f <= l) {
-                m = (f + (l - f)) / 2;
+                m = (f + l) / 2;
                 if (records.get(m).getId().compareTo(id) == 0) {
                     return records.get(m);
                 } else if (records.get(m).getId().compareTo(id) < 0) {
@@ -102,7 +114,7 @@ public class SNIDApp {
         try {
             Citizen newlyDead = searchDb(id);
             newlyDead.setLifeStatus(1);
-            deathLog.add(new DeathCertificate(id, cause, date, place));
+            newlyDead.addPaper(new DeathCertificate(cause, date, place));
         } catch (Exception e) {
             // System.out.println("Death could not be registered");
             throw new CompletionException("Death could not be registered", e);
@@ -120,7 +132,8 @@ public class SNIDApp {
         try {
             Citizen bride = searchDb(brideId);
             Citizen groom = searchDb(groomId);
-            marriageLog.add(new MarriageCertificate(groom.getId(), bride.getId(), date));
+            bride.addPaper(new MarriageCertificate(groomId, brideId, date));
+            groom.addPaper(new MarriageCertificate(groomId, brideId, date));
         } catch (Exception e) {
             // System.out.println("Marriage could not be registered");
             throw new CompletionException("Marriage could not be registered", e);
@@ -261,6 +274,7 @@ public class SNIDApp {
             Citizen person = new Citizen(gender, yob, fname, mname, lname);
             person.setLifeStatus(0);
             records.add(person);
+            Collections.sort(records);
         } catch (Exception e) {
             throw new CompletionException("Birth could not be registered", e);
         }
@@ -310,7 +324,7 @@ public class SNIDApp {
      */
     public void addParentData(String updateID, String fatherID, String motherID) throws IndexOutOfBoundsException {
 
-        Collections.sort(records);
+        // Collections.sort(records);
         int posid = binarySearch(updateID);
         int fid = binarySearch(fatherID);
         int mid = binarySearch(motherID);
@@ -344,4 +358,94 @@ public class SNIDApp {
 
     }
 
+
+    /**
+     * 
+     * @param id
+     * @param data
+     */
+    public void addBiometric(String id, String data){
+
+    }
+
+    /**
+     * 
+     */
+    public String getBiometric(String id, String tag){
+        return null;
+    }
+
+    /**
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    public void shutdown() throws FileNotFoundException, IOException {
+        try {
+            data.rewrite();
+            for (Citizen citizen : records) {
+                ArrayList<String> tokens = new ArrayList<>();
+                tokens.add(Character.toString(citizen.getGender()));
+                tokens.add(Integer.toString(citizen.getYOB()));
+                tokens.add(citizen.getNameAttr().getFirstName());
+                tokens.add(citizen.getNameAttr().getMiddleName());
+                tokens.add(citizen.getNameAttr().getLastName());
+                for (CivicDoc doc : citizen.getPapers()) {
+                    if (doc.getType() == 'M') {
+                        tokens.add(String.format("%c|%s|%s|%s", doc.getType(), ((MarriageCertificate) doc).getGroomId(),
+                                ((MarriageCertificate) doc).getBrideId(), ((MarriageCertificate) doc).getDate()));
+                    } else {
+                        tokens.add(String.format("%c|%s|%s|%s", doc.getType(),
+                                ((DeathCertificate) doc).getCause(), ((DeathCertificate) doc).getDate(),
+                                ((DeathCertificate) doc).getPlace()));
+                    }
+                }
+                //TODO put biometric data
+                data.putNext(tokens.toArray(new String[tokens.size()]));
+            }
+            data.close();
+
+        } catch (FileNotFoundException e) {
+            throw e;
+        } catch (IOException e) {
+            throw e;
+        }
+
+    }
+
+    //TODO Delete getRecords in SNIDApp method. Only for testing
+    private ArrayList<Citizen> getRecords(){
+        return records;
+    }
+
+    public static void main(String[] args) {
+        try {
+            SNIDApp app = new SNIDApp("data.db", ',');
+            for (Citizen citizen: app.getRecords()){
+                System.out.println(citizen.printPapers());
+            }
+            app.registerBirth('F', 1970, "Lucy", "Annie", "George");
+            app.registerBirth('M', 1972, "Harry", "Joseph", "George");
+            app.updateAddress("00000001", "12 Test lane", "Town1", "Parish2", "Jamaica");
+            app.updateAddress("00000002", "12 Test lane", "Town1", "Parish2", "Jamaica");
+            String label = app.mailingLabel("00000001");
+            System.out.println(label);
+            app.registerMarriage("00000002", "00000001", "02/04/2001");
+            app.registerBirth('M', 2005, "Tim", "Mike", "George");
+            app.addParentData("00000003", "00000002", "00000001");
+            app.registerDeath("00000001", "Childbirth", "UWI hospital", "06/07/2005");
+            System.out.println(app.search("00000003"));
+            System.out.println("complete");
+            System.out.println(app.search("00000004"));
+            app.shutdown();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

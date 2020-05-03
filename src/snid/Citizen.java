@@ -119,4 +119,31 @@ public class Citizen
         return String.format("%s, %s %s.", name.getLastName().toUpperCase(),
                              name.getFirstName(), name.getMiddleName().charAt(0));
     }
+
+    /**
+     * Getter for the person's Civic Documents
+     * @return return the list of Civic Document papers
+     */
+    public ArrayList<CivicDoc> getPapers() {
+        return papers;
+    }
+
+    /**
+     * Adds either Marriage certificate or Death certificate to the person's record
+     * @param papers Adds a new Civic document to list of papers
+     */
+    public void addPaper(CivicDoc paper) {
+        papers.add(paper);
+    }
+
+    //TODO delete printPapers in Citizen method. only for testing
+    public String printPapers(){
+        StringBuffer printable = new StringBuffer("");
+        for (CivicDoc doc :getPapers()){
+            printable.append(String.format("%s\n%s\n", getNameFull(),doc.toString()));
+        }
+        return printable.toString();
+    }
+
+
 }

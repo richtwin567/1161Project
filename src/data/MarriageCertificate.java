@@ -7,7 +7,8 @@ public class MarriageCertificate implements CivicDoc{
     private String brideId;
     private String date;
     private String refNo;
-    private static int counter=0;
+    private static int counter = 0;
+    private final char type = 'M';
 
     /**
      * 
@@ -55,4 +56,19 @@ public class MarriageCertificate implements CivicDoc{
         return String.format("%06d", counter++);
     }
     
+    /**
+     * @return char return the type
+     */
+    public char getType() {
+        return type;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public String toString() {
+        return String.format("Ref No.:\t%s\nGroom ID:\t%s\nBride ID:\t%s\nDate:\t%s", getRefNo(),getGroomId(),getBrideId(),getGroomId());
+    }
+
 }

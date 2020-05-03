@@ -142,7 +142,6 @@ public class SNIDDb {
             i.printStackTrace();*/
             throw i;
         }
-        
     }
 
     /**
@@ -183,7 +182,7 @@ public class SNIDDb {
      * 
      * @throws IOException
      */
-    public void closeFile() throws IOException {
+    public void close() throws IOException {
         try{
             writer.close(); //closes the BufferedWriter object
             opener.close(); //closes the FileWriter object

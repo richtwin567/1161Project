@@ -14,4 +14,10 @@ public interface CivicDoc {
      * @return the document's reference number as a String
      */
     public String getRefNo();
+
+    /**
+     * 
+     * @return
+     */
+    public char getType();
 }
