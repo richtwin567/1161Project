@@ -68,7 +68,7 @@ public class MarriageCertificate implements CivicDoc{
      */
     @Override
     public String toString() {
-        return String.format("Ref No.:\t%s\nGroom ID:\t%s\nBride ID:\t%s\nDate:\t%s", getRefNo(),getGroomId(),getBrideId(),getGroomId());
+        return String.format("Ref No.:\t%s\nGroom ID:\t%s\nBride ID:\t%s\nDate:\t%s", getRefNo(),getGroomId(),getBrideId(),getDate());
     }
 
 }
