@@ -95,8 +95,8 @@ public class SNIDDb {
      * the delimiter that was given to the constructor</p>
      * 
      * @return String Array of tokens
-     * @throws PatternSyntaxException
-     * @throws Exception
+     * @throws PatternSyntaxException if the delimeter is invalid
+     * @throws Exception if something else goes wrong
      */
     public String[] getNext(){
 

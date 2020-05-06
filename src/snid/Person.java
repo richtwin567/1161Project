@@ -159,6 +159,14 @@ public abstract class Person {
     }
 
     /**
+     * Returns the biodata attribute. For file writng purposes
+     * @return the list of biometric data
+     */
+    public ArrayList<Biometric> getBiometricList(){
+        return biodata;
+    }
+
+    /**
      * Creates a unique ID for each person instance.
      *
      * @return The person's unique ID as a String.

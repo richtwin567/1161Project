@@ -3,7 +3,7 @@ package snid;
 import java.security.InvalidParameterException;
 
 /**
- * Biometric data class.
+ * Biometric data class. There are two types of biometric data; Fingerprint denoted by 'F' and DNA denoted by 'D'.
  * @see snid.Biometric
  */
 public class BiometricData implements Biometric{
@@ -51,4 +51,12 @@ public class BiometricData implements Biometric{
         return this.getTag().compareTo(other.getTag())==0 ? this.getValue().compareTo(other.getValue()) : -1 ;
     }
     
+    /**
+     * Formats the biometric data to be written the file. File writing purposes only.
+     * @return A string to be written to file containing the biometric data
+     */
+    @Override
+    public String toString() {
+        return String.format("%c%s&", getTag().charAt(0),getValue());
+    }
 }

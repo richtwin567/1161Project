@@ -3,7 +3,7 @@ package ui;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,8 +16,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -32,11 +30,13 @@ public class SNIDGUI extends JFrame {
     private JRadioButton searchByIdRadioButton;
     private JRadioButton searchByNameRadioButton;
     private JRadioButton searchByBiometricRadioButton;
+    private ButtonGroup radioButtonGroup;
     private JPanel radioButtonPanel;
     private GridLayout radioButtonPanelLayout;
 
     private JTextField searchValueField;
     private JList<String> idList;
+    private JLabel idListLabel;
     private DefaultListModel<String> idListModel;
     private JScrollPane idListScrollPane;
 
@@ -78,6 +78,7 @@ public class SNIDGUI extends JFrame {
         setResizable(true);
         setLayout(new GridLayout(1, 1));
         setTitle("SYSTEM FOR NATIONAL IDENTIFICATION(SNID)");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // set up the base panel
         basePanel = new JPanel();
@@ -157,21 +158,25 @@ public class SNIDGUI extends JFrame {
         radioButtonPanelLayout.setHgap(20);
         radioButtonPanel.setLayout(radioButtonPanelLayout);
 
+        //set up radio button group so that the buttons auto toggle
+        radioButtonGroup = new ButtonGroup();
+
         // set up the radio buttons
         searchByIdRadioButton = new JRadioButton("Search by Id");
         setUpRadioButton(searchByIdRadioButton);
-        //add action listener to toggle selected radio button
-        searchByIdRadioButton.addActionListener(new RadioListener());
+        //add button to group
+        radioButtonGroup.add(searchByIdRadioButton);
+        //add button to panel
         radioButtonPanel.add(searchByIdRadioButton);
 
         searchByNameRadioButton = new JRadioButton("Search by Name");
         setUpRadioButton(searchByNameRadioButton);
-        searchByNameRadioButton.addActionListener(new RadioListener());
+        radioButtonGroup.add(searchByNameRadioButton);
         radioButtonPanel.add(searchByNameRadioButton);
 
         searchByBiometricRadioButton = new JRadioButton("Biometric Search");
         setUpRadioButton(searchByBiometricRadioButton);
-        searchByBiometricRadioButton.addActionListener(new RadioListener());
+        radioButtonGroup.add(searchByBiometricRadioButton);
         radioButtonPanel.add(searchByBiometricRadioButton);
 
         //add radio buttons to base panel
@@ -186,27 +191,24 @@ public class SNIDGUI extends JFrame {
         configureGridBagConstraints(basePanelConstraints, 1, 5, 1, 4);
         basePanel.add(searchValueField, basePanelConstraints);
 
+        idListLabel = new JLabel("List of Found IDs");
+        idListLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        idListLabel.setForeground(onBg);
+        idListLabel.setBackground(bg);
+        idListLabel.setBorder(new LineBorder(onBg,1));
+        configureGridBagConstraints(basePanelConstraints, 1, 1, 1, 6);
+        basePanel.add(idListLabel, basePanelConstraints);
+
         // set up located IDs list with scroll pane
         idListModel = new DefaultListModel<>();
-        idList = new JList<>(idListModel);
-        /*  new JTable();
-        idList.setModel(new DefaultTableModel(new String[][] { { "" } }, new String[] { "Located Citizen IDs" }) {
-        
-            private static final long serialVersionUID = -4792612440923892028L;
-
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        }); */
-            
+        idList = new JList<>(idListModel);            
         idList.setBackground(bg);
         idList.setBorder(new LineBorder(bg, 0));
         idList.setForeground(onBg);
         idListScrollPane = new JScrollPane(idList);
         idListScrollPane.setBackground(bg);
         idListScrollPane.setBorder(new LineBorder(onBg, 1));
-        configureGridBagConstraints(basePanelConstraints, 9, 1, 1, 6);
+        configureGridBagConstraints(basePanelConstraints, 8, 1, 1, 7);
         basePanel.add(idListScrollPane, basePanelConstraints);
 
         // setup citizen detail pane
@@ -281,6 +283,7 @@ public class SNIDGUI extends JFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            idListModel.clear();
             idListModel.addElement("This Method is a stub");
         }
 
@@ -294,30 +297,6 @@ public class SNIDGUI extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
             System.exit(0);
-        }
-        
-    }
-
-    /**
-     * 
-     */
-    private class RadioListener implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource().equals(searchByBiometricRadioButton)){
-                searchByBiometricRadioButton.setSelected(true);
-                searchByIdRadioButton.setSelected(false);
-                searchByNameRadioButton.setSelected(false);
-            }else if(e.getSource().equals(searchByIdRadioButton)){
-                searchByBiometricRadioButton.setSelected(false);
-                searchByIdRadioButton.setSelected(true);
-                searchByNameRadioButton.setSelected(false);
-            }else{
-                searchByBiometricRadioButton.setSelected(false);
-                searchByIdRadioButton.setSelected(false);
-                searchByNameRadioButton.setSelected(true);
-            }
         }
         
     }
@@ -339,8 +318,8 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * 
-     * @param rButton
+     * Sets common attribute for the radio buttons
+     * @param rButton the radio button to be set up
      */
     private void setUpRadioButton(JRadioButton rButton){
         rButton.setBorder(null);
@@ -351,7 +330,7 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * 
+     * Configures the GridBag Constraints according to the specifications passed to the method
      * @param c
      * @param gridHeight
      * @param gridWidth

@@ -2,19 +2,23 @@ package app;
 
 import java.util.*;
 import java.util.concurrent.CompletionException;
+import java.util.regex.PatternSyntaxException;
 import java.io.*;
+import java.security.InvalidParameterException;
+
 import data.*;
 import snid.*;
 
 /**
  * The app for the SNID management. Interacts with the database and the TextUI
+ * and the SNIDGUI
  * 
  * @see data.SNIDDb
- * 
+ * @see ui.SNIDGUI
  */
 public class SNIDApp {
 
-    // SNIDDb to be used to populate citiens.
+    // SNIDDb data to be used to populate Citizen records.
     private ArrayList<Citizen> records;
     private SNIDDb data;
 
@@ -27,48 +31,88 @@ public class SNIDApp {
      * 
      * @param fileName  - Name of file
      * @param delimiter - character which separated data in the file
-     * @throws IndexOutOfBoundsException
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws Exception
+     * @throws InvalidParameterException if the file contains incompatible biometric
+     *                                   information. Biometric data must have a tag
+     *                                   as specified in {@link snid.BiometricData
+     *                                   BiometricData}
+     * @throws FileNotFoundException     if the database file cannot be
+     *                                   found/created
+     * @throws IOException               if something goes wrong while reading from
+     *                                   the database
+     * @throws Exception                 if an unknown problem occurs, or an error
+     *                                   while access a null object, or an invalid
+     *                                   array index
+     * @throws PatternSyntaxException    if the delimeter for the data is invalid
+     * @throws NumberFormatException     indicates that the file data has been
+     *                                   corrupted or is invalid for one or more
+     *                                   records
+     * @throws IndexOutOfBoundsException indicates that the file data has been
+     *                                   corrupted or invalid for one or more
+     *                                   records
      */
     public SNIDApp(String fileName, char delimiter) throws FileNotFoundException, IOException, Exception {
         records = new ArrayList<>();
         try {
             File pas = new File(fileName);
             pas.createNewFile();
-            /*
-             * System.out.println("File created"); }else{
-             * System.out.println("File already exists"); }
-             */
-
             data = new SNIDDb(fileName, delimiter);
             String[] tokens;
 
             while (data.hasNext()) {
+                // get the next set of citizen data from the file
                 tokens = data.getNext();
-                Citizen citizen = new Citizen(tokens[0].charAt(0), Integer.parseInt(tokens[1]), tokens[2], tokens[3],
-                        tokens[4]);
 
-                for (int i = 5; i < tokens.length; i++) {
-                    String[] docParts = tokens[i].split("\\|");
-                    if (docParts[0].equals("M")) {
-                        citizen.addPaper(new MarriageCertificate(docParts[1], docParts[2], docParts[3]));
-                    } else {
-                        citizen.addPaper(new DeathCertificate(docParts[1], docParts[2], docParts[3]));
+                // separate citizen data
+                char gender = tokens[0].charAt(0);
+                int yob = Integer.parseInt(tokens[1]);
+                String firstName = tokens[2];
+                String middleName = tokens[3];
+                String lastName = tokens[4];
+
+                // create basic citizen record
+                Citizen citizen = new Citizen(gender, yob, firstName, middleName, lastName);
+
+                try {
+                    // separate the Civic doc tokens according to how they are stored
+                    String[] docs = tokens[5].split("@");
+                    String[][] docParts = new String[docs.length][4];
+                    for (int x = 0; x < docs.length; x++) {
+                        String[] parts = docs[x].split("\\|");
+                        docParts[x] = parts;
                     }
+                    // add all CivicDoc to record
+                    for (String[] doc : docParts) {
+                        if (doc[0].equals("M")) {
+                            citizen.addPaper(new MarriageCertificate(doc[1], doc[2], doc[3]));
+                        } else {
+                            citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
+                        }
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    // no civic documents attached to this record. Continue processing
                 }
-                //TODO add biometric data from file
+
+                try {
+                    // separate biometric data
+                    String[] biometricData = tokens[6].split("&");
+                    // add biometric data to record
+                    for (String data : biometricData) {
+                        BiometricData biodata = new BiometricData(data.charAt(0), data.substring(1));
+                        citizen.addBiometric(biodata);
+                    }
+
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    // no biometric data attached to this record. Continue processing
+                }
+
+                // add the citizen to the list of records
                 records.add(citizen);
             }
             Collections.sort(records);
-
-        } catch (IndexOutOfBoundsException o) {
-            throw o;
         } catch (FileNotFoundException f) {
             throw f;
-        } catch (IOException i) {
-            throw i;
+        } catch (NumberFormatException | InvalidParameterException | IndexOutOfBoundsException | IOException e) {
+            throw e;
         } catch (Exception e) {
             throw e;
         }
@@ -76,9 +120,10 @@ public class SNIDApp {
     }
 
     /**
+     * Searches the citizen database by ID and returns the citizen if found
      * 
-     * @param id
-     * @return
+     * @param id The ID number of the citizen to be found
+     * @return The citizen if found or null if not found
      */
     private Citizen searchDb(String id) {
         int m, l, f;
@@ -103,12 +148,17 @@ public class SNIDApp {
     }
 
     /**
+     * Creates a death certificate for the deceased citizen and attaches it to their
+     * record. The life status of the citizen will also be set to dead on their
+     * record.
      * 
-     * @param id
-     * @param cause
-     * @param place
-     * @param date
-     * @throws CompletionException
+     * @param id    The ID number of the dead citizen
+     * @param cause the cause of death
+     * @param place the place of death
+     * @param date  the date of death
+     * @throws CompletionException if registering the death of the citizen fails
+     *                             because the ID passes does not exist in the
+     *                             database or some other unknown reason.
      */
     public void registerDeath(String id, String cause, String place, String date) {
         try {
@@ -116,17 +166,21 @@ public class SNIDApp {
             newlyDead.setLifeStatus(1);
             newlyDead.addPaper(new DeathCertificate(cause, date, place));
         } catch (Exception e) {
-            // System.out.println("Death could not be registered");
             throw new CompletionException("Death could not be registered", e);
         }
     }
 
     /**
+     * Creates a marriage certifiacte for the newly weds and attaches the
+     * certificate to both their records.
      * 
-     * @param groomId
-     * @param brideId
-     * @param date
-     * @throws CompletionException
+     * @param groomId the groom's ID number
+     * @param brideId the bride's ID number
+     * @param date    the date of the marraige
+     * @throws CompletionException if the marraige could not be registered because
+     *                             the bride and/or the groom's ID passed do not
+     *                             exist in the database or some other unknown
+     *                             reason.
      */
     public void registerMarriage(String groomId, String brideId, String date) {
         try {
@@ -135,15 +189,16 @@ public class SNIDApp {
             bride.addPaper(new MarriageCertificate(groomId, brideId, date));
             groom.addPaper(new MarriageCertificate(groomId, brideId, date));
         } catch (Exception e) {
-            // System.out.println("Marriage could not be registered");
             throw new CompletionException("Marriage could not be registered", e);
         }
     }
 
     /**
+     * Formats the address of a specified ciizen (by ID) into a mailing Label
      * 
-     * @param id
-     * @return
+     * @param id the ID of the citizen whose address should be formatted into a
+     *           mailing label
+     * @return the mailing label
      */
     public String mailingLabel(String id) {
         try {
@@ -156,9 +211,14 @@ public class SNIDApp {
     }
 
     /**
+     * Gets the information of the mother of a particular citizen. Information is in
+     * the format 434552,Lisa,Anne,Rodney where 434552 is the mother's ID number,
+     * Lisa is her first name, Anne is her middle name, Rodney is her last name.
      * 
-     * @param id
-     * @return
+     * @param id the ID of the citizen whose mother's information should be fetched
+     * @return A {@code String} with the mother's information if the citizen has a
+     *         mother or and empty {@code String} if the citizen has no mother or
+     *         the citizen's ID can't be found in the database
      */
     public String getMother(String id) {
         try {
@@ -173,9 +233,15 @@ public class SNIDApp {
     }
 
     /**
+     * Gets the information of the father of a particular citizen. Information is in
+     * the format 545669,Brian,Joseph,Charles where 545669 is the father's ID
+     * number, Brian is his first name, Joseph is his middle name, Charles is his
+     * last name.
      * 
-     * @param id
-     * @return
+     * @param id the ID of the citizen whose father's information should be fetched
+     * @return A {@code String} with the father's information if the citizen has a
+     *         father or and empty {@code String} if the citizen has no father or
+     *         the citizen's ID can't be found in the database
      */
     public String getFather(String id) {
         try {
@@ -190,9 +256,13 @@ public class SNIDApp {
     }
 
     /**
+     * Searches the database by citizen ID and return's the citizen's information if
+     * the citizen is found Information is in the format 434552,Lisa,Anne,Rodney
+     * where 434552 is the ID number, Lisa is the first name, Anne is the middle
+     * name, Rodney is the last name.
      * 
-     * @param id
-     * @return
+     * @param id the ID of the citizen to search for
+     * @return the citizen's information or and empty {@code String}
      */
     public String search(String id) {
         try {
@@ -207,11 +277,16 @@ public class SNIDApp {
     }
 
     /**
+     * Searches the database by first and last name. A list of the information for
+     * all matches is compiled. Information is in the format 434552,Lisa,Anne,Rodney
+     * where 434552 is the ID number, Lisa is the first name, Anne is the middle
+     * name, Rodney is the last name.
      * 
-     * @param firstName
-     * @param lastName
-     * @return
-     * @throws CompletionException
+     * @param firstName the first name of the citizen(s) to be found.
+     * @param lastName  the last name of the citizen(s) to be found
+     * @return a list of the information for all matchesor an empty list
+     * @throws CompletionException if something goes wrong during the search or
+     *                             compiling the list and it could not be completed
      */
     public String[] search(String firstName, String lastName) {
         ArrayList<String> matches = new ArrayList<>();
@@ -233,10 +308,15 @@ public class SNIDApp {
     }
 
     /**
+     * Searches for a citizen by their biometric data and returns their information.
+     * Information is in the format 434552,Lisa,Anne,Rodney where 434552 is the ID
+     * number, Lisa is the first name, Anne is the middle name, Rodney is the last
+     * name.
      * 
-     * @param tag
-     * @param value
-     * @return
+     * @param tag   the type of biometric data being used to search
+     * @param value the biometric value
+     * @return the citzen's information if found or an empty {@code String} if not
+     *         found
      */
     public String search(char tag, String value) {
         try {
@@ -267,12 +347,13 @@ public class SNIDApp {
      * @param fname  - String representing the first name of individuals
      * @param mname  - String representing the middle name of individuals
      * @param lname  - String representing the last name of individuals
-     * @throws CompletionException
+     * @throws CompletionException if creating the new record or adding it to the
+     *                             database fails
      */
     public void registerBirth(char gender, int yob, String fname, String mname, String lname) {
         try {
             Citizen person = new Citizen(gender, yob, fname, mname, lname);
-            person.setLifeStatus(0);
+            // person.setLifeStatus(0);
             records.add(person);
             Collections.sort(records);
         } catch (Exception e) {
@@ -320,7 +401,8 @@ public class SNIDApp {
      * @param updateID - ID for the object to be updated
      * @param fatherID - ID for the father object
      * @param motherID - ID for the mother object
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException if the record for either parent(s) or child
+     *                                   is not found
      */
     public void addParentData(String updateID, String fatherID, String motherID) throws IndexOutOfBoundsException {
 
@@ -346,7 +428,7 @@ public class SNIDApp {
      * @param town     - town line of Address
      * @param parish   - parish line of Address
      * @param country  - country line of Address
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException if the citizen is not found
      */
     public void updateAddress(String updateID, String street, String town, String parish, String country)
             throws IndexOutOfBoundsException {
@@ -358,32 +440,63 @@ public class SNIDApp {
 
     }
 
-
     /**
+     * Add biometric data to a citizen's record
      * 
-     * @param id
-     * @param data
+     * @param id   the ID of the citizen whose record the biometric data should be
+     *             added to.
+     * @param data the biometric data to be added
+     * @throws InvalidParameterException if the biometric data is in an incompatible
+     *                                   format
+     * @throws CompletionException       if the data could not be added to the
+     *                                   citizen's record, most likely because the
+     *                                   citizen was not found
      */
-    public void addBiometric(String id, String data){
-
+    public void addBiometric(String id, String data) {
+        try {
+            Citizen citizen = searchDb(id);
+            citizen.addBiometric(new BiometricData(data.charAt(0), data.substring(1)));
+        } catch (InvalidParameterException p) {
+            throw p;
+        } catch (Exception e) {
+            throw new CompletionException("The biometric data could not be added to the ciizen's record", e);
+        }
     }
 
     /**
+     * Gets the value of a citizen's biometric data
      * 
+     * @param id  The citizen's ID
+     * @param tag the type of biometric data to get as specified in
+     *            {@link snid.BiometricData BiometricData}
+     * @return the biometric value
+     * @throws CompletionException if the biometric data could not be found or
+     *                             retreived or the citizen could not be found
      */
-    public String getBiometric(String id, String tag){
-        return null;
+    public String getBiometric(String id, String tag) {
+        try {
+            Citizen citizen = searchDb(id);
+            return citizen.getBiometric(tag).getValue();
+        } catch (Exception e) {
+            throw new CompletionException("Biometric data could not be retrieved", e);
+        }
     }
 
     /**
-     * @throws FileNotFoundException
-     * @throws IOException
+     * Shutsdown the program. All records are saved before termination.
+     * 
+     * @throws FileNotFoundException if the file to be written to cannot be
+     *                               found/created
+     * @throws IOException           if something goes wrong while trying to write
+     *                               the records to file
      */
     public void shutdown() throws FileNotFoundException, IOException {
         try {
             data.rewrite();
             for (Citizen citizen : records) {
                 ArrayList<String> tokens = new ArrayList<>();
+                StringBuffer docs = new StringBuffer("");
+                StringBuffer biodata = new StringBuffer("");
                 tokens.add(Character.toString(citizen.getGender()));
                 tokens.add(Integer.toString(citizen.getYOB()));
                 tokens.add(citizen.getNameAttr().getFirstName());
@@ -391,36 +504,39 @@ public class SNIDApp {
                 tokens.add(citizen.getNameAttr().getLastName());
                 for (CivicDoc doc : citizen.getPapers()) {
                     if (doc.getType() == 'M') {
-                        tokens.add(String.format("%c|%s|%s|%s", doc.getType(), ((MarriageCertificate) doc).getGroomId(),
-                                ((MarriageCertificate) doc).getBrideId(), ((MarriageCertificate) doc).getDate()));
+                        docs.append(String.format("%c|%s|%s|%s@", doc.getType(),
+                                ((MarriageCertificate) doc).getGroomId(), ((MarriageCertificate) doc).getBrideId(),
+                                ((MarriageCertificate) doc).getDate()));
                     } else {
-                        tokens.add(String.format("%c|%s|%s|%s", doc.getType(),
-                                ((DeathCertificate) doc).getCause(), ((DeathCertificate) doc).getDate(),
-                                ((DeathCertificate) doc).getPlace()));
+                        docs.append(String.format("%c|%s|%s|%s@", doc.getType(), ((DeathCertificate) doc).getCause(),
+                                ((DeathCertificate) doc).getDate(), ((DeathCertificate) doc).getPlace()));
                     }
                 }
-                //TODO put biometric data
+                tokens.add(docs.toString());
+                for (Biometric data : citizen.getBiometricList()) {
+                    biodata.append(data.toString());
+                }
+                tokens.add(biodata.toString());
                 data.putNext(tokens.toArray(new String[tokens.size()]));
             }
             data.close();
-
+            System.exit(0);
         } catch (FileNotFoundException e) {
             throw e;
         } catch (IOException e) {
             throw e;
         }
-
     }
 
-    //TODO Delete getRecords in SNIDApp method. Only for testing
-    private ArrayList<Citizen> getRecords(){
+    // TODO Delete getRecords in SNIDApp method. Only for testing
+    private ArrayList<Citizen> getRecords() {
         return records;
     }
 
     public static void main(String[] args) {
         try {
             SNIDApp app = new SNIDApp("data.db", ',');
-            for (Citizen citizen: app.getRecords()){
+            for (Citizen citizen : app.getRecords()) {
                 System.out.println(citizen.printPapers());
             }
             app.registerBirth('F', 1970, "Lucy", "Annie", "George");
@@ -433,18 +549,18 @@ public class SNIDApp {
             app.registerBirth('M', 2005, "Tim", "Mike", "George");
             app.addParentData("00000003", "00000002", "00000001");
             app.registerDeath("00000001", "Childbirth", "UWI hospital", "06/07/2005");
+            app.registerBirth('F', 2000, "Annie", "Marie", "Bishop");
+            app.addBiometric("00000004", "F9097");
             System.out.println(app.search("00000003"));
             System.out.println("complete");
             System.out.println(app.search("00000004"));
             app.shutdown();
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
+            //
             e.printStackTrace();
         }
     }
