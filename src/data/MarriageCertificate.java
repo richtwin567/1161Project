@@ -2,6 +2,11 @@ package data;
 
 import snid.CivicDoc;
 
+/**
+ * Represents a marriage certificate which is a type of civic document. The marriage certificate stores the groom's ID, the bride's ID,
+ * the date of the MarriageCertificate the unique reference number for the document.
+ * @see snid.CivicDoc
+ */
 public class MarriageCertificate implements CivicDoc{
     private String groomId;
     private String brideId;
@@ -11,7 +16,7 @@ public class MarriageCertificate implements CivicDoc{
     private final char type = 'M';
 
     /**
-     * 
+     * C
      * @param groomId
      * @param brideId
      * @param date

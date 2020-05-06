@@ -33,7 +33,7 @@ public class SNIDApp {
      * @param delimiter - character which separated data in the file
      * @throws InvalidParameterException if the file contains incompatible biometric
      *                                   information. Biometric data must have a tag
-     *                                   as specified in {@link snid.BiometricData
+     *                                   as specified in {@link data.BiometricData
      *                                   BiometricData}
      * @throws FileNotFoundException     if the database file cannot be
      *                                   found/created
@@ -468,7 +468,7 @@ public class SNIDApp {
      * 
      * @param id  The citizen's ID
      * @param tag the type of biometric data to get as specified in
-     *            {@link snid.BiometricData BiometricData}
+     *            {@link data.BiometricData BiometricData}
      * @return the biometric value
      * @throws CompletionException if the biometric data could not be found or
      *                             retreived or the citizen could not be found

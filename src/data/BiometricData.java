@@ -1,6 +1,8 @@
-package snid;
+package data;
 
 import java.security.InvalidParameterException;
+
+import snid.Biometric;
 
 /**
  * Biometric data class. There are two types of biometric data; Fingerprint denoted by 'F' and DNA denoted by 'D'.

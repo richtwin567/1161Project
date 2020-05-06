@@ -2,6 +2,13 @@ package data;
 
 import snid.CivicDoc;
 
+/**
+ * Represents a death certificate which is a type of civic document. The death
+ * certificate stores the cause of death, the date of death, the place of death
+ * and the unique reference number for the document.
+ * 
+ * @see snid.CivicDoc
+ */
 public class DeathCertificate implements CivicDoc {
     private String cause;
     private String date;
@@ -11,10 +18,12 @@ public class DeathCertificate implements CivicDoc {
     private final char type = 'D';
 
     /**
-     * @param id
-     * @param cause
-     * @param date
-     * @param place
+     * The constructor for the death certificate class. A unique reference number is
+     * automatically generated
+     * 
+     * @param cause the cause of death
+     * @param date  the date of death
+     * @param place the place of death
      */
     public DeathCertificate(String cause, String date, String place) {
         this.cause = cause;
@@ -23,31 +32,37 @@ public class DeathCertificate implements CivicDoc {
         refNo = generateID();
     }
 
-    
-
     /**
-     * @return String return the cause
+     * Gets the cause of death.
+     * 
+     * @return {@code String} outlining the cause of death
      */
     public String getCause() {
         return cause;
     }
 
     /**
-     * @return String return the date
+     * Gets the date of death.
+     * 
+     * @return The date of death in {@code String} format
      */
     public String getDate() {
         return date;
     }
 
     /**
-     * @return String return the place
+     * Gets the place of death.
+     * 
+     * @return {@code String} stating the place of death
      */
     public String getPlace() {
         return place;
     }
 
     /**
-     * @return 
+     * Gets the document's unique reference number
+     * 
+     * @return the reference number
      */
     @Override
     public String getRefNo() {
@@ -55,25 +70,32 @@ public class DeathCertificate implements CivicDoc {
     }
 
     /**
+     * Generates the reference number for each death certificate instance
      * 
-     * @return
+     * @return A unique 6 digit refernce number
      */
-    private String generateID(){
+    private String generateID() {
         return String.format("%06d", counter++);
     }
 
     /**
-     * @return char return the type
+     * Gets the type of civic document. In this case, a death certificate. This is
+     * represented by 'D'.
+     * 
+     * @return the type of civic documents
      */
     public char getType() {
         return type;
     }
 
     /**
-     * @return
+     * Formats the document information into a String
+     * 
+     * @return the document information
      */
     @Override
     public String toString() {
-        return String.format("RefNo.:\t\t%s\nCause of Death:\t%s\nDate of Death:\t%s\nPlace of Death:\t%s",getRefNo(),getCause(),getDate(),getPlace());
+        return String.format("RefNo.:\t\t%s\nCause of Death:\t%s\nDate of Death:\t%s\nPlace of Death:\t%s", getRefNo(),
+                getCause(), getDate(), getPlace());
     }
 }
