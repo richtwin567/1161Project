@@ -2,8 +2,6 @@ package data;
 
 import java.io.*;
 import java.util.regex.PatternSyntaxException;
-//import java.util.ArrayList;
-//import java.util.Arrays;
 
 public class SNIDDb {
 
@@ -26,7 +24,7 @@ public class SNIDDb {
      * 
      * @param fileName - The name of the file to be opened for reading
      * @param delimit  - char which is used to seperate data in the file
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException if the file cannot be found
      */
     public SNIDDb(String fileName, char delimit) throws FileNotFoundException {
         try{
@@ -39,15 +37,13 @@ public class SNIDDb {
             reader = new BufferedReader(open);
 
         }catch(FileNotFoundException f){
-            //System.err.println("Message: " + f.getMessage());
-            //f.printStackTrace();
             throw f;
         }
     }
 
     //Getter Method for Attributes
     /**
-     * 
+     * Gets the delimiter
      * @return charcter representing how the lines of data are separated
      */
     public char getDelimiter(){
@@ -55,15 +51,12 @@ public class SNIDDb {
     }
 
     /**
-     * 
+     * Gets the file name
      * @return String representing the file name
      */
     public String getFileName(){ 
         return fileName;
     }
-    // public BufferedReader getBFReader(){ return null;}
-    // public FileReader getFReader(){ return null;}
-    // public FileWriter getFWriter(){ return null;}
     
     /**
      * <p>
@@ -72,7 +65,7 @@ public class SNIDDb {
      * </p>
      * 
      * @return {@code boolean}
-     * @throws IOException
+     * @throws IOException if something goes wrong while trying to asses whether or no the file has more data to be processed
      */
     public boolean hasNext() throws IOException {
         try{
@@ -82,8 +75,6 @@ public class SNIDDb {
                 return true;
 
         }catch(IOException i){
-            //System.out.println(i.getMessage());
-            //i.printStackTrace();
             throw i;
         }
         
@@ -115,8 +106,8 @@ public class SNIDDb {
      * closes the file for reading. Reopens the file for writing [not appending]
      * </p>
      * 
-     * @throws IOException
-     * @throws FileNotFoundException
+     * @throws IOException if something goes wrong while trying to close the file
+     * @throws FileNotFoundException if the file cannot be found
      */
     public void rewrite() throws FileNotFoundException, IOException {
         try{
@@ -134,12 +125,8 @@ public class SNIDDb {
             writer = new BufferedWriter(opener);
 
         }catch(FileNotFoundException f){
-            /*System.out.println(f.getMessage());
-            f.printStackTrace();*/
             throw f;
         }catch(IOException i){
-            /*System.out.println(i.getMessage());
-            i.printStackTrace();*/
             throw i;
         }
     }
@@ -151,7 +138,7 @@ public class SNIDDb {
      * </p>
      * 
      * @param tokens - String Array full of tokens from a Citizen object
-     * @throws IOException
+     * @throws IOException if something goes wrong while writing to the file
      */
     // assumes that the data is in the same order as it would be when it is read
     public void putNext(String[] tokens) throws IOException {
@@ -168,8 +155,6 @@ public class SNIDDb {
             writer.flush();
 
         }catch(IOException i){
-            /*System.out.println(i.getMessage());
-            i.printStackTrace();*/
             throw i;
         }
 
@@ -180,7 +165,7 @@ public class SNIDDb {
      * This method closes the file for writing. It sets the attributes back to null
      * </p>
      * 
-     * @throws IOException
+     * @throws IOException if something goes wrong while trying to close the file
      */
     public void close() throws IOException {
         try{
@@ -193,8 +178,6 @@ public class SNIDDb {
             currentLine = null;
             
         }catch(IOException i){
-            /*System.out.println(i.getMessage());
-            i.printStackTrace();*/
             throw i;
         }
     }
