@@ -71,16 +71,16 @@ public class SNIDApp {
                 String lastName = tokens[5];
                 char lifeStatus = tokens[6].charAt(0);
                 String motherId = tokens[7];
-                String fatherId = tokens[8]; 
-                
+                String fatherId = tokens[8];
+
                 Citizen mother = searchDb(motherId);
                 Citizen father = searchDb(fatherId);
 
                 Address address = new Address(tokens[11]);
 
-                
                 // create basic citizen record
-                Citizen citizen = new Citizen(id, gender, yob, firstName, middleName, lastName, lifeStatus, mother, father, address);
+                Citizen citizen = new Citizen(id, gender, yob, firstName, middleName, lastName, lifeStatus, mother,
+                        father, address);
 
                 try {
                     // separate biometric data
@@ -95,16 +95,12 @@ public class SNIDApp {
                     // no biometric data attached to this record. Continue processing
                 }
 
-                
                 try {
                     // separate the Civic doc tokens according to how they are stored
                     String[] docs = tokens[10].split("@");
                     String[][] docParts = new String[docs.length][4];
                     for (int x = 0; x < docs.length; x++) {
                         String[] parts = docs[x].split("\\|");
-                        for (String string : parts) {
-                            System.out.println(string);
-                        }
                         docParts[x] = parts;
                     }
                     // add all CivicDoc to record
@@ -118,11 +114,11 @@ public class SNIDApp {
                 } catch (Exception e) {
                     // no civic documents attached to this record. Continue processing
                 }
-                
+
                 // add the citizen to the list of records
                 records.add(citizen);
             }
-            //precautionary sorting
+            // precautionary sorting
             Collections.sort(records);
         } catch (FileNotFoundException f) {
             throw f;
@@ -319,7 +315,7 @@ public class SNIDApp {
             throw new CompletionException("Search could not be completed", e);
         }
         matches.trimToSize();
-        return (String[]) matches.toArray();
+        return matches.toArray(new String[matches.size()]);
     }
 
     /**
@@ -330,6 +326,8 @@ public class SNIDApp {
      * 
      * @param tag   the type of biometric data being used to search
      * @param value the biometric value
+     * @throws CompletionException if something goes wrong while trying to search
+     *                             the database
      * @return the citzen's information if found or an empty {@code String} if not
      *         found
      */
@@ -338,16 +336,18 @@ public class SNIDApp {
             BiometricData key = new BiometricData(tag, value);
             for (Citizen citizen : records) {
                 Biometric biodata = citizen.getBiometric(Character.toString(tag));
-                if (((BiometricData) biodata).match(key) == 0) {
-                    return String.format("%s,%s,%s,%s,%s", citizen.getId(),
-                            citizen.getGender() == 'M' ? "Male" : "Female", citizen.getNameAttr().getFirstName(),
-                            citizen.getNameAttr().getMiddleName(), citizen.getNameAttr().getLastName());
+                if (biodata != null) {
+                    if (((BiometricData) biodata).match(key) == 0) {
+                        return String.format("%s,%s,%s,%s,%s", citizen.getId(),
+                                citizen.getGender() == 'M' ? "Male" : "Female", citizen.getNameAttr().getFirstName(),
+                                citizen.getNameAttr().getMiddleName(), citizen.getNameAttr().getLastName());
+                    }
                 }
             }
         } catch (Exception e) {
-            return null;
+            throw new CompletionException("Something went wrong while searching the database", e);
         }
-        return null;
+        return "";
     }
 
     /**
@@ -553,8 +553,8 @@ public class SNIDApp {
                         address.append(String.format("%s|", addressParts[x]));
                     }
                     address.append(addressParts[addressParts.length - 1]);
-                }catch(Exception e){
-                } finally{
+                } catch (Exception e) {
+                } finally {
                     tokens.add(address.toString());
                 }
                 data.putNext(tokens.toArray(new String[tokens.size()]));
@@ -578,7 +578,7 @@ public class SNIDApp {
             SNIDApp app = new SNIDApp("data.db", ',');
             for (Citizen citizen : app.getRecords()) {
                 System.out.println(citizen.printPapers());
-                for (Biometric bio: citizen.getBiometricList()){
+                for (Biometric bio : citizen.getBiometricList()) {
                     System.out.println(((BiometricData) bio).toPrint());
                 }
             }

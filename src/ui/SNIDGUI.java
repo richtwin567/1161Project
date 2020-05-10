@@ -7,27 +7,27 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import app.SNIDApp;
-
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,7 +52,8 @@ public class SNIDGUI extends JFrame {
     private DefaultListModel<String> idListModel;
     private JScrollPane idListScrollPane;
 
-    private JTextArea citizenDetailArea;
+    private JEditorPane citizenDetailArea;
+    private JScrollPane citizenDetailAreaScrollPane;
 
     private JButton searchGoButton;
     private JButton clearButton;
@@ -201,6 +202,7 @@ public class SNIDGUI extends JFrame {
         searchValueField.setBackground(bg);
         searchValueField.setBorder(new LineBorder(onBg, 1));
         searchValueField.setForeground(onBg);
+        searchValueField.addFocusListener(new SearchValueFieldFocusListener());
         configureGridBagConstraints(basePanelConstraints, 1, 5, 1, 4);
         basePanel.add(searchValueField, basePanelConstraints);
 
@@ -218,6 +220,8 @@ public class SNIDGUI extends JFrame {
         idList.setBackground(bg);
         idList.setBorder(new LineBorder(bg, 0));
         idList.setForeground(onBg);
+        idList.setSelectionBackground(accent);
+        idList.setSelectionForeground(onAccent);
         idList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         idList.addListSelectionListener(new IdListSelectionListener());
         idListScrollPane = new JScrollPane(idList);
@@ -227,17 +231,17 @@ public class SNIDGUI extends JFrame {
         basePanel.add(idListScrollPane, basePanelConstraints);
 
         // setup citizen detail pane
-        citizenDetailArea = new JTextArea(
-                "Details of a selected record are displayed here. Select a record from the list to the left after doing a search");
-        citizenDetailArea.setLineWrap(true);
-        citizenDetailArea.setWrapStyleWord(true);
+        citizenDetailArea = new JEditorPane("text/html", "Details of a selected record are displayed here.<br/> Select a record from the list to the left after doing a search");
+
         citizenDetailArea.setBackground(bg);
         citizenDetailArea.setForeground(onBg);
-        citizenDetailArea.setBorder(new LineBorder(onBg, 1));
-        citizenDetailArea.setEditable(false);
-        citizenDetailArea.setMargin(new Insets(20, 20, 20, 20));
+        citizenDetailArea.setBorder(new LineBorder(onBg, 0));
+        citizenDetailAreaScrollPane = new JScrollPane(citizenDetailArea);
+        citizenDetailAreaScrollPane.setBackground(bg);
+        citizenDetailAreaScrollPane.setBorder(new LineBorder(onBg, 1));
+        citizenDetailAreaScrollPane.setForeground(onBg);
         configureGridBagConstraints(basePanelConstraints, 9, 3, 3, 6);
-        basePanel.add(citizenDetailArea, basePanelConstraints);
+        basePanel.add(citizenDetailAreaScrollPane, basePanelConstraints);
 
         add(basePanel);
         pack();
@@ -324,7 +328,7 @@ public class SNIDGUI extends JFrame {
                     String t = appController.search(searchValueField.getText());
                     String[] temp = t.split(",");
                     String id = temp[0];
-                    String info = String.format("Sex:\t%s\nFirst Name:\t%s\nMiddle Name:\t%s\nLast Name:\t%s", temp[1],
+                    String info = String.format("<b>Sex:</b>&#9&#9%s<br/><b>First Name:</b>&#9%s<br/><b>Middle Name:</b>&#9%s<br/><b>Last Name:</b>&#9%s", temp[1],
                             temp[2], temp[3], temp[4]);
                     SearchResult result = new SearchResult(id, info);
                     results.add(result);
@@ -334,25 +338,26 @@ public class SNIDGUI extends JFrame {
                             searchValueField.getText().substring(1));
                     String[] temp = t.split(",");
                     String id = temp[0];
-                    String info = String.format("Sex:\t%s\nFirst Name:\t%s\nMiddle Name:\t%s\nLast Name:\t%s", temp[1],
+                    String info = String.format("<b>Sex:</b>&#9&#9%s<br/><b>First Name:</b>&#9%s<br/><b>Middle Name:</b>&#9%s<br/><b>Last Name:</b>&#9%s", temp[1],
                             temp[2], temp[3], temp[4]);
                     SearchResult result = new SearchResult(id, info);
                     results.add(result);
                     idListModel.addElement(result.getId());
-                } else if(searchByNameRadioButton.isSelected()){
-                    String[] t = appController.search(searchValueField.getText().split(" ")[0],
-                            searchValueField.getText().split(" ")[1]);
+                } else if (searchByNameRadioButton.isSelected()) {
+                    String fn = searchValueField.getText().split(" ")[0];
+                    String ln = searchValueField.getText().split(" ")[1];
+                    String[] t = appController.search(fn, ln);
                     String[][] temp = new String[t.length][5];
                     for (int x = 0; x < t.length; x++) {
                         temp[x] = t[x].split(",");
                         String id = temp[x][0];
-                        String info = String.format("Sex:\t%s\nFirst Name:\t%s\nMiddle Name:\t%s\nLast Name:\t%s",
-                                temp[x][1], temp[x][2], temp[x][3], temp[x][4]);
+                        String info = String.format("<b>Sex:</b>&#9&#9%s<br/><b>First Name:</b>&#9%s<br/><b>Middle Name:</b>&#9%s<br/><b>Last Name:</b>&#9%s", temp[x][1],
+                            temp[x][2], temp[x][3], temp[x][4]);
                         SearchResult result = new SearchResult(id, info);
                         results.add(result);
                         idListModel.addElement(result.getId());
                     }
-                }else{
+                } else {
                     citizenDetailArea.setText("Select a method to search by");
                 }
             } catch (Exception ex) {
@@ -384,6 +389,23 @@ public class SNIDGUI extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
             System.exit(0);
+        }
+
+    }
+
+    private class SearchValueFieldFocusListener implements FocusListener {
+
+        @Override
+        public void focusGained(FocusEvent e) {
+            JTextField field = (JTextField) e.getSource();
+            field.setBorder(new LineBorder(accent, 1));
+            field.setText("");
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            JTextField field = (JTextField) e.getSource();
+            field.setBorder(new LineBorder(onBg, 1));
         }
 
     }
