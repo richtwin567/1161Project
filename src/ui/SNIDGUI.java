@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,16 +17,27 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import app.SNIDApp;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class SNIDGUI extends JFrame {
 
     private static final long serialVersionUID = -8940575551959945422L;
+
+    SNIDApp appController;
+    private ArrayList<SearchResult> results;
 
     private JRadioButton searchByIdRadioButton;
     private JRadioButton searchByNameRadioButton;
@@ -65,9 +77,10 @@ public class SNIDGUI extends JFrame {
     private final Color onAccent = new Color(33, 33, 33);
     private final Color error = new Color(211, 27, 47);
     private final Color onError = new Color(255, 255, 255);
-    
 
-    public SNIDGUI() {
+    public SNIDGUI(SNIDApp appController) {
+        this.appController = appController;
+        results = new ArrayList<>();
         init();
     }
 
@@ -87,7 +100,7 @@ public class SNIDGUI extends JFrame {
         basePanel.setForeground(onBg);
         basePanelLayout = new GridBagLayout();
         basePanelLayout.rowHeights = new int[] { 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30 };
-        basePanelLayout.columnWidths = new int[] { 20, 50, 20, 50, 20, 50, 20, 50, 20, 50,20 };
+        basePanelLayout.columnWidths = new int[] { 20, 50, 20, 50, 20, 50, 20, 50, 20, 50, 20 };
         basePanelLayout.columnWeights = new double[] { 1, 1, 1, 1, 1, 1, 1, 2, 1 };
         basePanelLayout.rowWeights = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         basePanelConstraints = new GridBagConstraints();
@@ -105,13 +118,13 @@ public class SNIDGUI extends JFrame {
         windowTitle.setOpaque(true);
         configureGridBagConstraints(basePanelConstraints, 1, 12, 0, 0);
         basePanel.add(windowTitle, basePanelConstraints);
-        
-        //set up panel for buttons
-        buttonPanel =  new JPanel();
+
+        // set up panel for buttons
+        buttonPanel = new JPanel();
         buttonPanel.setBackground(bg);
         buttonPanel.setBorder(null);
         buttonPanel.setForeground(onBg);
-        buttonPanelLayout = new GridLayout(3,1);
+        buttonPanelLayout = new GridLayout(3, 1);
         buttonPanelLayout.setVgap(10);
         buttonPanel.setLayout(buttonPanelLayout);
 
@@ -120,7 +133,7 @@ public class SNIDGUI extends JFrame {
         searchGoButton.setBackground(primary);
         searchGoButton.setForeground(onPrimary);
         setUpMaterialButton(searchGoButton);
-        //carry out a search in the database using the search value provided
+        // carry out a search in the database using the search value provided
         searchGoButton.addMouseListener(new SearchButtonListener());
         // add search button to panel grid
         buttonPanel.add(searchGoButton);
@@ -130,7 +143,7 @@ public class SNIDGUI extends JFrame {
         clearButton.setBackground(error);
         clearButton.setForeground(onError);
         setUpMaterialButton(clearButton);
-        //make search value field clear when this button is pressed
+        // make search value field clear when this button is pressed
         clearButton.addMouseListener(new ClearButtonListener());
         // add clear button to panel
         buttonPanel.add(clearButton);
@@ -140,33 +153,33 @@ public class SNIDGUI extends JFrame {
         quitButton.setBackground(error);
         quitButton.setForeground(onError);
         setUpMaterialButton(quitButton);
-        //exit program when clicked
+        // exit program when clicked
         quitButton.addMouseListener(new QuitButtonListener());
         // add quit button to panel
         buttonPanel.add(quitButton);
 
-        //add button panel to base panel
+        // add button panel to base panel
         configureGridBagConstraints(basePanelConstraints, 4, 3, 7, 4);
         basePanel.add(buttonPanel, basePanelConstraints);
 
-        //set up radio button panel 
+        // set up radio button panel
         radioButtonPanel = new JPanel();
         radioButtonPanel.setBackground(bg);
         radioButtonPanel.setForeground(onBg);
         radioButtonPanel.setBorder(null);
-        radioButtonPanelLayout = new GridLayout(1,3);
+        radioButtonPanelLayout = new GridLayout(1, 3);
         radioButtonPanelLayout.setHgap(20);
         radioButtonPanel.setLayout(radioButtonPanelLayout);
 
-        //set up radio button group so that the buttons auto toggle
+        // set up radio button group so that the buttons auto toggle
         radioButtonGroup = new ButtonGroup();
 
         // set up the radio buttons
         searchByIdRadioButton = new JRadioButton("Search by Id");
         setUpRadioButton(searchByIdRadioButton);
-        //add button to group
+        // add button to group
         radioButtonGroup.add(searchByIdRadioButton);
-        //add button to panel
+        // add button to panel
         radioButtonPanel.add(searchByIdRadioButton);
 
         searchByNameRadioButton = new JRadioButton("Search by Name");
@@ -179,7 +192,7 @@ public class SNIDGUI extends JFrame {
         radioButtonGroup.add(searchByBiometricRadioButton);
         radioButtonPanel.add(searchByBiometricRadioButton);
 
-        //add radio buttons to base panel
+        // add radio buttons to base panel
         configureGridBagConstraints(basePanelConstraints, 1, 5, 1, 2);
         basePanel.add(radioButtonPanel, basePanelConstraints);
 
@@ -195,16 +208,18 @@ public class SNIDGUI extends JFrame {
         idListLabel.setHorizontalAlignment(SwingConstants.CENTER);
         idListLabel.setForeground(onBg);
         idListLabel.setBackground(bg);
-        idListLabel.setBorder(new LineBorder(onBg,1));
+        idListLabel.setBorder(new LineBorder(onBg, 1));
         configureGridBagConstraints(basePanelConstraints, 1, 1, 1, 6);
         basePanel.add(idListLabel, basePanelConstraints);
 
         // set up located IDs list with scroll pane
         idListModel = new DefaultListModel<>();
-        idList = new JList<>(idListModel);            
+        idList = new JList<>(idListModel);
         idList.setBackground(bg);
         idList.setBorder(new LineBorder(bg, 0));
         idList.setForeground(onBg);
+        idList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        idList.addListSelectionListener(new IdListSelectionListener());
         idListScrollPane = new JScrollPane(idList);
         idListScrollPane.setBackground(bg);
         idListScrollPane.setBorder(new LineBorder(onBg, 1));
@@ -229,24 +244,42 @@ public class SNIDGUI extends JFrame {
 
     }
 
+    private class SearchResult {
+        String id;
+        String info;
+
+        public SearchResult(String id, String info) {
+            this.id = id;
+            this.info = info;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+    }
+
     /**
      * 
      */
-    private abstract class ButtonListener implements MouseListener{
+    private abstract class ButtonListener implements MouseListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            //does nothing
+            // does nothing
 
-        }   
+        }
 
         @Override
-        public abstract void mousePressed(MouseEvent e); 
+        public abstract void mousePressed(MouseEvent e);
 
-        
         @Override
         public void mouseReleased(MouseEvent e) {
-            //does nothing
+            // does nothing
 
         }
 
@@ -267,12 +300,12 @@ public class SNIDGUI extends JFrame {
     /**
      * 
      */
-    private class ClearButtonListener extends ButtonListener{
+    private class ClearButtonListener extends ButtonListener {
 
         @Override
         public void mousePressed(MouseEvent e) {
             searchValueField.setText("");
-        }     
+        }
 
     }
 
@@ -283,8 +316,62 @@ public class SNIDGUI extends JFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            citizenDetailArea.setText("");
             idListModel.clear();
-            idListModel.addElement("This Method is a stub");
+            results = new ArrayList<>();
+            try {
+                if (searchByIdRadioButton.isSelected()) {
+                    String t = appController.search(searchValueField.getText());
+                    String[] temp = t.split(",");
+                    String id = temp[0];
+                    String info = String.format("Sex:\t%s\nFirst Name:\t%s\nMiddle Name:\t%s\nLast Name:\t%s", temp[1],
+                            temp[2], temp[3], temp[4]);
+                    SearchResult result = new SearchResult(id, info);
+                    results.add(result);
+                    idListModel.addElement(result.getId());
+                } else if (searchByBiometricRadioButton.isSelected()) {
+                    String t = appController.search(searchValueField.getText().charAt(0),
+                            searchValueField.getText().substring(1));
+                    String[] temp = t.split(",");
+                    String id = temp[0];
+                    String info = String.format("Sex:\t%s\nFirst Name:\t%s\nMiddle Name:\t%s\nLast Name:\t%s", temp[1],
+                            temp[2], temp[3], temp[4]);
+                    SearchResult result = new SearchResult(id, info);
+                    results.add(result);
+                    idListModel.addElement(result.getId());
+                } else if(searchByNameRadioButton.isSelected()){
+                    String[] t = appController.search(searchValueField.getText().split(" ")[0],
+                            searchValueField.getText().split(" ")[1]);
+                    String[][] temp = new String[t.length][5];
+                    for (int x = 0; x < t.length; x++) {
+                        temp[x] = t[x].split(",");
+                        String id = temp[x][0];
+                        String info = String.format("Sex:\t%s\nFirst Name:\t%s\nMiddle Name:\t%s\nLast Name:\t%s",
+                                temp[x][1], temp[x][2], temp[x][3], temp[x][4]);
+                        SearchResult result = new SearchResult(id, info);
+                        results.add(result);
+                        idListModel.addElement(result.getId());
+                    }
+                }else{
+                    citizenDetailArea.setText("Select a method to search by");
+                }
+            } catch (Exception ex) {
+                citizenDetailArea.setText("Not Found");
+            }
+        }
+
+    }
+
+    private class IdListSelectionListener implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            try {
+                JList<String> list = (JList<String>) e.getSource();
+                int index = list.getSelectedIndex();
+                citizenDetailArea.setText(results.get(index).getInfo());
+            } catch (Exception ex) {
+            }
         }
 
     }
@@ -298,30 +385,32 @@ public class SNIDGUI extends JFrame {
         public void mousePressed(MouseEvent e) {
             System.exit(0);
         }
-        
+
     }
 
     /**
      * Set buttons to similar styling
+     * 
      * @param button The button to be styled
      */
-    private void setUpMaterialButton(JButton button){
+    private void setUpMaterialButton(JButton button) {
         button.setBorder(null);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setOpaque(true);
         button.setFocusPainted(false);
         button.setHorizontalAlignment(SwingConstants.CENTER);
-        button.setMaximumSize(new Dimension(120,500));
+        button.setMaximumSize(new Dimension(120, 500));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setMargin(new Insets(60,30,60,30));
+        button.setMargin(new Insets(60, 30, 60, 30));
     }
 
     /**
      * Sets common attribute for the radio buttons
+     * 
      * @param rButton the radio button to be set up
      */
-    private void setUpRadioButton(JRadioButton rButton){
+    private void setUpRadioButton(JRadioButton rButton) {
         rButton.setBorder(null);
         rButton.setBackground(bg);
         rButton.setFocusPainted(false);
@@ -330,15 +419,18 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * Configures the GridBag Constraints according to the specifications passed to the method
-     * @param c
-     * @param gridHeight
-     * @param gridWidth
-     * @param gridx
-     * @param gridy
+     * Configures the GridBag Constraints according to the specifications passed to
+     * the method
+     * 
+     * @param c          the GridBagConstraints object
+     * @param gridHeight the number of rows the object should span
+     * @param gridWidth  the number of columns the object should span
+     * @param gridx      the location along the horizontal axis to place the object
+     * @param gridy      the location along the vertical axis to place the object
      */
-    private void configureGridBagConstraints(GridBagConstraints c, int gridHeight, int gridWidth, int gridx, int gridy){
-        c.fill =  GridBagConstraints.BOTH;
+    private void configureGridBagConstraints(GridBagConstraints c, int gridHeight, int gridWidth, int gridx,
+            int gridy) {
+        c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.CENTER;
         c.gridheight = gridHeight;
         c.gridwidth = gridWidth;
@@ -346,9 +438,9 @@ public class SNIDGUI extends JFrame {
         c.gridy = gridy;
     }
 
-
-    public static void main(String[] args) {
-        SNIDGUI ui = new SNIDGUI();
+    public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
+        SNIDApp appController = new SNIDApp("data.db", ',');
+        SNIDGUI ui = new SNIDGUI(appController);
         ui.setVisible(true);
     }
 }

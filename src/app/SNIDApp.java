@@ -63,21 +63,48 @@ public class SNIDApp {
                 tokens = data.getNext();
 
                 // separate citizen data
-                char gender = tokens[0].charAt(0);
-                int yob = Integer.parseInt(tokens[1]);
-                String firstName = tokens[2];
-                String middleName = tokens[3];
-                String lastName = tokens[4];
+                String id = tokens[0];
+                char gender = tokens[1].charAt(0);
+                int yob = Integer.parseInt(tokens[2]);
+                String firstName = tokens[3];
+                String middleName = tokens[4];
+                String lastName = tokens[5];
+                char lifeStatus = tokens[6].charAt(0);
+                String motherId = tokens[7];
+                String fatherId = tokens[8]; 
+                
+                Citizen mother = searchDb(motherId);
+                Citizen father = searchDb(fatherId);
 
+                Address address = new Address(tokens[11]);
+
+                
                 // create basic citizen record
-                Citizen citizen = new Citizen(gender, yob, firstName, middleName, lastName);
+                Citizen citizen = new Citizen(id, gender, yob, firstName, middleName, lastName, lifeStatus, mother, father, address);
 
                 try {
+                    // separate biometric data
+                    String[] biometricData = tokens[9].split("&");
+                    // add biometric data to record
+                    for (String data : biometricData) {
+                        BiometricData biodata = new BiometricData(data.charAt(0), data.substring(1));
+                        citizen.addBiometric(biodata);
+                    }
+
+                } catch (Exception e) {
+                    // no biometric data attached to this record. Continue processing
+                }
+
+                
+                try {
                     // separate the Civic doc tokens according to how they are stored
-                    String[] docs = tokens[5].split("@");
+                    String[] docs = tokens[10].split("@");
                     String[][] docParts = new String[docs.length][4];
                     for (int x = 0; x < docs.length; x++) {
                         String[] parts = docs[x].split("\\|");
+                        for (String string : parts) {
+                            System.out.println(string);
+                        }
                         docParts[x] = parts;
                     }
                     // add all CivicDoc to record
@@ -88,26 +115,14 @@ public class SNIDApp {
                             citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
                         }
                     }
-                } catch (ArrayIndexOutOfBoundsException e) {
+                } catch (Exception e) {
                     // no civic documents attached to this record. Continue processing
                 }
-
-                try {
-                    // separate biometric data
-                    String[] biometricData = tokens[6].split("&");
-                    // add biometric data to record
-                    for (String data : biometricData) {
-                        BiometricData biodata = new BiometricData(data.charAt(0), data.substring(1));
-                        citizen.addBiometric(biodata);
-                    }
-
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    // no biometric data attached to this record. Continue processing
-                }
-
+                
                 // add the citizen to the list of records
                 records.add(citizen);
             }
+            //precautionary sorting
             Collections.sort(records);
         } catch (FileNotFoundException f) {
             throw f;
@@ -497,11 +512,29 @@ public class SNIDApp {
                 ArrayList<String> tokens = new ArrayList<>();
                 StringBuffer docs = new StringBuffer("");
                 StringBuffer biodata = new StringBuffer("");
+                StringBuffer address = new StringBuffer("");
+                String[] addressParts;
+                tokens.add(citizen.getId());
                 tokens.add(Character.toString(citizen.getGender()));
                 tokens.add(Integer.toString(citizen.getYOB()));
                 tokens.add(citizen.getNameAttr().getFirstName());
                 tokens.add(citizen.getNameAttr().getMiddleName());
                 tokens.add(citizen.getNameAttr().getLastName());
+                tokens.add(Character.toString(citizen.getLifeStatus()));
+                try {
+                    tokens.add(citizen.getParent('M').getId());
+                } catch (Exception e) {
+                    tokens.add("");
+                }
+                try {
+                    tokens.add(citizen.getParent('F').getId());
+                } catch (Exception e) {
+                    tokens.add("");
+                }
+                for (Biometric data : citizen.getBiometricList()) {
+                    biodata.append(data.toString());
+                }
+                tokens.add(biodata.toString());
                 for (CivicDoc doc : citizen.getPapers()) {
                     if (doc.getType() == 'M') {
                         docs.append(String.format("%c|%s|%s|%s@", doc.getType(),
@@ -513,10 +546,17 @@ public class SNIDApp {
                     }
                 }
                 tokens.add(docs.toString());
-                for (Biometric data : citizen.getBiometricList()) {
-                    biodata.append(data.toString());
+                try {
+                    addressParts = citizen.getAddress().toString().split("\n");
+                    address.append(String.format("%s|", addressParts[0]));
+                    for (int x = 1; x < addressParts.length - 1; x++) {
+                        address.append(String.format("%s|", addressParts[x]));
+                    }
+                    address.append(addressParts[addressParts.length - 1]);
+                }catch(Exception e){
+                } finally{
+                    tokens.add(address.toString());
                 }
-                tokens.add(biodata.toString());
                 data.putNext(tokens.toArray(new String[tokens.size()]));
             }
             data.close();
@@ -538,6 +578,9 @@ public class SNIDApp {
             SNIDApp app = new SNIDApp("data.db", ',');
             for (Citizen citizen : app.getRecords()) {
                 System.out.println(citizen.printPapers());
+                for (Biometric bio: citizen.getBiometricList()){
+                    System.out.println(((BiometricData) bio).toPrint());
+                }
             }
             app.registerBirth('F', 1970, "Lucy", "Annie", "George");
             app.registerBirth('M', 1972, "Harry", "Joseph", "George");

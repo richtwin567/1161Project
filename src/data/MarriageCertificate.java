@@ -16,10 +16,10 @@ public class MarriageCertificate implements CivicDoc{
     private final char type = 'M';
 
     /**
-     * C
-     * @param groomId
-     * @param brideId
-     * @param date
+     * Constructor for the marriage certificate class. The reference number is automatically generated.
+     * @param groomId the groom's ID number
+     * @param brideId the bride's ID number
+     * @param date the date of the marriage
      */
     public MarriageCertificate(String groomId, String brideId, String date) {
         this.brideId = brideId;
@@ -29,47 +29,57 @@ public class MarriageCertificate implements CivicDoc{
     }
 
     /**
-     * @return String return the groomId
+     * Gets the groom's ID number
+     * @return {@code String} representing the groom's ID 
      */
     public String getGroomId() {
         return groomId;
     }
 
     /**
-     * @return String return the brideId
+     * Gets the bride's ID number
+     * @return {@code String} representing the bride's ID
      */
     public String getBrideId() {
         return brideId;
     }
 
     /**
-     * @return String return the date
+     * Gets the date of the marriage
+     * @return {@code String} representing the date
      */
     public String getDate() {
         return date;
     }
 
     /**
-     * @return
+     * Gets the refernce number for this marriage certificate.
+     * @return the refernce number for this Marriage certificate.
      */
     @Override
     public String getRefNo() {
         return refNo;
     }
 
+    /**
+     * Generates the unique refernce number for this marriage certificate
+     * @return the refernce number as a {@code String}
+     */
     private String generateID(){
         return String.format("%06d", counter++);
     }
     
     /**
-     * @return char return the type
+     * Gets the type of Civic document, in this case a marriage certificate.
+     * @return {@code char} 'M' representing marriage certificate
      */
     public char getType() {
         return type;
     }
 
     /**
-     * @return
+     * Formats the document information for printing
+     * @return the document information.
      */
     @Override
     public String toString() {

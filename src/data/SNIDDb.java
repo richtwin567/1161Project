@@ -146,10 +146,10 @@ public class SNIDDb {
             
             //places the data into the line format for storage using StringBuffer
             StringBuffer line = new StringBuffer();
-            for(int i= 0; i < tokens.length-1;i++)
+            for(int i= 0; i < tokens.length;i++)
                 line.append(tokens[i] + Character.toString(getDelimiter()));
-            line.append(tokens[tokens.length-1]);
-
+            //line.append(tokens[tokens.length-1]);
+            line.append("EOL");
             writer.write(line.toString());
             writer.newLine();
             writer.flush();

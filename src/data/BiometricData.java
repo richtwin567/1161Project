@@ -61,4 +61,12 @@ public class BiometricData implements Biometric{
     public String toString() {
         return String.format("%c%s&", getTag().charAt(0),getValue());
     }
+
+    /**
+     * Formats the biometric data to be printed in the UIs
+     * @return readable biometric data
+     */
+    public String toPrint(){
+        return String.format("Biometric\n\tTag:\t%c\n\tValue:\t%s",getTag().charAt(0),getValue());
+    }
 }

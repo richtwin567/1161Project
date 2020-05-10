@@ -19,6 +19,26 @@ public abstract class Person {
     private ArrayList<Biometric> biodata;
 
     /**
+     * Constructor for initialziing database from file
+     * @param id
+     * @param gender
+     * @param yob
+     * @param lifeStatus
+     * @param mother
+     * @param father
+     * @param biodata
+     */
+    public Person(String id, char gender, int yob, char lifeStatus, Person mother, Person father) {
+        this.id =id;
+        this.yob = yob;
+        this.lifeStatus = lifeStatus;
+        this.gender = gender;
+        this.mother =  mother;
+        this.father = father;
+        this.biodata = new ArrayList<>();
+    }
+
+    /**
      * The constructor for the Person class.
      *
      * @param gender the person's gender

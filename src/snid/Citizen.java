@@ -18,6 +18,26 @@ public class Citizen
     private Address address;
 
     /**
+     * For initializing the database from file
+     * @param id
+     * @param gender
+     * @param yob
+     * @param firstName
+     * @param middleName
+     * @param lastName
+     * @param lifeStatus
+     * @param mother
+     * @param father
+     * @param address
+     */
+    public Citizen(String id, char gender, int yob, String firstName, String middleName, String lastName, char lifeStatus, Person mother, Person father, Address address){
+        super(id, gender, yob, lifeStatus, mother, father);
+        name = new Name(firstName, middleName, lastName);
+        this.papers = new ArrayList<>();
+        this.address = address;
+    }
+    
+    /**
      * Constructor for the citizen class.
      *
      * @param gender the citizen's gender. Must be 'F' for female or 'M' for
