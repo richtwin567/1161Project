@@ -63,10 +63,18 @@ public class BiometricData implements Biometric{
     }
 
     /**
-     * Formats the biometric data to be printed in the UIs
+     * Formats the biometric data to be printed in the Text UI
      * @return readable biometric data
      */
-    public String toPrint(){
+    public String toTUIPrint(){
         return String.format("Biometric\n\tTag:\t%c\n\tValue:\t%s",getTag().charAt(0),getValue());
+    }
+
+    /**
+     * Formats the Biometric data for the GUI
+     * @return the biometric data
+     */
+    public String toGUIPrint(){
+        return String.format("<li><i>Type:</i>&#9 %s</li><li><i>Value:</i>&#9 %s</li><li><br/></li>", (getTag().equals("F")?"Fingerprint":"DNA"),getValue());
     }
 }

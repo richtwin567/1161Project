@@ -98,4 +98,13 @@ public class DeathCertificate implements CivicDoc {
         return String.format("RefNo.:\t\t%s\nCause of Death:\t%s\nDate of Death:\t%s\nPlace of Death:\t%s", getRefNo(),
                 getCause(), getDate(), getPlace());
     }
+
+    /**
+     * Formats the death certificate information for the GUI
+     * @return the death certificate information
+     */
+    @Override
+    public String toGUIPrint() {
+        return String.format("<b>%s</b><br/><i>Ref No.:</i>&#9&#9 %s<br/><i>Cause of Death:</i>&#9 %s<br/><i>Place:</i>&#9&#9 %s<br/><i>Date:</i>&#9&#9 %s<br/>","Death Certificate", getRefNo(),getCause(),getPlace(), getDate());
+    }
 }

@@ -1,9 +1,11 @@
 package ui;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
@@ -16,6 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -67,17 +70,19 @@ public class SNIDGUI extends JFrame {
 
     private JLabel windowTitle;
 
+    private final JFrame thisFrame = this;
+
     // Material Design Colours
-    private final Color darkPrimary = new Color(25, 118, 210);
-    private final Color onDarkPrimary = new Color(255, 255, 255);
-    private final Color primary = new Color(33, 150, 243);
-    private final Color onPrimary = new Color(33, 33, 33);
-    private final Color bg = new Color(255, 255, 255);
-    private final Color onBg = new Color(33, 33, 33);
-    private final Color accent = new Color(3, 169, 244);
-    private final Color onAccent = new Color(33, 33, 33);
-    private final Color error = new Color(211, 27, 47);
-    private final Color onError = new Color(255, 255, 255);
+    protected static final Color darkPrimary = new Color(25, 118, 210);
+    protected static final Color onDarkPrimary = new Color(255, 255, 255);
+    protected static final Color primary = new Color(33, 150, 243);
+    protected static final Color onPrimary = new Color(33, 33, 33);
+    protected static final Color bg = new Color(255, 255, 255);
+    protected static final Color onBg = new Color(33, 33, 33);
+    protected static final Color accent = new Color(255, 152, 0);
+    protected static final Color onAccent = new Color(255, 255, 255);
+    protected static final Color error = new Color(211, 27, 47);
+    protected static final Color onError = new Color(255, 255, 255);
 
     public SNIDGUI(SNIDApp appController) {
         this.appController = appController;
@@ -223,6 +228,19 @@ public class SNIDGUI extends JFrame {
         idList.setSelectionBackground(accent);
         idList.setSelectionForeground(onAccent);
         idList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        idList.setCellRenderer(new DefaultListCellRenderer() {
+
+            private static final long serialVersionUID = -7668408883782835744L;
+
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
+                    boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                Border border = null;
+                setBorder(border);
+                return c;
+            }
+        });
         idList.addListSelectionListener(new IdListSelectionListener());
         idListScrollPane = new JScrollPane(idList);
         idListScrollPane.setBackground(bg);
@@ -231,8 +249,9 @@ public class SNIDGUI extends JFrame {
         basePanel.add(idListScrollPane, basePanelConstraints);
 
         // setup citizen detail pane
-        citizenDetailArea = new JEditorPane("text/html", "Details of a selected record are displayed here.<br/> Select a record from the list to the left after doing a search");
-
+        citizenDetailArea = new JEditorPane("text/html",
+                "Details of a selected record are displayed here.<br/> Select a record from the list to the left after doing a search");
+        citizenDetailArea.setEditable(false);
         citizenDetailArea.setBackground(bg);
         citizenDetailArea.setForeground(onBg);
         citizenDetailArea.setBorder(new LineBorder(onBg, 0));
@@ -270,7 +289,10 @@ public class SNIDGUI extends JFrame {
     /**
      * 
      */
-    private abstract class ButtonListener implements MouseListener {
+    protected static abstract class ButtonListener implements MouseListener {
+
+        private Color oB;
+        private Color oF;
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -290,13 +312,17 @@ public class SNIDGUI extends JFrame {
         @Override
         public void mouseEntered(MouseEvent e) {
             JButton btn = (JButton) e.getSource();
-            btn.setBackground(btn.getBackground().darker());
+            oB = btn.getBackground();
+            oF = btn.getForeground();
+            btn.setBackground(accent);
+            btn.setForeground(onAccent);
         }
 
         @Override
         public void mouseExited(MouseEvent e) {
             JButton btn = (JButton) e.getSource();
-            btn.setBackground(btn.getBackground().brighter());
+            btn.setBackground(oB);
+            btn.setForeground(oF);
         }
 
     }
@@ -309,6 +335,7 @@ public class SNIDGUI extends JFrame {
         @Override
         public void mousePressed(MouseEvent e) {
             searchValueField.setText("");
+            searchValueField.requestFocus();
         }
 
     }
@@ -325,43 +352,44 @@ public class SNIDGUI extends JFrame {
             results = new ArrayList<>();
             try {
                 if (searchByIdRadioButton.isSelected()) {
-                    String t = appController.search(searchValueField.getText());
+                    String t = appController.searchGUI(searchValueField.getText());
                     String[] temp = t.split(",");
                     String id = temp[0];
-                    String info = String.format("<b>Sex:</b>&#9&#9%s<br/><b>First Name:</b>&#9%s<br/><b>Middle Name:</b>&#9%s<br/><b>Last Name:</b>&#9%s", temp[1],
-                            temp[2], temp[3], temp[4]);
+                    String info = temp[1];
                     SearchResult result = new SearchResult(id, info);
                     results.add(result);
                     idListModel.addElement(result.getId());
                 } else if (searchByBiometricRadioButton.isSelected()) {
-                    String t = appController.search(searchValueField.getText().charAt(0),
+                    String t = appController.searchGUI(searchValueField.getText().charAt(0),
                             searchValueField.getText().substring(1));
                     String[] temp = t.split(",");
                     String id = temp[0];
-                    String info = String.format("<b>Sex:</b>&#9&#9%s<br/><b>First Name:</b>&#9%s<br/><b>Middle Name:</b>&#9%s<br/><b>Last Name:</b>&#9%s", temp[1],
-                            temp[2], temp[3], temp[4]);
+                    String info = temp[1];
                     SearchResult result = new SearchResult(id, info);
                     results.add(result);
                     idListModel.addElement(result.getId());
                 } else if (searchByNameRadioButton.isSelected()) {
                     String fn = searchValueField.getText().split(" ")[0];
                     String ln = searchValueField.getText().split(" ")[1];
-                    String[] t = appController.search(fn, ln);
+                    String[] t = appController.searchGUI(fn, ln);
                     String[][] temp = new String[t.length][5];
                     for (int x = 0; x < t.length; x++) {
                         temp[x] = t[x].split(",");
                         String id = temp[x][0];
-                        String info = String.format("<b>Sex:</b>&#9&#9%s<br/><b>First Name:</b>&#9%s<br/><b>Middle Name:</b>&#9%s<br/><b>Last Name:</b>&#9%s", temp[x][1],
-                            temp[x][2], temp[x][3], temp[x][4]);
+                        String info = temp[x][1];
                         SearchResult result = new SearchResult(id, info);
                         results.add(result);
                         idListModel.addElement(result.getId());
                     }
                 } else {
-                    citizenDetailArea.setText("Select a method to search by");
+                    MessageDialog dialog = new MessageDialog(thisFrame, "Select a method to search by");
+                    dialog.setVisible(true);
+                    citizenDetailArea.setText("");
                 }
             } catch (Exception ex) {
-                citizenDetailArea.setText("Not Found");
+                MessageDialog dialog = new MessageDialog(thisFrame, "Not Found");
+                dialog.setVisible(true);
+                citizenDetailArea.setText("");
             }
         }
 
@@ -382,24 +410,28 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * 
+     * Allows the program to terminate when the quit button is pressed
      */
     private class QuitButtonListener extends ButtonListener {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            System.exit(0);
+            ConfirmQuit exit = new ConfirmQuit(thisFrame);
+            exit.setVisible(true);
         }
 
     }
 
+    /**
+     * Highlights the search field with the accent colour when it gains focus
+     */
     private class SearchValueFieldFocusListener implements FocusListener {
 
         @Override
         public void focusGained(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
             field.setBorder(new LineBorder(accent, 1));
-            field.setText("");
+            // field.setText("");
         }
 
         @Override
@@ -415,7 +447,7 @@ public class SNIDGUI extends JFrame {
      * 
      * @param button The button to be styled
      */
-    private void setUpMaterialButton(JButton button) {
+    protected static void setUpMaterialButton(JButton button) {
         button.setBorder(null);
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);

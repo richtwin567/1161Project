@@ -2,6 +2,8 @@ package snid;
 
 import java.util.ArrayList;
 
+import data.BiometricData;
+
 /**
  * The class representing a citizen of the country. A citizen is also a Person.
  * Their data can be compared to another person in the system.
@@ -165,5 +167,34 @@ public class Citizen
         return printable.toString();
     }
 
+    /**
+     * Formats this ciizen's information for display in the GUI app
+     * @return the citizen's information
+     */
+    public String toGUIPrint(){
+        StringBuffer print = new StringBuffer("");
+        String tab = "&#9 ";
+        String eol = "<br/>";
+        String listBegin = "<ul style=\"list-style-type:none\">";
+        print.append(getId() + ",");
+        print.append("<b>Sex:</b>" + tab + tab + (getGender()=='F'?"Female":"Male") + eol );
+        print.append("<b>Year of Birth:</b>" + tab + getYOB() + eol);
+        print.append("<b>First Name:</b>" + tab + getNameAttr().getFirstName() + eol);
+        print.append("<b>Middle Name:</b>" + tab + getNameAttr().getMiddleName() + eol);
+        print.append("<b>Last Name:</b>" + tab + getNameAttr().getLastName() + eol);
+        print.append("<i><b>Address</b></i>" + eol + listBegin);
+        print.append("<li>" + getAddress().toGUIPrint() + "</li></ul>" + eol);
+        print.append("<i><b>Civic Documents</b></i>" + eol + listBegin);
+        for (CivicDoc doc : getPapers()){
+            print.append(doc.toGUIPrint());
+        }
+        print.append("</ul>" + eol);
+        print.append("<i><b>Biometric</b></i>" + eol + listBegin);
+        for (Biometric biodata: getBiometricList()){
+            print.append(((BiometricData)biodata).toGUIPrint());
+        }
+        print.append("</ul>" + eol);
+        return print.toString();
+    }
 
 }

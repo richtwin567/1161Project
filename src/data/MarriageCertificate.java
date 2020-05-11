@@ -86,4 +86,14 @@ public class MarriageCertificate implements CivicDoc{
         return String.format("Ref No.:\t%s\nGroom ID:\t%s\nBride ID:\t%s\nDate:\t\t%s", getRefNo(),getGroomId(),getBrideId(),getDate());
     }
 
+    /**
+     * Formats the marriage certificate information for the GUI
+     * @return the marriage certificate information
+     */
+    @Override
+    public String toGUIPrint() {
+        return String.format("<b>%s</b><br/><i>Ref No.:</i>&#9&#9 %s<br/><i>Groom's ID:</i>&#9 %s<br/><i>Bride's ID:</i>&#9&#9 %s<br/><i>Date:</i>&#9&#9 %s<br/>", "Marriage Certificate", getRefNo(), getGroomId(),getBrideId(), getDate());
+    
+    }
+
 }

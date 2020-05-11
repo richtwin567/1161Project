@@ -288,6 +288,22 @@ public class SNIDApp {
     }
 
     /**
+     * Searches the database by citizen ID and return's the citizen's information formatted fo the GUI
+     * 
+     * @param id the ID of the citizen to search for
+     * @return the citizen's information or and empty {@code String}
+     */
+    public String searchGUI(String id) {
+        try {
+            Citizen citizen = searchDb(id);
+            return citizen.toGUIPrint();
+        } catch (Exception e) {
+            // No matching citizen found
+            throw new CompletionException("something went wrong", e);
+        }
+    }
+
+    /**
      * Searches the database by first and last name. A list of the information for
      * all matches is compiled. Information is in the format 434552,Lisa,Anne,Rodney
      * where 434552 is the ID number, Lisa is the first name, Anne is the middle
@@ -309,6 +325,32 @@ public class SNIDApp {
                             citizen.getGender() == 'M' ? "Male" : "Female", citizen.getNameAttr().getFirstName(),
                             citizen.getNameAttr().getMiddleName(), citizen.getNameAttr().getLastName());
                     matches.add(print);
+                }
+            }
+        } catch (Exception e) {
+            throw new CompletionException("Search could not be completed", e);
+        }
+        matches.trimToSize();
+        return matches.toArray(new String[matches.size()]);
+    }
+
+     /**
+     * Searches the database by first and last name. A list of the information for
+     * all matches is compiled for the GUI
+     * 
+     * @param firstName the first name of the citizen(s) to be found.
+     * @param lastName  the last name of the citizen(s) to be found
+     * @return a list of the information for all matchesor an empty list
+     * @throws CompletionException if something goes wrong during the search or
+     *                             compiling the list and it could not be completed
+     */
+    public String[] searchGUI(String firstName, String lastName) {
+        ArrayList<String> matches = new ArrayList<>();
+        try {
+            for (Citizen citizen : records) {
+                if (citizen.getNameAttr().getFirstName().equals(firstName)
+                        && citizen.getNameAttr().getLastName().equals(lastName)) {
+                   matches.add(citizen.toGUIPrint());
                 }
             }
         } catch (Exception e) {
@@ -341,6 +383,33 @@ public class SNIDApp {
                         return String.format("%s,%s,%s,%s,%s", citizen.getId(),
                                 citizen.getGender() == 'M' ? "Male" : "Female", citizen.getNameAttr().getFirstName(),
                                 citizen.getNameAttr().getMiddleName(), citizen.getNameAttr().getLastName());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new CompletionException("Something went wrong while searching the database", e);
+        }
+        return "";
+    }
+
+    /**
+     * Searches for a citizen by their biometric data and returns their information for the GUI.
+     * 
+     * @param tag   the type of biometric data being used to search
+     * @param value the biometric value
+     * @throws CompletionException if something goes wrong while trying to search
+     *                             the database
+     * @return the citzen's information if found or an empty {@code String} if not
+     *         found
+     */
+    public String searchGUI(char tag, String value) {
+        try {
+            BiometricData key = new BiometricData(tag, value);
+            for (Citizen citizen : records) {
+                Biometric biodata = citizen.getBiometric(Character.toString(tag));
+                if (biodata != null) {
+                    if (((BiometricData) biodata).match(key) == 0) {
+                        return citizen.toGUIPrint();
                     }
                 }
             }
@@ -579,7 +648,7 @@ public class SNIDApp {
             for (Citizen citizen : app.getRecords()) {
                 System.out.println(citizen.printPapers());
                 for (Biometric bio : citizen.getBiometricList()) {
-                    System.out.println(((BiometricData) bio).toPrint());
+                    System.out.println(((BiometricData) bio).toTUIPrint());
                 }
             }
             app.registerBirth('F', 1970, "Lucy", "Annie", "George");
