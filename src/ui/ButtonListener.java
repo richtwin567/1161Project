@@ -29,7 +29,7 @@ public abstract class ButtonListener implements MouseListener {
 
     }
 
-    // changes background and foreground colour of buttons on hover
+    /**changes background and foreground colour of buttons on hover*/
     @Override
     public void mouseEntered(MouseEvent e) {
         JButton btn = (JButton) e.getSource();
@@ -39,7 +39,7 @@ public abstract class ButtonListener implements MouseListener {
         btn.setForeground(Colours.onAccent);
     }
 
-    // restores original colours on exit
+    /**restores original colours on exit*/
     @Override
     public void mouseExited(MouseEvent e) {
         JButton btn = (JButton) e.getSource();

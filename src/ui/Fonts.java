@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.Font;
 
+/**Fonts to be used in the project */
 public class Fonts {
     protected static final Font body = new Font("Calibri", Font.PLAIN, 12);
     protected static final Font heading = new Font("Calibri", Font.BOLD, 14);

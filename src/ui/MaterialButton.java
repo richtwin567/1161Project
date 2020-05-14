@@ -7,12 +7,19 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 
+/**
+ * Material style JButton
+ * @see JButton
+ */
 public class MaterialButton extends JButton{
 
 	private static final long serialVersionUID = 5262532734302802208L;
 
     /**
-     * 
+     * Creates a flat button with the specified label and colours
+     * @param label the button text
+     * @param fg the text colour
+     * @param bg the background colour
      */
     public MaterialButton(String label, Color fg, Color bg){
         super(label);

@@ -18,12 +18,21 @@ public class MessageDialog extends JDialog {
     private JButton ok;
     private JPanel base;
 
+    /**
+     * Creates a message dialog with the specified message
+     * @param parent the parent window
+     * @param message the message for the user
+     */
     public MessageDialog(JFrame parent, String message) {
         super(parent, true);
         setLocationRelativeTo(parent);
         init(message);
     }
 
+    /**
+     * Sets up components
+     * @param message the message for the user
+     */
     public void init(String message) {
         setBackground(Colours.bg);
         setForeground(Colours.onBg);
@@ -50,6 +59,7 @@ public class MessageDialog extends JDialog {
 
     }
 
+    /**CLose the message when the ok button is pressed */
     private class OkButtonListener extends ButtonListener {
 
         @Override

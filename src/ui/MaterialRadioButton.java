@@ -13,18 +13,23 @@ import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-//import java.awt.Color;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
-
 import java.awt.Dimension;
 import javax.swing.plaf.basic.BasicHTML;
 import javax.swing.plaf.basic.BasicRadioButtonUI;
 
+/**
+ * A material style radio button
+ */
 public class MaterialRadioButton extends JRadioButton {
 
     private static final long serialVersionUID = -6020540338356599302L;
 
+    /**
+     * Creates a new instance of the material radio button
+     * @param label the tex to placed beside the button
+     */
     public MaterialRadioButton(String label) {
         super(label);
         setBorder(null);
@@ -35,6 +40,9 @@ public class MaterialRadioButton extends JRadioButton {
         setUI(new MaterialRadioButtonUI());
     }
 
+    /**
+     * The ui for the button. Implements the material style appearance
+     */
     private static class MaterialRadioButtonUI extends BasicRadioButtonUI {
 
         private static Dimension size = new Dimension();
@@ -42,6 +50,12 @@ public class MaterialRadioButton extends JRadioButton {
         private static Rectangle iconRect = new Rectangle();
         private static Rectangle textRect = new Rectangle();
 
+        /**
+         * Grafted from the {@link BasicRadioButtonUI#paint(Graphics, JComponent)} method to override the appearance of the 
+         * radio buttons
+         * @param g the graphics. Needed so that the button can render correctly
+         * @param c this radio button
+         */
         @Override
         public synchronized void paint(Graphics g, JComponent c) {
             AbstractButton b = (AbstractButton) c;
@@ -51,6 +65,7 @@ public class MaterialRadioButton extends JRadioButton {
             g.setFont(f);
             Canvas canvas = new Canvas();
             FontMetrics fm = canvas.getFontMetrics(f);
+
             Insets i = c.getInsets();
             size = b.getSize(size);
             viewRect.x = i.left;
@@ -62,6 +77,7 @@ public class MaterialRadioButton extends JRadioButton {
 
             Icon altIcon = new ImageIcon("src/ui/icons/enabled_unselected.png", "enabled unselected");
 
+            //place the labels beside the button icons
             String text = SwingUtilities.layoutCompoundLabel(c, fm, b.getText(),
                     altIcon != null ? altIcon : getDefaultIcon(), b.getVerticalAlignment(), b.getHorizontalAlignment(),
                     b.getVerticalTextPosition(), b.getHorizontalTextPosition(), viewRect, iconRect, textRect,

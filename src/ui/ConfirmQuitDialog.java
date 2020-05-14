@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 
+/**A prompt to ensure that user really wants to quit the program */
 public class ConfirmQuitDialog extends JDialog {
 
     private JDialog thisDialog = this;
@@ -18,7 +19,6 @@ public class ConfirmQuitDialog extends JDialog {
     private JButton no;
     private JLabel message;
     private GridLayout grid;
-    
 
     private static final long serialVersionUID = 6300291949093588173L;
 
@@ -28,6 +28,9 @@ public class ConfirmQuitDialog extends JDialog {
         init();
     }
 
+    /**
+     * Set up dialog components
+     */
     public void init() {
         
         grid = new GridLayout();
@@ -71,6 +74,9 @@ public class ConfirmQuitDialog extends JDialog {
         pack();
     }
 
+    /**Exits the program when yes is clicked
+     * 
+     */
     private class YesButtonListener extends ButtonListener {
 
         @Override
@@ -81,6 +87,9 @@ public class ConfirmQuitDialog extends JDialog {
     }
 
 
+    /**
+     * Returns to the program when no is clicked
+     */
     private class NoButtonListener extends ButtonListener {
 
         @Override
