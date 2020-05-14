@@ -13,7 +13,7 @@ public class Colours {
 	protected static final Color onBg = new Color(33, 33, 33);
 	protected static final Color accent = new Color(255, 152, 0);
 	protected static final Color onAccent = new Color(255, 255, 255);
-	protected static final Color error = new Color(211, 27, 47);
-	protected static final Color onError = new Color(255, 255, 255);
+	protected static final Color critical = new Color(211, 27, 47);
+	protected static final Color onCritical = new Color(255, 255, 255);
     
 }

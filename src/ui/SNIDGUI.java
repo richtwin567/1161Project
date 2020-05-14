@@ -119,14 +119,14 @@ public class SNIDGUI extends JFrame {
         buttonPanel.add(searchGoButton);
 
         // clear button set up
-        clearButton = new MaterialButton("Clear",Colours.onError,Colours.error);
+        clearButton = new MaterialButton("Clear",Colours.onCritical,Colours.critical);
         // make search value field clear when this button is pressed
         clearButton.addMouseListener(new ClearButtonListener());
         // add clear button to panel
         buttonPanel.add(clearButton);
 
         // quit button set up
-        quitButton = new MaterialButton("Quit",Colours.onError,Colours.error);
+        quitButton = new MaterialButton("Quit",Colours.onCritical,Colours.critical);
         // exit program when clicked
         quitButton.addMouseListener(new QuitButtonListener());
         // add quit button to panel
@@ -190,6 +190,7 @@ public class SNIDGUI extends JFrame {
         idList.setSelectionBackground(Colours.accent);
         idList.setSelectionForeground(Colours.onAccent);
         idList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        //remove border around cell on selection
         idList.setCellRenderer(new DefaultListCellRenderer() {
 
             private static final long serialVersionUID = -7668408883782835744L;
@@ -204,9 +205,7 @@ public class SNIDGUI extends JFrame {
             }
         });
         idList.addListSelectionListener(new IdListSelectionListener());
-        idListScrollPane = new JScrollPane(idList);
-        idListScrollPane.setBackground(Colours.bg);
-        idListScrollPane.setBorder(new LineBorder(Colours.onBg, 1));
+        idListScrollPane = new MaterialScrollPane(idList);
         configureGridBagConstraints(basePanelConstraints, 8, 1, 1, 7);
         basePanel.add(idListScrollPane, basePanelConstraints);
 
@@ -217,10 +216,7 @@ public class SNIDGUI extends JFrame {
         citizenDetailArea.setBackground(Colours.bg);
         citizenDetailArea.setForeground(Colours.onBg);
         citizenDetailArea.setBorder(new LineBorder(Colours.onBg, 0));
-        citizenDetailAreaScrollPane = new JScrollPane(citizenDetailArea);
-        citizenDetailAreaScrollPane.setBackground(Colours.bg);
-        citizenDetailAreaScrollPane.setBorder(new LineBorder(Colours.onBg, 1));
-        citizenDetailAreaScrollPane.setForeground(Colours.onBg);
+        citizenDetailAreaScrollPane = new MaterialScrollPane(citizenDetailArea);
         configureGridBagConstraints(basePanelConstraints, 9, 3, 3, 6);
         basePanel.add(citizenDetailAreaScrollPane, basePanelConstraints);
 
@@ -293,9 +289,8 @@ public class SNIDGUI extends JFrame {
                     results.add(result);
                     idListModel.addElement(result.getId());
                 } else if (searchByNameRadioButton.isSelected()) {
-                    String fn = searchValueField.getText().split(" ")[0];
-                    String ln = searchValueField.getText().split(" ")[1];
-                    String[] t = appController.searchGUI(fn, ln);
+                    String ln = searchValueField.getText();
+                    String[] t = appController.searchGUI(null, ln);
                     String[][] temp = new String[t.length][5];
                     for (int x = 0; x < t.length; x++) {
                         temp[x] = t[x].split(",");
@@ -330,6 +325,7 @@ public class SNIDGUI extends JFrame {
             try {
                 int index = idList.getSelectedIndex();
                 citizenDetailArea.setText(results.get(index).getInfo());
+                citizenDetailArea.setCaretPosition(0);
             } catch (Exception ex) {
             }
         }

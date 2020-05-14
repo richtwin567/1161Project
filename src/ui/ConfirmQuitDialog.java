@@ -34,7 +34,6 @@ public class ConfirmQuitDialog extends JDialog {
         setLayout(grid);
         setBackground(Colours.bg);
         setForeground(Colours.onBg);
-        
         base = new JPanel();
         base.setBackground(Colours.bg);
         base.setForeground(Colours.onBg);
@@ -56,7 +55,7 @@ public class ConfirmQuitDialog extends JDialog {
         grid.setVgap(20);
         buttons.setLayout(grid);
 
-        yes = new MaterialButton("Yes",Colours.onError,Colours.error);
+        yes = new MaterialButton("Yes",Colours.onCritical,Colours.critical);
         yes.addMouseListener(new YesButtonListener());
 
         buttons.add(yes);

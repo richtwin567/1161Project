@@ -348,8 +348,7 @@ public class SNIDApp {
         ArrayList<String> matches = new ArrayList<>();
         try {
             for (Citizen citizen : records) {
-                if (citizen.getNameAttr().getFirstName().equals(firstName)
-                        && citizen.getNameAttr().getLastName().equals(lastName)) {
+                if (citizen.getNameAttr().getLastName().equals(lastName)) {
                    matches.add(citizen.toGUIPrint());
                 }
             }
