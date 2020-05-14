@@ -6,9 +6,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
-
-import javax.swing.text.*;
+import java.awt.Canvas;
+import javax.swing.text.View;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonModel;
 import javax.swing.Icon;
@@ -50,7 +49,8 @@ public class MaterialRadioButton extends JRadioButton {
 
             Font f = c.getFont();
             g.setFont(f);
-            FontMetrics fm = Toolkit.getDefaultToolkit().getFontMetrics(f);
+            Canvas canvas = new Canvas();
+            FontMetrics fm = canvas.getFontMetrics(f);
             Insets i = c.getInsets();
             size = b.getSize(size);
             viewRect.x = i.left;
