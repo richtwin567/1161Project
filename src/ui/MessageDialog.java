@@ -6,8 +6,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import ui.SNIDGUI.ButtonListener;
-
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 
@@ -27,25 +25,22 @@ public class MessageDialog extends JDialog {
     }
 
     public void init(String message) {
-        setBackground(SNIDGUI.bg);
-        setForeground(SNIDGUI.onBg);
+        setBackground(Colours.bg);
+        setForeground(Colours.onBg);
         setLayout(new GridLayout());
 
         base = new JPanel(new GridLayout(2, 1));
         ((GridLayout) base.getLayout()).setVgap(20);
-        base.setBackground(SNIDGUI.bg);
-        base.setForeground(SNIDGUI.onBg);
+        base.setBackground(Colours.bg);
+        base.setForeground(Colours.onBg);
 
         messageText = new JLabel(message);
-        messageText.setForeground(SNIDGUI.onBg);
-        messageText.setBackground(SNIDGUI.bg);
+        messageText.setForeground(Colours.onBg);
+        messageText.setBackground(Colours.bg);
 
         base.add(messageText);
 
-        ok = new JButton("OK");
-        SNIDGUI.setUpMaterialButton(ok);
-        ok.setBackground(SNIDGUI.primary);
-        ok.setForeground(SNIDGUI.onPrimary);
+        ok = new MaterialButton("OK",Colours.onPrimary,Colours.primary);
         ok.addMouseListener(new OkButtonListener());
         
         base.add(ok);

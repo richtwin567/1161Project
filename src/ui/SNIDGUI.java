@@ -1,9 +1,6 @@
 package ui;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Dimension;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -25,10 +22,8 @@ import javax.swing.event.ListSelectionListener;
 import app.SNIDApp;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
 import java.io.FileNotFoundException;
@@ -72,18 +67,6 @@ public class SNIDGUI extends JFrame {
 
     private final JFrame thisFrame = this;
 
-    // Material Design Colours
-    protected static final Color darkPrimary = new Color(25, 118, 210);
-    protected static final Color onDarkPrimary = new Color(255, 255, 255);
-    protected static final Color primary = new Color(33, 150, 243);
-    protected static final Color onPrimary = new Color(33, 33, 33);
-    protected static final Color bg = new Color(255, 255, 255);
-    protected static final Color onBg = new Color(33, 33, 33);
-    protected static final Color accent = new Color(255, 152, 0);
-    protected static final Color onAccent = new Color(255, 255, 255);
-    protected static final Color error = new Color(211, 27, 47);
-    protected static final Color onError = new Color(255, 255, 255);
-
     public SNIDGUI(SNIDApp appController) {
         this.appController = appController;
         results = new ArrayList<>();
@@ -92,18 +75,15 @@ public class SNIDGUI extends JFrame {
 
     private void init() {
         // set up JFrame
-        setBackground(bg);
-        setForeground(onBg);
+        setBackground(Colours.bg);
+        setForeground(Colours.onBg);
         setResizable(true);
         setLayout(new GridLayout(1, 1));
         setTitle("SYSTEM FOR NATIONAL IDENTIFICATION(SNID)");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // set up the base panel
-        basePanel = new JPanel();
-        basePanel.setBorder(null);
-        basePanel.setBackground(bg);
-        basePanel.setForeground(onBg);
+        basePanel = new MaterialPanel();
         basePanelLayout = new GridBagLayout();
         basePanelLayout.rowHeights = new int[] { 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30 };
         basePanelLayout.columnWidths = new int[] { 20, 50, 20, 50, 20, 50, 20, 50, 20, 50, 20 };
@@ -119,46 +99,34 @@ public class SNIDGUI extends JFrame {
         // setup window title label
         windowTitle = new JLabel("SYSTEM FOR NATIONAL IDENTIFICATION(SNID)");
         windowTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        windowTitle.setBackground(darkPrimary);
-        windowTitle.setForeground(onDarkPrimary);
+        windowTitle.setBackground(Colours.darkPrimary);
+        windowTitle.setForeground(Colours.onDarkPrimary);
         windowTitle.setOpaque(true);
         configureGridBagConstraints(basePanelConstraints, 1, 12, 0, 0);
         basePanel.add(windowTitle, basePanelConstraints);
 
         // set up panel for buttons
-        buttonPanel = new JPanel();
-        buttonPanel.setBackground(bg);
-        buttonPanel.setBorder(null);
-        buttonPanel.setForeground(onBg);
+        buttonPanel = new MaterialPanel();
         buttonPanelLayout = new GridLayout(3, 1);
         buttonPanelLayout.setVgap(10);
         buttonPanel.setLayout(buttonPanelLayout);
 
         // search button set up
-        searchGoButton = new JButton("Search");
-        searchGoButton.setBackground(primary);
-        searchGoButton.setForeground(onPrimary);
-        setUpMaterialButton(searchGoButton);
+        searchGoButton = new MaterialButton("Search",Colours.onPrimary,Colours.primary);
         // carry out a search in the database using the search value provided
         searchGoButton.addMouseListener(new SearchButtonListener());
         // add search button to panel grid
         buttonPanel.add(searchGoButton);
 
         // clear button set up
-        clearButton = new JButton("Clear");
-        clearButton.setBackground(error);
-        clearButton.setForeground(onError);
-        setUpMaterialButton(clearButton);
+        clearButton = new MaterialButton("Clear",Colours.onError,Colours.error);
         // make search value field clear when this button is pressed
         clearButton.addMouseListener(new ClearButtonListener());
         // add clear button to panel
         buttonPanel.add(clearButton);
 
         // quit button set up
-        quitButton = new JButton("Quit");
-        quitButton.setBackground(error);
-        quitButton.setForeground(onError);
-        setUpMaterialButton(quitButton);
+        quitButton = new MaterialButton("Quit",Colours.onError,Colours.error);
         // exit program when clicked
         quitButton.addMouseListener(new QuitButtonListener());
         // add quit button to panel
@@ -169,10 +137,7 @@ public class SNIDGUI extends JFrame {
         basePanel.add(buttonPanel, basePanelConstraints);
 
         // set up radio button panel
-        radioButtonPanel = new JPanel();
-        radioButtonPanel.setBackground(bg);
-        radioButtonPanel.setForeground(onBg);
-        radioButtonPanel.setBorder(null);
+        radioButtonPanel = new MaterialPanel();
         radioButtonPanelLayout = new GridLayout(1, 3);
         radioButtonPanelLayout.setHgap(20);
         radioButtonPanel.setLayout(radioButtonPanelLayout);
@@ -181,20 +146,17 @@ public class SNIDGUI extends JFrame {
         radioButtonGroup = new ButtonGroup();
 
         // set up the radio buttons
-        searchByIdRadioButton = new JRadioButton("Search by Id");
-        setUpRadioButton(searchByIdRadioButton);
+        searchByIdRadioButton = new MaterialRadioButton("Search by Id");
         // add button to group
         radioButtonGroup.add(searchByIdRadioButton);
         // add button to panel
         radioButtonPanel.add(searchByIdRadioButton);
 
-        searchByNameRadioButton = new JRadioButton("Search by Name");
-        setUpRadioButton(searchByNameRadioButton);
+        searchByNameRadioButton = new MaterialRadioButton("Search by Name");
         radioButtonGroup.add(searchByNameRadioButton);
         radioButtonPanel.add(searchByNameRadioButton);
 
-        searchByBiometricRadioButton = new JRadioButton("Biometric Search");
-        setUpRadioButton(searchByBiometricRadioButton);
+        searchByBiometricRadioButton = new MaterialRadioButton("Biometric Search");
         radioButtonGroup.add(searchByBiometricRadioButton);
         radioButtonPanel.add(searchByBiometricRadioButton);
 
@@ -204,29 +166,29 @@ public class SNIDGUI extends JFrame {
 
         // set up search text field
         searchValueField = new JTextField("User enters search string here");
-        searchValueField.setBackground(bg);
-        searchValueField.setBorder(new LineBorder(onBg, 1));
-        searchValueField.setForeground(onBg);
+        searchValueField.setBackground(Colours.bg);
+        searchValueField.setBorder(new LineBorder(Colours.onBg, 1));
+        searchValueField.setForeground(Colours.onBg);
         searchValueField.addFocusListener(new SearchValueFieldFocusListener());
         configureGridBagConstraints(basePanelConstraints, 1, 5, 1, 4);
         basePanel.add(searchValueField, basePanelConstraints);
 
         idListLabel = new JLabel("List of Found IDs");
         idListLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        idListLabel.setForeground(onBg);
-        idListLabel.setBackground(bg);
-        idListLabel.setBorder(new LineBorder(onBg, 1));
+        idListLabel.setForeground(Colours.onBg);
+        idListLabel.setBackground(Colours.bg);
+        idListLabel.setBorder(new LineBorder(Colours.onBg, 1));
         configureGridBagConstraints(basePanelConstraints, 1, 1, 1, 6);
         basePanel.add(idListLabel, basePanelConstraints);
 
         // set up located IDs list with scroll pane
         idListModel = new DefaultListModel<>();
         idList = new JList<>(idListModel);
-        idList.setBackground(bg);
-        idList.setBorder(new LineBorder(bg, 0));
-        idList.setForeground(onBg);
-        idList.setSelectionBackground(accent);
-        idList.setSelectionForeground(onAccent);
+        idList.setBackground(Colours.bg);
+        idList.setBorder(new LineBorder(Colours.bg, 0));
+        idList.setForeground(Colours.onBg);
+        idList.setSelectionBackground(Colours.accent);
+        idList.setSelectionForeground(Colours.onAccent);
         idList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
         idList.setCellRenderer(new DefaultListCellRenderer() {
 
@@ -243,8 +205,8 @@ public class SNIDGUI extends JFrame {
         });
         idList.addListSelectionListener(new IdListSelectionListener());
         idListScrollPane = new JScrollPane(idList);
-        idListScrollPane.setBackground(bg);
-        idListScrollPane.setBorder(new LineBorder(onBg, 1));
+        idListScrollPane.setBackground(Colours.bg);
+        idListScrollPane.setBorder(new LineBorder(Colours.onBg, 1));
         configureGridBagConstraints(basePanelConstraints, 8, 1, 1, 7);
         basePanel.add(idListScrollPane, basePanelConstraints);
 
@@ -252,13 +214,13 @@ public class SNIDGUI extends JFrame {
         citizenDetailArea = new JEditorPane("text/html",
                 "Details of a selected record are displayed here.<br/> Select a record from the list to the left after doing a search");
         citizenDetailArea.setEditable(false);
-        citizenDetailArea.setBackground(bg);
-        citizenDetailArea.setForeground(onBg);
-        citizenDetailArea.setBorder(new LineBorder(onBg, 0));
+        citizenDetailArea.setBackground(Colours.bg);
+        citizenDetailArea.setForeground(Colours.onBg);
+        citizenDetailArea.setBorder(new LineBorder(Colours.onBg, 0));
         citizenDetailAreaScrollPane = new JScrollPane(citizenDetailArea);
-        citizenDetailAreaScrollPane.setBackground(bg);
-        citizenDetailAreaScrollPane.setBorder(new LineBorder(onBg, 1));
-        citizenDetailAreaScrollPane.setForeground(onBg);
+        citizenDetailAreaScrollPane.setBackground(Colours.bg);
+        citizenDetailAreaScrollPane.setBorder(new LineBorder(Colours.onBg, 1));
+        citizenDetailAreaScrollPane.setForeground(Colours.onBg);
         configureGridBagConstraints(basePanelConstraints, 9, 3, 3, 6);
         basePanel.add(citizenDetailAreaScrollPane, basePanelConstraints);
 
@@ -267,6 +229,9 @@ public class SNIDGUI extends JFrame {
 
     }
 
+    /**
+     * Results class to help manage the search results
+     */
     private class SearchResult {
         String id;
         String info;
@@ -287,48 +252,7 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * 
-     */
-    protected static abstract class ButtonListener implements MouseListener {
-
-        private Color oB;
-        private Color oF;
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            // does nothing
-
-        }
-
-        @Override
-        public abstract void mousePressed(MouseEvent e);
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            // does nothing
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            JButton btn = (JButton) e.getSource();
-            oB = btn.getBackground();
-            oF = btn.getForeground();
-            btn.setBackground(accent);
-            btn.setForeground(onAccent);
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            JButton btn = (JButton) e.getSource();
-            btn.setBackground(oB);
-            btn.setForeground(oF);
-        }
-
-    }
-
-    /**
-     * 
+     * Clearsthe search field and gives it focus
      */
     private class ClearButtonListener extends ButtonListener {
 
@@ -341,7 +265,7 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * 
+     * Searches for a citizen based on the criteria specified by the user. The citizen's data is added to the results list if found.
      */
     private class SearchButtonListener extends ButtonListener {
 
@@ -395,13 +319,16 @@ public class SNIDGUI extends JFrame {
 
     }
 
+    /**
+     * Allows for the corresponding citizen information to be displayed in 
+     * the editor pane to the right when an ID in the list is selected.
+     */
     private class IdListSelectionListener implements ListSelectionListener {
 
         @Override
         public void valueChanged(ListSelectionEvent e) {
             try {
-                JList<String> list = (JList<String>) e.getSource();
-                int index = list.getSelectedIndex();
+                int index = idList.getSelectedIndex();
                 citizenDetailArea.setText(results.get(index).getInfo());
             } catch (Exception ex) {
             }
@@ -416,7 +343,7 @@ public class SNIDGUI extends JFrame {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            ConfirmQuit exit = new ConfirmQuit(thisFrame);
+            ConfirmQuitDialog exit = new ConfirmQuitDialog(thisFrame);
             exit.setVisible(true);
         }
 
@@ -430,46 +357,16 @@ public class SNIDGUI extends JFrame {
         @Override
         public void focusGained(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
-            field.setBorder(new LineBorder(accent, 1));
+            field.setBorder(new LineBorder(Colours.accent, 1));
             // field.setText("");
         }
 
         @Override
         public void focusLost(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
-            field.setBorder(new LineBorder(onBg, 1));
+            field.setBorder(new LineBorder(Colours.onBg, 1));
         }
 
-    }
-
-    /**
-     * Set buttons to similar styling
-     * 
-     * @param button The button to be styled
-     */
-    protected static void setUpMaterialButton(JButton button) {
-        button.setBorder(null);
-        button.setBorderPainted(false);
-        button.setContentAreaFilled(false);
-        button.setOpaque(true);
-        button.setFocusPainted(false);
-        button.setHorizontalAlignment(SwingConstants.CENTER);
-        button.setMaximumSize(new Dimension(120, 500));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setMargin(new Insets(60, 30, 60, 30));
-    }
-
-    /**
-     * Sets common attribute for the radio buttons
-     * 
-     * @param rButton the radio button to be set up
-     */
-    private void setUpRadioButton(JRadioButton rButton) {
-        rButton.setBorder(null);
-        rButton.setBackground(bg);
-        rButton.setFocusPainted(false);
-        rButton.setForeground(onBg);
-        rButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     /**
