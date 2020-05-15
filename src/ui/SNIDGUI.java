@@ -215,7 +215,7 @@ public class SNIDGUI extends JFrame {
 
         // setup citizen detail pane
         citizenDetailArea = new JEditorPane("text/html",
-                "Details of a selected record are displayed here.<br/> Select a record from the list to the left after doing a search");
+                "<html><head><style> body {font-family: Dialog;font-size: 10px}</style></head><body>Details of a selected record are displayed here.<br/> Select a record from the list to the left after doing a search</body></html>");
         citizenDetailArea.setEditable(false);
         citizenDetailArea.setBackground(Colours.bg);
         citizenDetailArea.setForeground(Colours.onBg);

@@ -46,43 +46,39 @@ public class SNIDApp {
      * @throws NumberFormatException     indicates that the file data has been
      *                                   corrupted or is invalid for one or more
      *                                   records
-     * @throws IndexOutOfBoundsException indicates that the file data has been
-     *                                   corrupted or invalid for one or more
-     *                                   records
      */
     public SNIDApp(String fileName, char delimiter) throws FileNotFoundException, IOException, Exception {
         records = new ArrayList<>();
         try {
+
             File pas = new File(fileName);
             pas.createNewFile();
             data = new SNIDDb(fileName, delimiter);
             String[] tokens;
-
             while (data.hasNext()) {
                 // get the next set of citizen data from the file
                 tokens = data.getNext();
-
-                // separate citizen data
-                String id = tokens[0];
-                char gender = tokens[1].charAt(0);
-                int yob = Integer.parseInt(tokens[2]);
-                String firstName = tokens[3];
-                String middleName = tokens[4];
-                String lastName = tokens[5];
-                char lifeStatus = tokens[6].charAt(0);
-                String motherId = tokens[7];
-                String fatherId = tokens[8];
-
-                Citizen mother = searchDb(motherId);
-                Citizen father = searchDb(fatherId);
-
-                Address address = new Address(tokens[11]);
-
-                // create basic citizen record
-                Citizen citizen = new Citizen(id, gender, yob, firstName, middleName, lastName, lifeStatus, mother,
-                        father, address);
-
                 try {
+                    // separate citizen data
+                    String id = tokens[0];
+                    char gender = tokens[1].charAt(0);
+                    int yob = Integer.parseInt(tokens[2]);
+                    String firstName = tokens[3];
+                    String middleName = tokens[4];
+                    String lastName = tokens[5];
+                    char lifeStatus = tokens[6].charAt(0);
+                    String motherId = tokens[7];
+                    String fatherId = tokens[8];
+
+                    Citizen mother = searchDb(motherId);
+                    Citizen father = searchDb(fatherId);
+
+                    Address address = new Address(tokens[11]);
+
+                    // create basic citizen record
+                    Citizen citizen = new Citizen(id, gender, yob, firstName, middleName, lastName, lifeStatus, mother,
+                            father, address);
+
                     // separate biometric data
                     String[] biometricData = tokens[9].split("&");
                     // add biometric data to record
@@ -91,11 +87,6 @@ public class SNIDApp {
                         citizen.addBiometric(biodata);
                     }
 
-                } catch (Exception e) {
-                    // no biometric data attached to this record. Continue processing
-                }
-
-                try {
                     // separate the Civic doc tokens according to how they are stored
                     String[] docs = tokens[10].split("@");
                     String[][] docParts = new String[docs.length][4];
@@ -111,18 +102,19 @@ public class SNIDApp {
                             citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
                         }
                     }
-                } catch (Exception e) {
-                    // no civic documents attached to this record. Continue processing
-                }
 
-                // add the citizen to the list of records
-                records.add(citizen);
+                    // add the citizen to the list of records
+                    records.add(citizen);
+                    System.out.println("added");
+                } catch (InvalidParameterException | NumberFormatException | IndexOutOfBoundsException e) {
+                    continue;
+                }
             }
             // precautionary sorting
             Collections.sort(records);
         } catch (FileNotFoundException f) {
             throw f;
-        } catch (NumberFormatException | InvalidParameterException | IndexOutOfBoundsException | IOException e) {
+        } catch ( PatternSyntaxException | NullPointerException |  IOException e) {
             throw e;
         } catch (Exception e) {
             throw e;
@@ -288,7 +280,8 @@ public class SNIDApp {
     }
 
     /**
-     * Searches the database by citizen ID and return's the citizen's information formatted fo the GUI
+     * Searches the database by citizen ID and return's the citizen's information
+     * formatted fo the GUI
      * 
      * @param id the ID of the citizen to search for
      * @return the citizen's information or and empty {@code String}
@@ -334,7 +327,7 @@ public class SNIDApp {
         return matches.toArray(new String[matches.size()]);
     }
 
-     /**
+    /**
      * Searches the database by first and last name. A list of the information for
      * all matches is compiled for the GUI
      * 
@@ -349,7 +342,7 @@ public class SNIDApp {
         try {
             for (Citizen citizen : records) {
                 if (citizen.getNameAttr().getLastName().equals(lastName)) {
-                   matches.add(citizen.toGUIPrint());
+                    matches.add(citizen.toGUIPrint());
                 }
             }
         } catch (Exception e) {
@@ -392,7 +385,8 @@ public class SNIDApp {
     }
 
     /**
-     * Searches for a citizen by their biometric data and returns their information for the GUI.
+     * Searches for a citizen by their biometric data and returns their information
+     * for the GUI.
      * 
      * @param tag   the type of biometric data being used to search
      * @param value the biometric value
@@ -643,7 +637,7 @@ public class SNIDApp {
 
     public static void main(String[] args) {
         try {
-            SNIDApp app = new SNIDApp("data.db", ',');
+            SNIDApp app = new SNIDApp("SNID0.txt", ',');
             for (Citizen citizen : app.getRecords()) {
                 System.out.println(citizen.printPapers());
                 for (Biometric bio : citizen.getBiometricList()) {
@@ -665,7 +659,7 @@ public class SNIDApp {
             System.out.println(app.search("00000003"));
             System.out.println("complete");
             System.out.println(app.search("00000004"));
-            app.shutdown();
+            // app.shutdown();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
