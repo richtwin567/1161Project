@@ -105,7 +105,6 @@ public class SNIDApp {
 
                     // add the citizen to the list of records
                     records.add(citizen);
-                    System.out.println("added");
                 } catch (InvalidParameterException | NumberFormatException | IndexOutOfBoundsException e) {
                     continue;
                 }
