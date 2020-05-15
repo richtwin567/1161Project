@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
@@ -17,12 +18,14 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import app.SNIDApp;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
@@ -168,6 +171,7 @@ public class SNIDGUI extends JFrame {
         searchValueField = new JTextField("User enters search string here");
         searchValueField.setBackground(Colours.bg);
         searchValueField.setBorder(new LineBorder(Colours.onBg, 1));
+        //searchValueField.setBorder(new MatteBorder(new Insets(0,0,2,0), Colours.onBg));
         searchValueField.setForeground(Colours.onBg);
         searchValueField.addFocusListener(new SearchValueFieldFocusListener());
         configureGridBagConstraints(basePanelConstraints, 1, 5, 1, 4);
@@ -353,13 +357,17 @@ public class SNIDGUI extends JFrame {
         @Override
         public void focusGained(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
-            field.setBorder(new LineBorder(Colours.accent, 1));
+            //field.setBorder(new LineBorder(Colours.accent, 1));
+            field.setBorder(new MatteBorder(new Insets(0,0,2,0),Colours.accent));
+            field.setBackground(new Color(255, 245, 168));
         }
 
         @Override
         public void focusLost(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
             field.setBorder(new LineBorder(Colours.onBg, 1));
+            field.setBackground(Colours.bg);
+            //field.setBorder(new MatteBorder(new Insets(0,0,2,0),Colours.onBg));
         }
 
     }
