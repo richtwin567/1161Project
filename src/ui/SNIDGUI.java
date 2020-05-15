@@ -86,7 +86,7 @@ public class SNIDGUI extends JFrame {
         basePanel = new MaterialPanel();
         basePanelLayout = new GridBagLayout();
         basePanelLayout.rowHeights = new int[] { 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30, 10, 30 };
-        basePanelLayout.columnWidths = new int[] { 20, 50, 20, 50, 20, 50, 20, 50, 20, 50, 20 };
+        basePanelLayout.columnWidths = new int[] { 35, 35, 35, 35, 35, 35, 35, 35, 35, 35 };
         basePanelLayout.columnWeights = new double[] { 1, 1, 1, 1, 1, 1, 1, 2, 1 };
         basePanelLayout.rowWeights = new double[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         basePanelConstraints = new GridBagConstraints();
@@ -102,7 +102,7 @@ public class SNIDGUI extends JFrame {
         windowTitle.setBackground(Colours.darkPrimary);
         windowTitle.setForeground(Colours.onDarkPrimary);
         windowTitle.setOpaque(true);
-        configureGridBagConstraints(basePanelConstraints, 1, 12, 0, 0);
+        configureGridBagConstraints(basePanelConstraints, 1, 11, 0, 0);
         basePanel.add(windowTitle, basePanelConstraints);
 
         // set up panel for buttons
@@ -133,7 +133,7 @@ public class SNIDGUI extends JFrame {
         buttonPanel.add(quitButton);
 
         // add button panel to base panel
-        configureGridBagConstraints(basePanelConstraints, 4, 3, 7, 4);
+        configureGridBagConstraints(basePanelConstraints, 5, 2, 7, 4);
         basePanel.add(buttonPanel, basePanelConstraints);
 
         // set up radio button panel
@@ -354,7 +354,6 @@ public class SNIDGUI extends JFrame {
         public void focusGained(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
             field.setBorder(new LineBorder(Colours.accent, 1));
-            // field.setText("");
         }
 
         @Override

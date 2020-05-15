@@ -177,6 +177,7 @@ public class Citizen
         String eol = "<br/>";
         String listBegin = "<ul style=\"list-style-type:none\">";
         print.append(getId() + ",");
+        print.append("<html><head><style> body {font-family: Dialog;font-size: 10px}</style></head><body>");
         print.append("<b>Sex:</b>" + tab + tab + (getGender()=='F'?"Female":"Male") + eol );
         print.append("<b>Year of Birth:</b>" + tab + getYOB() + eol);
         print.append("<b>First Name:</b>" + tab + getNameAttr().getFirstName() + eol);
@@ -194,6 +195,7 @@ public class Citizen
             print.append(((BiometricData)biodata).toGUIPrint());
         }
         print.append("</ul>" + eol);
+        print.append("</body></html>");
         return print.toString();
     }
 

@@ -92,7 +92,7 @@ public class MarriageCertificate implements CivicDoc{
      */
     @Override
     public String toGUIPrint() {
-        return String.format("<b>%s</b><br/><i>Ref No.:</i>&#9&#9 %s<br/><i>Groom's ID:</i>&#9 %s<br/><i>Bride's ID:</i>&#9&#9 %s<br/><i>Date:</i>&#9&#9 %s<br/>", "Marriage Certificate", getRefNo(), getGroomId(),getBrideId(), getDate());
+        return String.format("<b>%s</b><br/><i>Ref No.:</i>&#9&#9 %s<br/><i>Groom's ID:</i>&#9&#9 %s<br/><i>Bride's ID:</i>&#9&#9 %s<br/><i>Date:</i>&#9&#9 %s<br/>", "Marriage Certificate", getRefNo(), getGroomId(),getBrideId(), getDate());
     
     }
 
