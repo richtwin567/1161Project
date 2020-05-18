@@ -195,6 +195,19 @@ public class TextUI {
 
             } // end of option h
 
+            System.out.println("Welcome to the System for National Identification\n");
+            System.out.println("            Main Menu\n");
+            System.out.println("a. Register a Birth\n");
+            System.out.println("b. Update Parent Data\n");
+            System.out.println("c. Update a Citizen's Address\n");
+            System.out.println("d. Register a Death\n");
+            System.out.println("e. Register a Marriage\n");
+            System.out.println("f. Generate a Mailing Label\n");
+            System.out.println("g. Search\n");
+            System.out.println("h. Exit Application\n");
+
+            option = in.nextLine();
+
         } // end of while loop
 
         in.close();
@@ -202,6 +215,7 @@ public class TextUI {
     }
 
     public static void main(String[] args) {
-
+        TextUI ui = new TextUI();
+        
+    
     }
-}
