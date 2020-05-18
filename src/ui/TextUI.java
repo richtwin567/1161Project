@@ -202,6 +202,12 @@ public class TextUI {
     }
 
     public static void main(String[] args) {
-
+        TextUI ui = new TextUI();
+        try {
+            ui.go(new SNIDApp("data.db", ','));
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
