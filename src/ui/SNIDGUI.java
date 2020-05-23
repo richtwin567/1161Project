@@ -22,7 +22,6 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import app.SNIDApp;
-import snid.Citizen;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -310,6 +309,9 @@ public class SNIDGUI extends JFrame {
                 } else if (searchByNameRadioButton.isSelected()) {
                     String ln = searchValueField.getText();
                     String[] t = appController.searchGUI(null, ln);
+                    if (t.length==0){
+                        throw new IndexOutOfBoundsException("No persons with the last name found.");
+                    }
                     String[][] temp = new String[t.length][5];
                     for (int x = 0; x < t.length; x++) {
                         temp[x] = t[x].split(",");
@@ -409,11 +411,6 @@ public class SNIDGUI extends JFrame {
         SNIDApp appController;
         try {
             appController = new SNIDApp("data.db", ',');
-
-            for (Citizen citizen : appController.getRecords()) {
-                System.out.println(citizen.printPapers());
-            }
-            System.out.println("finished");
             SNIDGUI ui = new SNIDGUI(appController);
             ui.setVisible(true);
 

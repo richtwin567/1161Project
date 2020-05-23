@@ -15,6 +15,7 @@ import java.awt.Cursor;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import javax.swing.ImageIcon;
 
 /**
  * Material style JScrollPane. The JScrollbar is style as well
@@ -36,9 +37,9 @@ public class MaterialScrollPane extends JScrollPane {
         setBorder(new LineBorder(Colours.onBg, 1));
         setBackground(Colours.bg);
         setForeground(Colours.onBg);
-        getVerticalScrollBar().setUI(new MaterialScrollBarUI("🞁", "🞃"));
+        getVerticalScrollBar().setUI(new MaterialScrollBarUI("UP", "DOWN"));
         getVerticalScrollBar().setPreferredSize(new Dimension(10, this.getHeight()));
-        getHorizontalScrollBar().setUI(new MaterialScrollBarUI("🞀", "🞂"));
+        getHorizontalScrollBar().setUI(new MaterialScrollBarUI("LEFT", "RIGHT"));
         getHorizontalScrollBar().setPreferredSize(new Dimension(this.getWidth(), 10));
     }
 
@@ -99,7 +100,15 @@ public class MaterialScrollPane extends JScrollPane {
         /**Create the button for scrolling up or to the left */
         @Override
         protected JButton createDecreaseButton(int orientation) {
-            JButton btn = new JButton(arrow1);
+            JButton btn = new JButton();
+            switch(arrow1){
+                case "UP":
+                    btn.setIcon(new ImageIcon("src/ui/icons/up_arrow.png"));
+                    break;
+                case "LEFT":
+                    btn.setIcon(new ImageIcon("src/ui/icons/left_arrow.png"));
+                    break;
+            }
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             btn.setFont(new Font("Calibri", Font.PLAIN, 10));
             btn.setForeground(Colours.onBg);
@@ -116,7 +125,15 @@ public class MaterialScrollPane extends JScrollPane {
         /**Create button for scrolling down or to the right */
         @Override
         protected JButton createIncreaseButton(int orientation) {
-            JButton btn = new JButton(arrow2);
+            JButton btn = new JButton();
+            switch(arrow2){
+                case "DOWN":
+                    btn.setIcon(new ImageIcon("src/ui/icons/down_arrow.png"));
+                    break;
+                case "RIGHT":
+                    btn.setIcon(new ImageIcon("src/ui/icons/right_arrow.png"));
+                    break;
+            }
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             btn.setFont(new Font("Calibri", Font.PLAIN, 10));
             btn.setForeground(Colours.onBg);
