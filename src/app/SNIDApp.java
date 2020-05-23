@@ -69,50 +69,38 @@ public class SNIDApp {
                     char lifeStatus = tokens[6].charAt(0);
                     String motherId = tokens[7];
                     String fatherId = tokens[8];
-                    Citizen mother = null;
-                    Citizen father = null;
-                    try {
-                        mother = searchDb(motherId);
-                        father = searchDb(fatherId);
-                    } catch (Exception e) {
 
-                    }
+                    Citizen mother = searchDb(motherId);
+                    Citizen father = searchDb(fatherId);
+
                     Address address = new Address(tokens[11]);
 
                     // create basic citizen record
                     Citizen citizen = new Citizen(id, gender, yob, firstName, middleName, lastName, lifeStatus, mother,
                             father, address);
 
-                    try {
-                        // separate biometric data
-                        String[] biometricData = tokens[9].split("&");
-                        // add biometric data to record
-                        for (String data : biometricData) {
-                            BiometricData biodata = new BiometricData(data.charAt(0), data.substring(1));
-                            citizen.addBiometric(biodata);
-                        }
-                    } catch (Exception e) {
-                        //no biometric data exists
+                    // separate biometric data
+                    String[] biometricData = tokens[9].split("&");
+                    // add biometric data to record
+                    for (String data : biometricData) {
+                        BiometricData biodata = new BiometricData(data.charAt(0), data.substring(1));
+                        citizen.addBiometric(biodata);
                     }
 
-                    try {
-                        // separate the Civic doc tokens according to how they are stored
-                        String[] docs = tokens[10].split("@");
-                        String[][] docParts = new String[docs.length][4];
-                        for (int x = 0; x < docs.length; x++) {
-                            String[] parts = docs[x].split("\\|");
-                            docParts[x] = parts;
+                    // separate the Civic doc tokens according to how they are stored
+                    String[] docs = tokens[10].split("@");
+                    String[][] docParts = new String[docs.length][4];
+                    for (int x = 0; x < docs.length; x++) {
+                        String[] parts = docs[x].split("\\|");
+                        docParts[x] = parts;
+                    }
+                    // add all CivicDoc to record
+                    for (String[] doc : docParts) {
+                        if (doc[0].equals("M")) {
+                            citizen.addPaper(new MarriageCertificate(doc[1], doc[2], doc[3]));
+                        } else {
+                            citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
                         }
-                        // add all CivicDoc to record
-                        for (String[] doc : docParts) {
-                            if (doc[0].equals("M")) {
-                                citizen.addPaper(new MarriageCertificate(doc[1], doc[2], doc[3]));
-                            } else {
-                                citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
-                            }
-                        }
-                    } catch (Exception e) {
-                        //no civic docs
                     }
 
                     // add the citizen to the list of records
@@ -125,7 +113,7 @@ public class SNIDApp {
             Collections.sort(records);
         } catch (FileNotFoundException f) {
             throw f;
-        } catch (PatternSyntaxException | NullPointerException | IOException e) {
+        } catch ( PatternSyntaxException | NullPointerException |  IOException e) {
             throw e;
         } catch (Exception e) {
             throw e;
@@ -449,36 +437,36 @@ public class SNIDApp {
         }
     }
 
-    /**
-     * <p>
-     * This method follows the algorithm of binary search but takes in only the
-     * search id key to find the object
-     * </p>
-     * 
-     * @param key - ID to be search for
-     * @return {@code positive integer} representing the index location of the id is
-     *         found and {@code negative integer} if the index location cannot be
-     *         found or the id does not exist
-     */
-    private int binarySearch(String key) {
-        int low = 0;
-        int high = records.size() - 1;
+    // /**
+    //  * <p>
+    //  * This method follows the algorithm of binary search but takes in only the
+    //  * search id key to find the object
+    //  * </p>
+    //  * 
+    //  * @param key - ID to be search for
+    //  * @return {@code positive integer} representing the index location of the id is
+    //  *         found and {@code negative integer} if the index location cannot be
+    //  *         found or the id does not exist
+    //  */
+    // private int binarySearch(String key) {
+    //     int low = 0;
+    //     int high = records.size() - 1;
 
-        while (low <= high) {
-            int mid = (int) ((low + high) / 2);
-            String midVal = (records.get(mid)).getId();
-            int cmp = midVal.compareTo(key);
+    //     while (low <= high) {
+    //         int mid = (int) ((low + high) / 2);
+    //         String midVal = (records.get(mid)).getId();
+    //         int cmp = midVal.compareTo(key);
 
-            if (cmp < 0)
-                low = mid + 1;
-            else if (cmp > 0)
-                high = mid - 1;
-            else
-                return mid; // key found
-        }
+    //         if (cmp < 0)
+    //             low = mid + 1;
+    //         else if (cmp > 0)
+    //             high = mid - 1;
+    //         else
+    //             return mid; // key found
+    //     }
 
-        return -(low + 1); // key not found
-    }
+    //     return -(low + 1); // key not found
+    // }
 
     /**
      * <p>
@@ -489,19 +477,22 @@ public class SNIDApp {
      * @param updateID - ID for the object to be updated
      * @param fatherID - ID for the father object
      * @param motherID - ID for the mother object
-     * @throws IndexOutOfBoundsException if the record for either parent(s) or child
+     * @throws CompletionExeption if the record for either parent(s) or child
      *                                   is not found
      */
-    public void addParentData(String updateID, String fatherID, String motherID) throws IndexOutOfBoundsException {
+    public void addParentData(String updateID, String fatherID, String motherID) throws CompletionException{
+        try{
+            Citizen person = searchDb(updateID);
+            Citizen mother = searchDb(motherID);
+            Citizen father = searchDb(fatherID);
 
-        // Collections.sort(records);
-        int posid = binarySearch(updateID);
-        int fid = binarySearch(fatherID);
-        int mid = binarySearch(motherID);
-        if (posid < 0 || fid < 0 || mid < 0)
-            throw new IndexOutOfBoundsException("Invalid Array Index");
-        (records.get(posid)).setParent('F', records.get(fid));
-        (records.get(posid)).setParent('M', records.get(mid));
+            person.setParent('F', father);
+            person.setParent('M', mother);
+
+        }catch(Exception e){
+            throw new CompletionException("One or more persons could not be found", e);
+        }
+     
 
     }
 
@@ -516,15 +507,19 @@ public class SNIDApp {
      * @param town     - town line of Address
      * @param parish   - parish line of Address
      * @param country  - country line of Address
-     * @throws IndexOutOfBoundsException if the citizen is not found
+     * 
      */
     public void updateAddress(String updateID, String street, String town, String parish, String country)
-            throws IndexOutOfBoundsException {
-        String line = street + "|" + town + "|" + parish + "|" + country;
-        int posid = binarySearch(updateID);
-        if (posid < 0)
-            throw new IndexOutOfBoundsException("Invalid Array Index");
-        (records.get(posid)).setAddress(new Address(line));
+            throws CompletionException {
+        
+        try{
+            String line = street + "|" + town + "|" + parish + "|" + country;
+            Citizen person = searchDb(updateID);
+            person.setAddress(new Address(line));
+        }catch(Exception e){
+            throw new CompletionException("Person could not be found", e);
+        }
+        
 
     }
 
@@ -642,13 +637,13 @@ public class SNIDApp {
     }
 
     // TODO Delete getRecords in SNIDApp method. Only for testing
-    public ArrayList<Citizen> getRecords() {
+    private ArrayList<Citizen> getRecords() {
         return records;
     }
 
     public static void main(String[] args) {
         try {
-            SNIDApp app = new SNIDApp("data.db", ',');
+            SNIDApp app = new SNIDApp("SNID0.txt", ',');
             for (Citizen citizen : app.getRecords()) {
                 System.out.println(citizen.printPapers());
                 for (Biometric bio : citizen.getBiometricList()) {
@@ -670,7 +665,9 @@ public class SNIDApp {
             System.out.println(app.search("00000003"));
             System.out.println("complete");
             System.out.println(app.search("00000004"));
-            app.shutdown();
+            System.out.println("complete");
+            System.out.println(((Citizen)(app.searchDb("00000003")).getParent('F')).getNameFull());
+            // app.shutdown();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
