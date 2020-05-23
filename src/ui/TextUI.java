@@ -1,6 +1,9 @@
 package ui;
 
 import app.*;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -26,35 +29,6 @@ public class TextUI {
 
         String option = in.nextLine();
 
-<<<<<<< HEAD
-        if (option.toLowerCase() != "a" || option.toLowerCase() != "b" || option.toLowerCase() != "c"
-                || option.toLowerCase() != "d" || option.toLowerCase() != "e" || option.toLowerCase() != "f"
-                || option.toLowerCase() != "g" || option.toLowerCase() != "h") {
-            System.out.println("Invalid choice. Select from a-h\n");
-            option = in.nextLine();
-        }
-
-        while (option.toLowerCase() != "h") {
-            if (option == "a") {
-                // Input of birth information
-                System.out.println("Enter gender (M for male or F for female");
-                String gender = in.nextLine();
-
-                // to check if a valid gender is entered
-                if (gender.toUpperCase() != "M" || gender.toUpperCase() != "F") {
-                    System.out.println("Not a gender option. Enter M or F");
-                    gender = in.nextLine();
-                }
-
-                System.out.println("Enter year of birth");
-                int yob = 0;
-                try {
-                    yob = in.nextInt();
-                } catch (InputMismatchException a) {
-                    System.out.println("Enter an integer representing the year of birth");
-
-                } // to catch if user does not enter an integer
-=======
         while (!(option.equalsIgnoreCase("h"))) {
             switch (option.toLowerCase()) {
 
@@ -73,92 +47,69 @@ public class TextUI {
                     int yob = 0;
                     try {
                         yob = in.nextInt();
+                        while (!(in.hasNextInt())) {
+                            yob = in.nextInt();
+                        }
+
                     } catch (InputMismatchException a) {
                         System.out.println("Enter an integer representing the year of birth:");
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
-                System.out.println("Enter first name: ");
-                String fname = in.nextLine();
+                    } // to catch if user does not enter an integer
 
-<<<<<<< HEAD
-                System.out.println("Enter middle name: ");
-                String mname = in.nextLine();
-=======
                     in.nextLine();
 
                     System.out.println("Enter first name: ");
                     String fname = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
-                System.out.println("Enter last name");
-                String lname = in.nextLine();
+                    System.out.println("Enter middle name: ");
+                    String mname = in.nextLine();
 
-<<<<<<< HEAD
-                app.registerBirth(gender.charAt(0), yob, fname, mname, lname);
-=======
                     System.out.println("Enter last name:");
                     String lname = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
-            } // end of option a
-            else if (option.toLowerCase() == "b") {
-                System.out.println("Enter Id of citizen's whose parent data is to be updated:");
-                String updateID = in.nextLine();
+                    app.registerBirth(gender.charAt(0), yob, fname, mname, lname);
 
-                System.out.println("Enter Id of citizen's father: ");
-                String fatherID = in.nextLine();
+                    break;
 
-                System.out.println("Enter Id of citizen's mother: ");
-                String motherID = in.nextLine();
+                case "b":
 
-                // Addition of parent informaation to citizen
-                app.addParentData(updateID, fatherID, motherID);
+                    System.out.println("Enter Id of citizen's whose parent data is to be updated:");
+                    String updateID = in.nextLine();
 
-            } // end of option b
+                    System.out.println("Enter Id of citizen's father: ");
+                    String fatherID = in.nextLine();
 
-            else if (option.toLowerCase() == "c") {
-                System.out.println("Enter id of citizen: ");
-                String updateID = in.nextLine();
+                    System.out.println("Enter Id of citizen's mother: ");
+                    String motherID = in.nextLine();
 
-                System.out.println("Enter street of address: ");
-                String street = in.nextLine();
+                    // Addition of parent informaation to citizen
+                    app.addParentData(updateID, fatherID, motherID);
 
-                System.out.println("Enter town of address: ");
-                String town = in.nextLine();
+                    break;
 
-                System.out.println("Enter parish of address:");
-                String parish = in.nextLine();
+                case "c":
 
-                System.out.println("Enter country of address: ");
-                String country = in.nextLine();
+                    System.out.println("Enter id of citizen: ");
+                    String updateId = in.nextLine();
 
-                // Update of citizen's address
-                app.updateAddress(updateID, street, town, parish, country);
+                    System.out.println("Enter street of address: ");
+                    String street = in.nextLine();
 
-            } // end of option c
+                    System.out.println("Enter town of address: ");
+                    String town = in.nextLine();
 
-<<<<<<< HEAD
-            else if (option.toLowerCase() == "d") {
-                System.out.println("Enter citizen id: ");
-                String id = in.nextLine();
-=======
                     System.out.println("Enter parish of address: ");
                     String parish = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
-                System.out.println("Enter cause of death: ");
-                String cause = in.nextLine();
+                    System.out.println("Enter country of address: ");
+                    String country = in.nextLine();
 
-                System.out.println("Enter place of death: ");
-                String place = in.nextLine();
+                    // Update of citizen's address
+                    app.updateAddress(updateId, street, town, parish, country);
+                    break;
 
-                System.out.println("Enter date of death: ");
-                String date = in.nextLine();
+                case "d":
 
-<<<<<<< HEAD
-                // Registry of citizen's death
-                app.registerDeath(id, cause, place, date);
-=======
                     System.out.println("Enter citizen id: ");
                     String id = in.nextLine();
 
@@ -189,98 +140,108 @@ public class TextUI {
 
                     // Registry of marriage
                     app.registerMarriage(groomId, brideId, date1);
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
-            } // end of option d
+                    break;
 
-            else if (option.toLowerCase() == "e") {
-                System.out.println("Enter groom id: ");
-                String groomId = in.nextLine();
+                case "f":
 
-<<<<<<< HEAD
-                System.out.println("Enter bride id: ");
-                String brideId = in.nextLine();
-=======
                     System.out.println("Enter id of citizen to generate mailing label:");
                     String Id = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
-                System.out.println("Enter date of marriage; ");
-                String date = in.nextLine();
+                    // Generation of mailing label
+                    app.mailingLabel(Id);
 
-                // Registry of marriage
-                app.registerMarriage(groomId, brideId, date);
+                    break;
 
-            } // end of option e
+                case "g":
 
-            else if (option.toLowerCase() == "f") {
-                System.out.println("Enter id of citizen to generate mailing label");
-                String id = in.nextLine();
+                    // Menu to select search criteria
 
-                // Generation of mailing label
-                app.mailingLabel(id);
+                    System.out.println("1. To search by id of citizen\n");
+                    System.out.println("2. To search by first and last name of citizen\n");
+                    System.out.println("3. To search by biometric data\n");
+                    System.out.println("4. To exit search");
 
-            } // end of option f
+                    int choice = 0;
+                    try {
+                        choice = in.nextInt();
+                        while (!(in.hasNextInt())) {
+                            choice = in.nextInt();
+                        }
+                    } catch (InputMismatchException a) {
+                        System.out.println("Invalid choice. Enter an option from 1 - 3\n");
+                    }
 
-            else if (option.toLowerCase() == "g") {
-                // Menu to select search criteria
+                    switch (choice) {
 
-                System.out.println("1. To search by id of citizen\n");
-                System.out.println("2. To search by first and last name of citizen\n");
-                System.out.println("3. To search by biometric data\n");
-                System.out.println("4. To exit search");
+                        case 1:
 
-                int choice = 0;
-                try {
-                    choice = in.nextInt();
-                } catch (InputMismatchException a) {
-                    System.out.println("Invalid choice. Enter an option from 1 - 3\n");
-                }
+                            System.out.println("Enter citizen id: ");
+                            String ID = in.nextLine();
 
-                if (choice == 1) {
-                    System.out.println("Enter citizen id: ");
-                    String id = in.nextLine();
+                            // Search by id
+                            app.search(ID);
 
-                    // Search by id
-                    app.search(id);
+                            break;
 
-                } else if (choice == 2) {
-                    System.out.println("Enter citizen first name: ");
-                    String firstName = in.nextLine();
+                        case 2:
 
-                    System.out.println("Enter citizen last name: ");
-                    String lastName = in.nextLine();
+                            System.out.println("Enter citizen first name: ");
+                            String firstName = in.nextLine();
 
-                    // search by name
-                    app.search(firstName, lastName);
+                            System.out.println("Enter citizen last name: ");
+                            String lastName = in.nextLine();
 
-                } else if (choice == 3) {
-                    System.out.println("Enter the value for the DNA: ");
-                    String value = in.nextLine();
+                            // search by name
+                            app.search(firstName, lastName);
 
-                    System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
-                    String tag = in.nextLine();
+                            break;
 
-                    // Search by biometric data
-                    app.search(tag, value);
-                }
+                        case 3:
 
-            } // end of option g
+                            System.out.println("Enter the value for the DNA: ");
+                            String value = in.nextLine();
 
-<<<<<<< HEAD
-            else if (option.toLowerCase() == "h") {
-=======
+                            System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
+                            String tag = in.nextLine();
+
+                            // Search by biometric data
+                            app.search(tag, value);
+
+                            break;
+                    } // end of switch for case "g"
+
+                    break;
+
+                case "h":
+                    try {
+                        app.shutdown();
+                    } catch (FileNotFoundException m) {
+                        m.printStackTrace();
+                        ;
+                    } catch (IOException n) {
+                        n.printStackTrace();
+                    }
+
                     break;
 
                 default:
                     System.out.println("Invalid choice. Select from a-h\n");
                     option = in.nextLine();
             }
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
-                System.exit(0);
+            System.out.println("Welcome to the System for National Identification\n");
+            System.out.println("            Main Menu\n");
+            System.out.println("a. Register a Birth\n");
+            System.out.println("b. Update Parent Data\n");
+            System.out.println("c. Update a Citizen's Address\n");
+            System.out.println("d. Register a Death\n");
+            System.out.println("e. Register a Marriage\n");
+            System.out.println("f. Generate a Mailing Label\n");
+            System.out.println("g. Search\n");
+            System.out.println("h. Exit Application\n");
 
-            } // end of option h
+            option = in.nextLine();
 
         } // end of while loop
 
@@ -293,15 +254,8 @@ public class TextUI {
         try {
             ui.go(new SNIDApp("data.db", ','));
         } catch (Exception e) {
-<<<<<<< HEAD
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-=======
             e.printStackTrace();
         }
     }
 
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 }
