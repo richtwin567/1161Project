@@ -69,50 +69,38 @@ public class SNIDApp {
                     char lifeStatus = tokens[6].charAt(0);
                     String motherId = tokens[7];
                     String fatherId = tokens[8];
-                    Citizen mother = null;
-                    Citizen father = null;
-                    try {
-                        mother = searchDb(motherId);
-                        father = searchDb(fatherId);
-                    } catch (Exception e) {
 
-                    }
+                    Citizen mother = searchDb(motherId);
+                    Citizen father = searchDb(fatherId);
+
                     Address address = new Address(tokens[11]);
 
                     // create basic citizen record
                     Citizen citizen = new Citizen(id, gender, yob, firstName, middleName, lastName, lifeStatus, mother,
                             father, address);
 
-                    try {
-                        // separate biometric data
-                        String[] biometricData = tokens[9].split("&");
-                        // add biometric data to record
-                        for (String data : biometricData) {
-                            BiometricData biodata = new BiometricData(data.charAt(0), data.substring(1));
-                            citizen.addBiometric(biodata);
-                        }
-                    } catch (Exception e) {
-                        //no biometric data exists
+                    // separate biometric data
+                    String[] biometricData = tokens[9].split("&");
+                    // add biometric data to record
+                    for (String data : biometricData) {
+                        BiometricData biodata = new BiometricData(data.charAt(0), data.substring(1));
+                        citizen.addBiometric(biodata);
                     }
 
-                    try {
-                        // separate the Civic doc tokens according to how they are stored
-                        String[] docs = tokens[10].split("@");
-                        String[][] docParts = new String[docs.length][4];
-                        for (int x = 0; x < docs.length; x++) {
-                            String[] parts = docs[x].split("\\|");
-                            docParts[x] = parts;
+                    // separate the Civic doc tokens according to how they are stored
+                    String[] docs = tokens[10].split("@");
+                    String[][] docParts = new String[docs.length][4];
+                    for (int x = 0; x < docs.length; x++) {
+                        String[] parts = docs[x].split("\\|");
+                        docParts[x] = parts;
+                    }
+                    // add all CivicDoc to record
+                    for (String[] doc : docParts) {
+                        if (doc[0].equals("M")) {
+                            citizen.addPaper(new MarriageCertificate(doc[1], doc[2], doc[3]));
+                        } else {
+                            citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
                         }
-                        // add all CivicDoc to record
-                        for (String[] doc : docParts) {
-                            if (doc[0].equals("M")) {
-                                citizen.addPaper(new MarriageCertificate(doc[1], doc[2], doc[3]));
-                            } else {
-                                citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
-                            }
-                        }
-                    } catch (Exception e) {
-                        //no civic docs
                     }
 
                     // add the citizen to the list of records
@@ -125,11 +113,12 @@ public class SNIDApp {
             Collections.sort(records);
         } catch (FileNotFoundException f) {
             throw f;
-        } catch (PatternSyntaxException | NullPointerException | IOException e) {
+        } catch ( PatternSyntaxException | NullPointerException |  IOException e) {
             throw e;
         } catch (Exception e) {
             throw e;
         }
+
     }
 
     /**
