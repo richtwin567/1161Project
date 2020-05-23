@@ -1,0 +1,4 @@
+00000001,F,1970,Lucy,Annie,George,D,,,,M|00000002|00000001|02/04/2001@D|Childbirth|06/07/2005|UWI hospital@,12 Test lane|Town1|Parish2|Jamaica,EOL
+00000002,M,1972,Harry,Joseph,George,A,,,,M|00000002|00000001|02/04/2001@,12 Test lane|Town1|Parish2|Jamaica,EOL
+00000003,M,2005,Tim,Mike,George,A,00000001,00000002,,,,EOL
+00000004,F,2000,Annie,Marie,Bishop,A,,,F9097&,,,EOL

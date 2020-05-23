@@ -182,47 +182,4 @@ public class SNIDDb {
         }
     }
 
-
-    /*
-    public static void main(String[] args){
-
-        try{
-            File pas = new File("pas");
-            if(pas.createNewFile()){
-                System.out.println("File created");
-            }else{
-                System.out.println("File already exists");
-            }
-        }catch(FileNotFoundException f){
-            System.out.println(f.getMessage());
-            f.printStackTrace();
-        }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-        
-        SNIDDb test = new SNIDDb("test",':');
-        ArrayList<String[]> testlst = new ArrayList<>();
-        while(test.hasNext()){
-            testlst.add(test.getNext());
-        }
-
-        for(String[] i: testlst){
-            System.out.println(Arrays.toString(i));
-        }
-        String[] obj = {"newitem","reallynew","2014","bounce"};
-        testlst.add(obj);
-        test.rewrite();
-        for(String[] i: testlst){
-            test.putNext(i);
-        }
-        test.closeFile();
-
-    }
-    */
-
-
 }

@@ -31,10 +31,11 @@ import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.FocusEvent;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * The GUI that allows users to search the SNID database
+ */
 public class SNIDGUI extends JFrame {
 
     private static final long serialVersionUID = -8940575551959945422L;
@@ -72,12 +73,19 @@ public class SNIDGUI extends JFrame {
 
     private final JFrame thisFrame = this;
 
+    /**
+     * Constructor for the GUI. 
+     * @param appController an instance of SNIDApp to access the database
+     */
     public SNIDGUI(SNIDApp appController) {
         this.appController = appController;
         results = new ArrayList<>();
         init();
     }
 
+    /**
+     * Sets up the components of the GUI and places them in the JFrame.
+     */
     private void init() {
         // set up JFrame
         setBackground(Colours.bg);
@@ -202,6 +210,9 @@ public class SNIDGUI extends JFrame {
 
             private static final long serialVersionUID = -7668408883782835744L;
 
+            /**
+             * Remove blue outline from selected list items
+             */
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected,
                     boolean cellHasFocus) {
@@ -361,7 +372,6 @@ public class SNIDGUI extends JFrame {
         @Override
         public void focusGained(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
-            // field.setBorder(new LineBorder(Colours.accent, 1));
             field.setBorder(new MatteBorder(new Insets(0, 0, 2, 0), Colours.accent));
             field.setBackground(new Color(255, 245, 168));
         }
@@ -371,7 +381,6 @@ public class SNIDGUI extends JFrame {
             JTextField field = (JTextField) e.getSource();
             field.setBorder(new LineBorder(Colours.onBg, 1));
             field.setBackground(Colours.bg);
-            // field.setBorder(new MatteBorder(new Insets(0,0,2,0),Colours.onBg));
         }
 
     }
@@ -400,16 +409,17 @@ public class SNIDGUI extends JFrame {
         SNIDApp appController;
         try {
             appController = new SNIDApp("data.db", ',');
-        
-    for (Citizen citizen : appController.getRecords()){
-        System.out.println(citizen.printPapers());
+
+            for (Citizen citizen : appController.getRecords()) {
+                System.out.println(citizen.printPapers());
+            }
+            System.out.println("finished");
+            SNIDGUI ui = new SNIDGUI(appController);
+            ui.setVisible(true);
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
-    System.out.println("finished");
-        SNIDGUI ui = new SNIDGUI(appController);
-        ui.setVisible(true);
-    
-} catch (Exception e) {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
 }
-}}

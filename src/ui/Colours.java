@@ -18,7 +18,7 @@ public class Colours {
     protected static final Color onPrimary = new Color(33, 33, 33);
     /**background colour */
     protected static final Color bg = new Color(255, 255, 255);
-    /**text colour to be uesd on the background colour*/
+    /**text colour to be used on the background colour*/
     protected static final Color onBg = new Color(33, 33, 33);
     /**accent colour for highlight and colour change on hover, etc. */
     protected static final Color accent = new Color(255, 152, 0);
