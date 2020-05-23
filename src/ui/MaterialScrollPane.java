@@ -110,7 +110,6 @@ public class MaterialScrollPane extends JScrollPane {
                     break;
             }
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            btn.setFont(new Font("Calibri", Font.PLAIN, 10));
             btn.setForeground(Colours.onBg);
             btn.setBorder(null);
             btn.setFocusPainted(false);
