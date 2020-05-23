@@ -26,7 +26,6 @@ public class TextUI {
 
         String option = in.nextLine();
 
-<<<<<<< HEAD
         if (option.toLowerCase() != "a" || option.toLowerCase() != "b" || option.toLowerCase() != "c"
                 || option.toLowerCase() != "d" || option.toLowerCase() != "e" || option.toLowerCase() != "f"
                 || option.toLowerCase() != "g" || option.toLowerCase() != "h") {
@@ -54,51 +53,17 @@ public class TextUI {
                     System.out.println("Enter an integer representing the year of birth");
 
                 } // to catch if user does not enter an integer
-=======
-        while (!(option.equalsIgnoreCase("h"))) {
-            switch (option.toLowerCase()) {
-
-                case "a":
-                    // Input of birth information
-                    System.out.println("Enter gender (M for male or F for female):");
-                    String gender = in.nextLine();
-
-                    // to check if a valid gender is entered
-                    while (!(gender.equals("M")) || !(gender.equals("F"))) {
-                        System.out.println("Not a gender option. Enter M or F");
-                        gender = in.nextLine();
-                    }
-
-                    System.out.println("Enter year of birth");
-                    int yob = 0;
-                    try {
-                        yob = in.nextInt();
-                    } catch (InputMismatchException a) {
-                        System.out.println("Enter an integer representing the year of birth:");
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
                 System.out.println("Enter first name: ");
                 String fname = in.nextLine();
 
-<<<<<<< HEAD
                 System.out.println("Enter middle name: ");
                 String mname = in.nextLine();
-=======
-                    in.nextLine();
-
-                    System.out.println("Enter first name: ");
-                    String fname = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
                 System.out.println("Enter last name");
                 String lname = in.nextLine();
 
-<<<<<<< HEAD
                 app.registerBirth(gender.charAt(0), yob, fname, mname, lname);
-=======
-                    System.out.println("Enter last name:");
-                    String lname = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
             } // end of option a
             else if (option.toLowerCase() == "b") {
@@ -137,14 +102,9 @@ public class TextUI {
 
             } // end of option c
 
-<<<<<<< HEAD
             else if (option.toLowerCase() == "d") {
                 System.out.println("Enter citizen id: ");
                 String id = in.nextLine();
-=======
-                    System.out.println("Enter parish of address: ");
-                    String parish = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
                 System.out.println("Enter cause of death: ");
                 String cause = in.nextLine();
@@ -155,41 +115,8 @@ public class TextUI {
                 System.out.println("Enter date of death: ");
                 String date = in.nextLine();
 
-<<<<<<< HEAD
                 // Registry of citizen's death
                 app.registerDeath(id, cause, place, date);
-=======
-                    System.out.println("Enter citizen id: ");
-                    String id = in.nextLine();
-
-                    System.out.println("Enter cause of death: ");
-                    String cause = in.nextLine();
-
-                    System.out.println("Enter place of death: ");
-                    String place = in.nextLine();
-
-                    System.out.println("Enter date of death: ");
-                    String date = in.nextLine();
-
-                    // Registry of citizen's death
-                    app.registerDeath(id, cause, place, date);
-
-                    break;
-
-                case "e":
-
-                    System.out.println("Enter groom id: ");
-                    String groomId = in.nextLine();
-
-                    System.out.println("Enter bride id: ");
-                    String brideId = in.nextLine();
-
-                    System.out.println("Enter date of marriage: ");
-                    String date1 = in.nextLine();
-
-                    // Registry of marriage
-                    app.registerMarriage(groomId, brideId, date1);
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
             } // end of option d
 
@@ -197,13 +124,8 @@ public class TextUI {
                 System.out.println("Enter groom id: ");
                 String groomId = in.nextLine();
 
-<<<<<<< HEAD
                 System.out.println("Enter bride id: ");
                 String brideId = in.nextLine();
-=======
-                    System.out.println("Enter id of citizen to generate mailing label:");
-                    String Id = in.nextLine();
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
                 System.out.println("Enter date of marriage; ");
                 String date = in.nextLine();
@@ -267,16 +189,7 @@ public class TextUI {
 
             } // end of option g
 
-<<<<<<< HEAD
             else if (option.toLowerCase() == "h") {
-=======
-                    break;
-
-                default:
-                    System.out.println("Invalid choice. Select from a-h\n");
-                    option = in.nextLine();
-            }
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 
                 System.exit(0);
 
@@ -293,15 +206,8 @@ public class TextUI {
         try {
             ui.go(new SNIDApp("data.db", ','));
         } catch (Exception e) {
-<<<<<<< HEAD
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
-=======
-            e.printStackTrace();
-        }
-    }
-
->>>>>>> 3ff993e4805ec56ca7879f8dc66cd2fd13762885
 }
