@@ -26,23 +26,16 @@ public class TextUI {
 
         String option = in.nextLine();
 
-        if (!(option.equalsIgnoreCase("a")) || !(option.equalsIgnoreCase("b")) || !(option.equalsIgnoreCase("c"))
-                || !(option.equalsIgnoreCase("d")) || !(option.equalsIgnoreCase("e")) || !(option.equalsIgnoreCase("f"))
-                || !(option.equalsIgnoreCase("g")) || !(option.equalsIgnoreCase("h"))) {
-            System.out.println("Invalid choice. Select from a-h\n");
-            option = in.nextLine();
-        }
-
         while (!(option.equalsIgnoreCase("h"))) {
             switch (option.toLowerCase()) {
 
                 case "a":
                     // Input of birth information
-                    System.out.println("Enter gender (M for male or F for female");
+                    System.out.println("Enter gender (M for male or F for female):");
                     String gender = in.nextLine();
 
                     // to check if a valid gender is entered
-                    if (!(gender.equalsIgnoreCase("M")) || !(gender.equalsIgnoreCase("F"))) {
+                    while (!(gender.equals("M")) || !(gender.equals("F"))) {
                         System.out.println("Not a gender option. Enter M or F");
                         gender = in.nextLine();
                     }
@@ -52,9 +45,11 @@ public class TextUI {
                     try {
                         yob = in.nextInt();
                     } catch (InputMismatchException a) {
-                        System.out.println("Enter an integer representing the year of birth");
+                        System.out.println("Enter an integer representing the year of birth:");
 
                     } // to catch if user does not enter an integer
+
+                    in.nextLine();
 
                     System.out.println("Enter first name: ");
                     String fname = in.nextLine();
@@ -62,7 +57,7 @@ public class TextUI {
                     System.out.println("Enter middle name: ");
                     String mname = in.nextLine();
 
-                    System.out.println("Enter last name");
+                    System.out.println("Enter last name:");
                     String lname = in.nextLine();
 
                     app.registerBirth(gender.charAt(0), yob, fname, mname, lname);
@@ -96,7 +91,7 @@ public class TextUI {
                     System.out.println("Enter town of address: ");
                     String town = in.nextLine();
 
-                    System.out.println("Enter parish of address:");
+                    System.out.println("Enter parish of address: ");
                     String parish = in.nextLine();
 
                     System.out.println("Enter country of address: ");
@@ -133,7 +128,7 @@ public class TextUI {
                     System.out.println("Enter bride id: ");
                     String brideId = in.nextLine();
 
-                    System.out.println("Enter date of marriage; ");
+                    System.out.println("Enter date of marriage: ");
                     String date1 = in.nextLine();
 
                     // Registry of marriage
@@ -143,7 +138,7 @@ public class TextUI {
 
                 case "f":
 
-                    System.out.println("Enter id of citizen to generate mailing label");
+                    System.out.println("Enter id of citizen to generate mailing label:");
                     String Id = in.nextLine();
 
                     // Generation of mailing label
@@ -213,6 +208,10 @@ public class TextUI {
                     System.exit(0);
 
                     break;
+
+                default:
+                    System.out.println("Invalid choice. Select from a-h\n");
+                    option = in.nextLine();
             }
 
             System.out.println("Welcome to the System for National Identification\n");
@@ -236,6 +235,11 @@ public class TextUI {
 
     public static void main(String[] args) {
         TextUI ui = new TextUI();
-        
-    
+        try {
+            ui.go(new SNIDApp("data.db", ','));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+}
