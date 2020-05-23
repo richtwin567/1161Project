@@ -10,9 +10,9 @@ import javax.swing.JButton;
  * Super class for all button listeners in the SNID project
  */
 public abstract class ButtonListener implements MouseListener {
-
+/* 
     private Color oB;
-    private Color oF;
+    private Color oF; */
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -31,20 +31,20 @@ public abstract class ButtonListener implements MouseListener {
 
     /**changes background and foreground colour of buttons on hover*/
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(MouseEvent e) {/* 
         JButton btn = (JButton) e.getSource();
         oB = btn.getBackground();
         oF = btn.getForeground();
         btn.setBackground(Colours.accent);
-        btn.setForeground(Colours.onAccent);
+        btn.setForeground(Colours.onAccent); */
     }
 
     /**restores original colours on exit*/
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(MouseEvent e) {/* 
         JButton btn = (JButton) e.getSource();
         btn.setBackground(oB);
-        btn.setForeground(oF);
+        btn.setForeground(oF); */
     }
 
 }

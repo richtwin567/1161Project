@@ -35,35 +35,35 @@ public class ConfirmQuitDialog extends JDialog {
         
         grid = new GridLayout();
         setLayout(grid);
-        setBackground(Colours.bg);
-        setForeground(Colours.onBg);
-        base = new JPanel();
+        /* setBackground(Colours.bg);
+        setForeground(Colours.onBg); */
+        base = new JPanel();/* 
         base.setBackground(Colours.bg);
-        base.setForeground(Colours.onBg);
+        base.setForeground(Colours.onBg); */
         grid = new GridLayout(2, 1);
         grid.setHgap(20);
         grid.setVgap(30);
         base.setLayout(grid);
 
         message = new JLabel("Are you sure you want to quit?");
-        message.setBackground(Colours.bg);
-        message.setForeground(Colours.onBg);
+        /* message.setBackground(Colours.bg);
+        message.setForeground(Colours.onBg); */
         base.add(message);
 
         buttons = new JPanel();
-        buttons.setBackground(Colours.bg);
-        buttons.setForeground(Colours.onBg);
+        /* buttons.setBackground(Colours.bg);
+        buttons.setForeground(Colours.onBg); */
         grid = new GridLayout(1, 2);
         grid.setHgap(30);
         grid.setVgap(20);
         buttons.setLayout(grid);
 
-        yes = new MaterialButton("Yes",Colours.onCritical,Colours.critical);
+        yes = new JButton("Yes");
         yes.addMouseListener(new YesButtonListener());
 
         buttons.add(yes);
 
-        no = new MaterialButton("NO",Colours.onPrimary,Colours.primary);
+        no = new JButton("NO");
         no.addMouseListener(new NoButtonListener());
 
         buttons.add(no);

@@ -5,7 +5,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 
@@ -34,22 +33,22 @@ public class MessageDialog extends JDialog {
      * @param message the message for the user
      */
     public void init(String message) {
-        setBackground(Colours.bg);
-        setForeground(Colours.onBg);
+        /* setBackground(Colours.bg);
+        setForeground(Colours.onBg); */
         setLayout(new GridLayout());
 
         base = new JPanel(new GridLayout(2, 1));
         ((GridLayout) base.getLayout()).setVgap(20);
-        base.setBackground(Colours.bg);
-        base.setForeground(Colours.onBg);
+        /* base.setBackground(Colours.bg);
+        base.setForeground(Colours.onBg); */
 
         messageText = new JLabel(message);
-        messageText.setForeground(Colours.onBg);
-        messageText.setBackground(Colours.bg);
+        /* messageText.setForeground(Colours.onBg);
+        messageText.setBackground(Colours.bg); */
 
         base.add(messageText);
 
-        ok = new MaterialButton("OK",Colours.onPrimary,Colours.primary);
+        ok = new JButton("OK");
         ok.addMouseListener(new OkButtonListener());
         
         base.add(ok);
