@@ -22,6 +22,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import app.SNIDApp;
+import snid.Citizen;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -115,21 +117,21 @@ public class SNIDGUI extends JFrame {
         buttonPanel.setLayout(buttonPanelLayout);
 
         // search button set up
-        searchGoButton = new MaterialButton("Search",Colours.onPrimary,Colours.primary);
+        searchGoButton = new MaterialButton("Search", Colours.onPrimary, Colours.primary);
         // carry out a search in the database using the search value provided
         searchGoButton.addMouseListener(new SearchButtonListener());
         // add search button to panel grid
         buttonPanel.add(searchGoButton);
 
         // clear button set up
-        clearButton = new MaterialButton("Clear",Colours.onCritical,Colours.critical);
+        clearButton = new MaterialButton("Clear", Colours.onCritical, Colours.critical);
         // make search value field clear when this button is pressed
         clearButton.addMouseListener(new ClearButtonListener());
         // add clear button to panel
         buttonPanel.add(clearButton);
 
         // quit button set up
-        quitButton = new MaterialButton("Quit",Colours.onCritical,Colours.critical);
+        quitButton = new MaterialButton("Quit", Colours.onCritical, Colours.critical);
         // exit program when clicked
         quitButton.addMouseListener(new QuitButtonListener());
         // add quit button to panel
@@ -171,7 +173,8 @@ public class SNIDGUI extends JFrame {
         searchValueField = new JTextField("User enters search string here");
         searchValueField.setBackground(Colours.bg);
         searchValueField.setBorder(new LineBorder(Colours.onBg, 1));
-        //searchValueField.setBorder(new MatteBorder(new Insets(0,0,2,0), Colours.onBg));
+        // searchValueField.setBorder(new MatteBorder(new Insets(0,0,2,0),
+        // Colours.onBg));
         searchValueField.setForeground(Colours.onBg);
         searchValueField.addFocusListener(new SearchValueFieldFocusListener());
         configureGridBagConstraints(basePanelConstraints, 1, 5, 1, 4);
@@ -194,7 +197,7 @@ public class SNIDGUI extends JFrame {
         idList.setSelectionBackground(Colours.accent);
         idList.setSelectionForeground(Colours.onAccent);
         idList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-        //remove border around cell on selection
+        // remove border around cell on selection
         idList.setCellRenderer(new DefaultListCellRenderer() {
 
             private static final long serialVersionUID = -7668408883782835744L;
@@ -265,7 +268,8 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * Searches for a citizen based on the criteria specified by the user. The citizen's data is added to the results list if found.
+     * Searches for a citizen based on the criteria specified by the user. The
+     * citizen's data is added to the results list if found.
      */
     private class SearchButtonListener extends ButtonListener {
 
@@ -319,8 +323,8 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * Allows for the corresponding citizen information to be displayed in 
-     * the editor pane to the right when an ID in the list is selected.
+     * Allows for the corresponding citizen information to be displayed in the
+     * editor pane to the right when an ID in the list is selected.
      */
     private class IdListSelectionListener implements ListSelectionListener {
 
@@ -357,8 +361,8 @@ public class SNIDGUI extends JFrame {
         @Override
         public void focusGained(FocusEvent e) {
             JTextField field = (JTextField) e.getSource();
-            //field.setBorder(new LineBorder(Colours.accent, 1));
-            field.setBorder(new MatteBorder(new Insets(0,0,2,0),Colours.accent));
+            // field.setBorder(new LineBorder(Colours.accent, 1));
+            field.setBorder(new MatteBorder(new Insets(0, 0, 2, 0), Colours.accent));
             field.setBackground(new Color(255, 245, 168));
         }
 
@@ -367,7 +371,7 @@ public class SNIDGUI extends JFrame {
             JTextField field = (JTextField) e.getSource();
             field.setBorder(new LineBorder(Colours.onBg, 1));
             field.setBackground(Colours.bg);
-            //field.setBorder(new MatteBorder(new Insets(0,0,2,0),Colours.onBg));
+            // field.setBorder(new MatteBorder(new Insets(0,0,2,0),Colours.onBg));
         }
 
     }
@@ -392,9 +396,20 @@ public class SNIDGUI extends JFrame {
         c.gridy = gridy;
     }
 
-    public static void main(String[] args) throws FileNotFoundException, IOException, Exception {
-        SNIDApp appController = new SNIDApp("data.db", ',');
+    public static void main(String[] args) {
+        SNIDApp appController;
+        try {
+            appController = new SNIDApp("data.db", ',');
+        
+    for (Citizen citizen : appController.getRecords()){
+        System.out.println(citizen.printPapers());
+    }
+    System.out.println("finished");
         SNIDGUI ui = new SNIDGUI(appController);
         ui.setVisible(true);
-    }
+    
+} catch (Exception e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
 }
+}}

@@ -630,13 +630,13 @@ public class SNIDApp {
     }
 
     // TODO Delete getRecords in SNIDApp method. Only for testing
-    private ArrayList<Citizen> getRecords() {
+    public ArrayList<Citizen> getRecords() {
         return records;
     }
 
     public static void main(String[] args) {
         try {
-            SNIDApp app = new SNIDApp("SNID0.txt", ',');
+            SNIDApp app = new SNIDApp("data.db", ',');
             for (Citizen citizen : app.getRecords()) {
                 System.out.println(citizen.printPapers());
                 for (Biometric bio : citizen.getBiometricList()) {
@@ -658,7 +658,7 @@ public class SNIDApp {
             System.out.println(app.search("00000003"));
             System.out.println("complete");
             System.out.println(app.search("00000004"));
-            // app.shutdown();
+            app.shutdown();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
