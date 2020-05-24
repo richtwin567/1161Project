@@ -199,6 +199,7 @@ public class SNIDApp {
         try {
             Citizen bride = searchDb(brideId);
             Citizen groom = searchDb(groomId);
+            bride.changeLastName(groom.getNameAttr().getLastName());
             bride.addPaper(new MarriageCertificate(groomId, brideId, date));
             groom.addPaper(new MarriageCertificate(groomId, brideId, date));
         } catch (Exception e) {
@@ -647,7 +648,7 @@ public class SNIDApp {
     }
 
     // TODO Delete getRecords in SNIDApp method. Only for testing
-    private ArrayList<Citizen> getRecords() {
+    public ArrayList<Citizen> getRecords() {
         return records;
     }
 
