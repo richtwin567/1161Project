@@ -5,6 +5,7 @@ import app.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletionException;
 
 /**
  * Text-based menu interface for SNID Management. Interacts with SNIDApp
@@ -105,7 +106,12 @@ public class TextUI {
                     String country = in.nextLine();
 
                     // Update of citizen's address
-                    app.updateAddress(updateId, street, town, parish, country);
+                    try {
+                        app.updateAddress(updateId, street, town, parish, country);
+                    } catch (CompletionException r) {
+                        System.out.println("Citizen ID not found. Try Again Entering a Valid ID");
+                    }
+
                     break;
 
                 case "d":
