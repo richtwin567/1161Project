@@ -142,20 +142,22 @@ public class TextUI {
                     break;
 
                 case "e":
+                    try {
+                        System.out.println("Enter groom id: ");
+                        String groomId = in.nextLine();
 
-                    System.out.println("Enter groom id: ");
-                    String groomId = in.nextLine();
+                        System.out.println("Enter bride id: ");
+                        String brideId = in.nextLine();
 
-                    System.out.println("Enter bride id: ");
-                    String brideId = in.nextLine();
+                        System.out.println("Enter date of marriage: ");
+                        String date1 = in.nextLine();
 
-                    System.out.println("Enter date of marriage: ");
-                    String date1 = in.nextLine();
-
-                    // Registry of marriage
-                    app.registerMarriage(groomId, brideId, date1);
-                    System.out.println("Marriage Registered\n");
-
+                        // Registry of marriage
+                        app.registerMarriage(groomId, brideId, date1);
+                        System.out.println("Marriage Registered\n");
+                    } catch (CompletionException w) {
+                        System.out.println("Check to ensure that both groom and bride ID are valid. Try Again");
+                    }
                     break;
 
                 case "f":
