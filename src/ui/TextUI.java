@@ -133,9 +133,12 @@ public class TextUI {
                     String date = in.nextLine();
 
                     // Registry of citizen's death
-                    app.registerDeath(id, cause, place, date);
-                    System.out.println("Death Registered\n");
-
+                    try {
+                        app.registerDeath(id, cause, place, date);
+                        System.out.println("Death Registered\n");
+                    } catch (CompletionException y) {
+                        System.out.println("Invalid citizen ID. Check to ensure that correct ID was entered");
+                    }
                     break;
 
                 case "e":
