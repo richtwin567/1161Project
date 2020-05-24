@@ -5,6 +5,7 @@ import app.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CompletionException;
 
 /**
  * Text-based menu interface for SNID Management. Interacts with SNIDApp
@@ -74,19 +75,23 @@ public class TextUI {
 
                 case "b":
 
-                    System.out.println("Enter Id of citizen's whose parent data is to be updated:");
-                    String updateID = in.nextLine();
+                    try {
+                        System.out.println("Enter Id of citizen's whose parent data is to be updated:");
+                        String updateID = in.nextLine();
 
-                    System.out.println("Enter Id of citizen's father: ");
-                    String fatherID = in.nextLine();
+                        System.out.println("Enter Id of citizen's father: ");
+                        String fatherID = in.nextLine();
 
-                    System.out.println("Enter Id of citizen's mother: ");
-                    String motherID = in.nextLine();
+                        System.out.println("Enter Id of citizen's mother: ");
+                        String motherID = in.nextLine();
 
-                    // Addition of parent informaation to citizen
-                    app.addParentData(updateID, fatherID, motherID);
-                    System.out.println("Parent Data Updated\n");
+                        // Addition of parent informaation to citizen
+                        app.addParentData(updateID, fatherID, motherID);
+                        System.out.println("Parent Data Updated\n");
+                    } catch (CompletionException p) {
+                        System.out.println("Check to ensure that ALL IDs entered are valid. Try again");
 
+                    }
                     break;
 
                 case "c":
@@ -107,7 +112,12 @@ public class TextUI {
                     String country = in.nextLine();
 
                     // Update of citizen's address
-                    app.updateAddress(updateId, street, town, parish, country);
+                    try {
+                        app.updateAddress(updateId, street, town, parish, country);
+                    } catch (CompletionException r) {
+                        System.out.println("Citizen ID not found. Try Again Entering a Valid ID");
+                    }
+
                     break;
 
                 case "d":
@@ -125,26 +135,31 @@ public class TextUI {
                     String date = in.nextLine();
 
                     // Registry of citizen's death
-                    app.registerDeath(id, cause, place, date);
-                    System.out.println("Death Registered\n");
-
+                    try {
+                        app.registerDeath(id, cause, place, date);
+                        System.out.println("Death Registered\n");
+                    } catch (CompletionException y) {
+                        System.out.println("Invalid citizen ID. Check to ensure that correct ID was entered");
+                    }
                     break;
 
                 case "e":
+                    try {
+                        System.out.println("Enter groom id: ");
+                        String groomId = in.nextLine();
 
-                    System.out.println("Enter groom id: ");
-                    String groomId = in.nextLine();
+                        System.out.println("Enter bride id: ");
+                        String brideId = in.nextLine();
 
-                    System.out.println("Enter bride id: ");
-                    String brideId = in.nextLine();
+                        System.out.println("Enter date of marriage: ");
+                        String date1 = in.nextLine();
 
-                    System.out.println("Enter date of marriage: ");
-                    String date1 = in.nextLine();
-
-                    // Registry of marriage
-                    app.registerMarriage(groomId, brideId, date1);
-                    System.out.println("Marriage Registered\n");
-
+                        // Registry of marriage
+                        app.registerMarriage(groomId, brideId, date1);
+                        System.out.println("Marriage Registered\n");
+                    } catch (CompletionException w) {
+                        System.out.println("Check to ensure that both groom and bride ID are valid. Try Again");
+                    }
                     break;
 
                 case "f":
@@ -153,9 +168,13 @@ public class TextUI {
                     String Id = in.nextLine();
 
                     // Generation of mailing label
-                    app.mailingLabel(Id);
-                    System.out.println("Mailing Label Generated\n");
-                    System.out.println(app.mailingLabel(Id));
+                    if (app.mailingLabel(Id) == null) {
+                        System.out.println(
+                                "Citizen Not Found. Cannot Generate Mailing Label. Check if ID entered is valid");
+                    } else {
+                        System.out.println("Mailing Label Generated\n");
+                        System.out.println(app.mailingLabel(Id));
+                    }
 
                     break;
 
