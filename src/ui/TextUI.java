@@ -166,9 +166,13 @@ public class TextUI {
                     String Id = in.nextLine();
 
                     // Generation of mailing label
-                    app.mailingLabel(Id);
-                    System.out.println("Mailing Label Generated\n");
-                    System.out.println(app.mailingLabel(Id));
+                    if (app.mailingLabel(Id) == null) {
+                        System.out.println(
+                                "Citizen Not Found. Cannot Generate Mailing Label. Check if ID entered is valid");
+                    } else {
+                        System.out.println("Mailing Label Generated\n");
+                        System.out.println(app.mailingLabel(Id));
+                    }
 
                     break;
 
