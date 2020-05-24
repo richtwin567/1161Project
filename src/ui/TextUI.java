@@ -73,19 +73,23 @@ public class TextUI {
 
                 case "b":
 
-                    System.out.println("Enter Id of citizen's whose parent data is to be updated:");
-                    String updateID = in.nextLine();
+                    try {
+                        System.out.println("Enter Id of citizen's whose parent data is to be updated:");
+                        String updateID = in.nextLine();
 
-                    System.out.println("Enter Id of citizen's father: ");
-                    String fatherID = in.nextLine();
+                        System.out.println("Enter Id of citizen's father: ");
+                        String fatherID = in.nextLine();
 
-                    System.out.println("Enter Id of citizen's mother: ");
-                    String motherID = in.nextLine();
+                        System.out.println("Enter Id of citizen's mother: ");
+                        String motherID = in.nextLine();
 
-                    // Addition of parent informaation to citizen
-                    app.addParentData(updateID, fatherID, motherID);
-                    System.out.println("Parent Data Updated\n");
+                        // Addition of parent informaation to citizen
+                        app.addParentData(updateID, fatherID, motherID);
+                        System.out.println("Parent Data Updated\n");
+                    } catch (CompletionException p) {
+                        System.out.println("Check to ensure that ALL IDs entered are valid. Try again");
 
+                    }
                     break;
 
                 case "c":
