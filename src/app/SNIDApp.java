@@ -92,7 +92,7 @@ public class SNIDApp {
                             citizen.addBiometric(biodata);
                         }
                     } catch (Exception e) {
-                        //no biometric data exists
+                        // no biometric data exists
                     }
 
                     try {
@@ -112,7 +112,7 @@ public class SNIDApp {
                             }
                         }
                     } catch (Exception e) {
-                        //no civic docs
+                        // no civic docs
                     }
 
                     // add the citizen to the list of records
@@ -449,34 +449,35 @@ public class SNIDApp {
     }
 
     // /**
-    //  * <p>
-    //  * This method follows the algorithm of binary search but takes in only the
-    //  * search id key to find the object
-    //  * </p>
-    //  * 
-    //  * @param key - ID to be search for
-    //  * @return {@code positive integer} representing the index location of the id is
-    //  *         found and {@code negative integer} if the index location cannot be
-    //  *         found or the id does not exist
-    //  */
+    // * <p>
+    // * This method follows the algorithm of binary search but takes in only the
+    // * search id key to find the object
+    // * </p>
+    // *
+    // * @param key - ID to be search for
+    // * @return {@code positive integer} representing the index location of the id
+    // is
+    // * found and {@code negative integer} if the index location cannot be
+    // * found or the id does not exist
+    // */
     // private int binarySearch(String key) {
-    //     int low = 0;
-    //     int high = records.size() - 1;
+    // int low = 0;
+    // int high = records.size() - 1;
 
-    //     while (low <= high) {
-    //         int mid = (int) ((low + high) / 2);
-    //         String midVal = (records.get(mid)).getId();
-    //         int cmp = midVal.compareTo(key);
+    // while (low <= high) {
+    // int mid = (int) ((low + high) / 2);
+    // String midVal = (records.get(mid)).getId();
+    // int cmp = midVal.compareTo(key);
 
-    //         if (cmp < 0)
-    //             low = mid + 1;
-    //         else if (cmp > 0)
-    //             high = mid - 1;
-    //         else
-    //             return mid; // key found
-    //     }
+    // if (cmp < 0)
+    // low = mid + 1;
+    // else if (cmp > 0)
+    // high = mid - 1;
+    // else
+    // return mid; // key found
+    // }
 
-    //     return -(low + 1); // key not found
+    // return -(low + 1); // key not found
     // }
 
     /**
@@ -488,11 +489,11 @@ public class SNIDApp {
      * @param updateID - ID for the object to be updated
      * @param fatherID - ID for the father object
      * @param motherID - ID for the mother object
-     * @throws CompletionExeption if the record for either parent(s) or child
-     *                                   is not found
+     * @throws CompletionExeption if the record for either parent(s) or child is not
+     *                            found
      */
-    public void addParentData(String updateID, String fatherID, String motherID) throws CompletionException{
-        try{
+    public void addParentData(String updateID, String fatherID, String motherID) throws CompletionException {
+        try {
             Citizen person = searchDb(updateID);
             Citizen mother = searchDb(motherID);
             Citizen father = searchDb(fatherID);
@@ -500,10 +501,9 @@ public class SNIDApp {
             person.setParent('F', father);
             person.setParent('M', mother);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new CompletionException("One or more persons could not be found", e);
         }
-     
 
     }
 
@@ -522,15 +522,14 @@ public class SNIDApp {
      */
     public void updateAddress(String updateID, String street, String town, String parish, String country)
             throws CompletionException {
-        
-        try{
+
+        try {
             String line = street + "|" + town + "|" + parish + "|" + country;
             Citizen person = searchDb(updateID);
             person.setAddress(new Address(line));
-        }catch(Exception e){
+        } catch (Exception e) {
             throw new CompletionException("Person could not be found", e);
         }
-        
 
     }
 
@@ -653,39 +652,116 @@ public class SNIDApp {
     }
 
     public static void main(String[] args) {
-        try {
-            SNIDApp app = new SNIDApp("SNID0.txt", ',');
-            for (Citizen citizen : app.getRecords()) {
-                System.out.println(citizen.printPapers());
-                for (Biometric bio : citizen.getBiometricList()) {
-                    System.out.println(((BiometricData) bio).toTUIPrint());
+        int choice = 0;
+        String id;
+        String updateID;
+        String date;
+        Scanner sc = new Scanner(System.in);
+        
+            try {
+                SNIDApp app = new SNIDApp("data.db", ',');
+                
+                while (true) {
+                    System.out.println("");
+                    for (Citizen citizen : app.getRecords()) {
+                        System.out.println(citizen.getId() + " "+ citizen.getName());
+                    }
+                System.out.println(
+                        "1\t-\tRegister Birth\n2\t-\tRegister Marriage\n3\t-\tRegister Death\n4\t-\tGet mother\n5\t-\tGet Father\n6\t-\tSearch for citizen\n7\t-\tAdd Parent\n8\t-\tUpdate Address\n9\t-\tAdd Biometric\n10\t-\tShutdown");
+                
+                choice = sc.nextInt();
+                sc.nextLine();
+                switch (choice) {
+                    case 1:
+                        char gender = sc.nextLine().charAt(0);
+                        int yob = sc.nextInt();
+                        sc.nextLine();
+                        String fname = sc.nextLine();
+                        String mname = sc.nextLine();
+                        String lname = sc.nextLine();
+                        app.registerBirth(gender, yob, fname, mname, lname);
+                        break;
+                    case 2:
+                        String groomId = sc.nextLine();
+                        String brideId = sc.nextLine();
+                        date = sc.nextLine();
+                        app.registerMarriage(groomId, brideId, date);
+                        break;
+                    case 3:
+                        id = sc.nextLine();
+                        String cause = sc.nextLine();
+                        String place = sc.nextLine();
+                        date = sc.nextLine();
+                        app.registerDeath(id, cause, place, date);
+                        break;
+                    case 4:
+                        id = sc.nextLine();
+                        app.getMother(id);
+                        break;
+                    case 5:
+                        id = sc.nextLine();
+                        app.getFather(id);
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        updateID = sc.nextLine();
+                        String fatherID = sc.nextLine();
+                        String motherID = sc.nextLine();
+                        app.addParentData(updateID, fatherID, motherID);
+                        break;
+                    case 8:
+                        updateID = sc.nextLine();
+                        String street = sc.nextLine();
+                        String town = sc.nextLine();
+                        String parish = sc.nextLine();
+                        String country = sc.nextLine();
+                        app.updateAddress(updateID, street, town, parish, country);
+                        break;
+                    case 9:
+                        id = sc.nextLine();
+                        String data = sc.nextLine();
+                        app.addBiometric(id, data);
+                        break;
+                    case 10:
+                        app.shutdown();
+                        break;
+                    default:
+                        break;
+
+                }
+                if (choice == 10) {
+                    break;
                 }
             }
-            app.registerBirth('F', 1970, "Lucy", "Annie", "George");
-            app.registerBirth('M', 1972, "Harry", "Joseph", "George");
-            app.updateAddress("00000001", "12 Test lane", "Town1", "Parish2", "Jamaica");
-            app.updateAddress("00000002", "12 Test lane", "Town1", "Parish2", "Jamaica");
-            String label = app.mailingLabel("00000001");
-            System.out.println(label);
-            app.registerMarriage("00000002", "00000001", "02/04/2001");
-            app.registerBirth('M', 2005, "Tim", "Mike", "George");
-            app.addParentData("00000003", "00000002", "00000001");
-            app.registerDeath("00000001", "Childbirth", "UWI hospital", "06/07/2005");
-            app.registerBirth('F', 2000, "Annie", "Marie", "Bishop");
-            app.addBiometric("00000004", "F9097");
-            System.out.println(app.search("00000003"));
-            System.out.println("complete");
-            System.out.println(app.search("00000004"));
-            System.out.println("complete");
-            System.out.println(((Citizen)(app.searchDb("00000003")).getParent('F')).getNameFull());
-            // app.shutdown();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            //
-            e.printStackTrace();
-        }
+
+                /*
+                 * app.registerBirth('F', 1970, "Lucy", "Annie", "George");
+                 * app.registerBirth('M', 1972, "Harry", "Joseph", "George");
+                 * app.updateAddress("00000001", "12 Test lane", "Town1", "Parish2", "Jamaica");
+                 * app.updateAddress("00000002", "12 Test lane", "Town1", "Parish2", "Jamaica");
+                 * String label = app.mailingLabel("00000001"); System.out.println(label);
+                 * app.registerMarriage("00000002", "00000001", "02/04/2001");
+                 * app.registerBirth('M', 2005, "Tim", "Mike", "George");
+                 * app.addParentData("00000003", "00000002", "00000001");
+                 * app.registerDeath("00000001", "Childbirth", "UWI hospital", "06/07/2005");
+                 * app.registerBirth('F', 2000, "Annie", "Marie", "Bishop");
+                 * app.addBiometric("00000004", "F9097");
+                 * System.out.println(app.search("00000003")); System.out.println("complete");
+                 * System.out.println(app.search("00000004")); System.out.println("complete");
+                 * System.out.println(((Citizen)(app.searchDb("00000003")).getParent('F')).
+                 * getNameFull());
+                 */
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                //
+                e.printStackTrace();
+                
+            }
+            
+        sc.close();
     }
 }

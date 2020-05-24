@@ -31,6 +31,7 @@ public abstract class Person {
     public Person(String id, char gender, int yob, char lifeStatus, Person mother, Person father) {
         this.id =id;
         this.yob = yob;
+        counter++;
         this.lifeStatus = lifeStatus;
         this.gender = gender;
         this.mother =  mother;
