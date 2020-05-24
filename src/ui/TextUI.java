@@ -176,7 +176,12 @@ public class TextUI {
                             String ID = in.nextLine();
 
                             // Search by id
-                            System.out.println(app.search(ID));
+                            if (app.search(ID).equals("")) {
+                                System.out.println("Citizen Not Found");
+                            } else {
+                                System.out.println("Citizen Found: " + app.search(ID));
+                                // System.out.println(app.search(ID));
+                            }
 
                             break;
 
@@ -189,7 +194,12 @@ public class TextUI {
                             String lastName = in.nextLine();
 
                             // search by name
-                            System.out.println(Arrays.toString(app.search(firstName, lastName)));
+                            if (app.search(firstName, lastName).length == 0) {
+                                System.out.println("Citizen Not Found");
+                            } else {
+                                System.out
+                                        .println("Citizen Found: " + Arrays.toString(app.search(firstName, lastName)));
+                            }
 
                             break;
 
@@ -202,8 +212,11 @@ public class TextUI {
                             String tag = in.nextLine();
 
                             // Search by biometric data
-                            System.out.println(Arrays.toString(app.search(tag, value)));
-
+                            if (app.search(tag, value).length == 0) {
+                                System.out.println("Citizen Not Found");
+                            } else {
+                                System.out.println(app.search(tag, value));
+                            }
                             break;
                     } // end of switch for case "g"
 
