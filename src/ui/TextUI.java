@@ -17,15 +17,15 @@ public class TextUI {
 
         // Menu to be displayed to user
         System.out.println("Welcome to the System for National Identification\n");
-        System.out.println("            Main Menu\n");
-        System.out.println("a. Register a Birth\n");
-        System.out.println("b. Update Parent Data\n");
-        System.out.println("c. Update a Citizen's Address\n");
-        System.out.println("d. Register a Death\n");
-        System.out.println("e. Register a Marriage\n");
-        System.out.println("f. Generate a Mailing Label\n");
-        System.out.println("g. Search\n");
-        System.out.println("h. Exit Application\n");
+        System.out.println("                Main Menu\n");
+        System.out.println("a. Register a Birth");
+        System.out.println("b. Update Parent Data");
+        System.out.println("c. Update a Citizen's Address");
+        System.out.println("d. Register a Death");
+        System.out.println("e. Register a Marriage");
+        System.out.println("f. Generate a Mailing Label");
+        System.out.println("g. Search");
+        System.out.println("h. Exit Application");
 
         String option = in.nextLine();
 
@@ -38,21 +38,20 @@ public class TextUI {
                     String gender = in.nextLine();
 
                     // to check if a valid gender is entered
-                    while (!(gender.equals("M")) || !(gender.equals("F"))) {
+                    while (!(gender.equals("M")) && !(gender.equals("F"))) {
                         System.out.println("Not a gender option. Enter M or F");
                         gender = in.nextLine();
                     }
 
                     System.out.println("Enter year of birth");
                     int yob = 0;
+
                     try {
                         yob = in.nextInt();
-                        while (!(in.hasNextInt())) {
-                            yob = in.nextInt();
-                        }
 
-                    } catch (InputMismatchException a) {
-                        System.out.println("Enter an integer representing the year of birth:");
+                    } catch (InputMismatchException i) {
+
+                        System.out.println("Incorrect entry. Please enter an integer representing the year of birth:");
 
                     } // to catch if user does not enter an integer
 
@@ -84,6 +83,7 @@ public class TextUI {
 
                     // Addition of parent informaation to citizen
                     app.addParentData(updateID, fatherID, motherID);
+                    System.out.println("Parent Data Updated\n");
 
                     break;
 
@@ -124,6 +124,7 @@ public class TextUI {
 
                     // Registry of citizen's death
                     app.registerDeath(id, cause, place, date);
+                    System.out.println("Death Registered\n");
 
                     break;
 
@@ -140,6 +141,7 @@ public class TextUI {
 
                     // Registry of marriage
                     app.registerMarriage(groomId, brideId, date1);
+                    System.out.println("Marriage Registered\n");
 
                     break;
 
@@ -150,41 +152,35 @@ public class TextUI {
 
                     // Generation of mailing label
                     app.mailingLabel(Id);
+                    System.out.println("Mailing Label Generated\n");
+                    System.out.println(app.mailingLabel(Id));
 
                     break;
 
                 case "g":
 
                     // Menu to select search criteria
+                    System.out.println("\nSelect an option to search by:\n");
+                    System.out.println("a. To search by id of citizen");
+                    System.out.println("b. To search by first and last name of citizen");
+                    System.out.println("c. To search by biometric data");
+                    System.out.println("d. To exit search");
 
-                    System.out.println("1. To search by id of citizen\n");
-                    System.out.println("2. To search by first and last name of citizen\n");
-                    System.out.println("3. To search by biometric data\n");
-                    System.out.println("4. To exit search");
-
-                    int choice = 0;
-                    try {
-                        choice = in.nextInt();
-                        while (!(in.hasNextInt())) {
-                            choice = in.nextInt();
-                        }
-                    } catch (InputMismatchException a) {
-                        System.out.println("Invalid choice. Enter an option from 1 - 3\n");
-                    }
+                    String choice = in.nextLine();
 
                     switch (choice) {
 
-                        case 1:
+                        case "a":
 
                             System.out.println("Enter citizen id: ");
                             String ID = in.nextLine();
 
                             // Search by id
-                            app.search(ID);
+                            System.out.println(app.search(ID));
 
                             break;
 
-                        case 2:
+                        case "b":
 
                             System.out.println("Enter citizen first name: ");
                             String firstName = in.nextLine();
@@ -193,11 +189,11 @@ public class TextUI {
                             String lastName = in.nextLine();
 
                             // search by name
-                            app.search(firstName, lastName);
+                            System.out.println(Arrays.toString(app.search(firstName, lastName)));
 
                             break;
 
-                        case 3:
+                        case "c":
 
                             System.out.println("Enter the value for the DNA: ");
                             String value = in.nextLine();
@@ -206,7 +202,7 @@ public class TextUI {
                             String tag = in.nextLine();
 
                             // Search by biometric data
-                            app.search(tag, value);
+                            System.out.println(Arrays.toString(app.search(tag, value)));
 
                             break;
                     } // end of switch for case "g"
@@ -230,16 +226,16 @@ public class TextUI {
                     option = in.nextLine();
             }
 
-            System.out.println("Welcome to the System for National Identification\n");
-            System.out.println("            Main Menu\n");
-            System.out.println("a. Register a Birth\n");
-            System.out.println("b. Update Parent Data\n");
-            System.out.println("c. Update a Citizen's Address\n");
-            System.out.println("d. Register a Death\n");
-            System.out.println("e. Register a Marriage\n");
-            System.out.println("f. Generate a Mailing Label\n");
-            System.out.println("g. Search\n");
-            System.out.println("h. Exit Application\n");
+            System.out.println("\nWelcome to the System for National Identification\n");
+            System.out.println("                Main Menu\n");
+            System.out.println("a. Register a Birth");
+            System.out.println("b. Update Parent Data");
+            System.out.println("c. Update a Citizen's Address");
+            System.out.println("d. Register a Death");
+            System.out.println("e. Register a Marriage");
+            System.out.println("f. Generate a Mailing Label");
+            System.out.println("g. Search");
+            System.out.println("h. Exit Application");
 
             option = in.nextLine();
 
