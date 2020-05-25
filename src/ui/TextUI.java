@@ -315,7 +315,7 @@ public class TextUI {
                         System.out.println(
                                 "The format of the data was incorrect. The tag must be 'F' or 'D'. Changes not saved");
                     } catch (CompletionException ce) {
-                        System.out.println("Error. " + ce.getLocalizedMessage());
+                        System.out.println("Error. " + ce.getLocalizedMessage() +" "+ ce.getCause().getLocalizedMessage());
                     }
                     System.out.println("Press enter to return to the menu...");
                     in.nextLine();
@@ -337,7 +337,7 @@ public class TextUI {
                         }
                     } while (true);
                     try {
-                        app.getBiometric(ID, Character.toString(tag));
+                        System.out.println("Data value: "+app.getBiometric(ID, Character.toString(tag)));
                         System.out.println("Request Complete");
                     } catch (CompletionException e) {
                         System.out.println(e.getLocalizedMessage());
@@ -348,7 +348,7 @@ public class TextUI {
                 case "j":
                     try {
                         app.shutdown();
-                        System.out.println("Exiting Program.... Press enter to start the GUI");
+                        System.out.println("Exiting Program....Press enter to exit");
                         in.nextLine();
                     } catch (FileNotFoundException m) {
                         System.out.println("File not found");

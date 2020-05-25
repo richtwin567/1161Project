@@ -556,7 +556,13 @@ public class SNIDApp {
     public void addBiometric(String id, String data) {
         try {
             Citizen citizen = searchDb(id);
-            citizen.addBiometric(new BiometricData(data.charAt(0), data.substring(1)));
+            if (citizen.getBiometric("F")!=null && data.charAt(0)=='F'){
+                throw new Exception("The citizen already has a fingerprint registered in the database.");
+            }else if(citizen.getBiometric("D")!=null && data.charAt(0)=='D'){
+                throw new Exception("The citizen's DNA is already registered in the database.");
+            }else{
+                citizen.addBiometric(new BiometricData(data.charAt(0), data.substring(1)));
+            }
         } catch (InvalidParameterException p) {
             throw p;
         } catch (Exception e) {
