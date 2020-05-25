@@ -158,7 +158,7 @@ public class Citizen
         papers.add(paper);
     }
 
-    //TODO delete printPapers in Citizen method. only for testing
+    /* //printPapers in Citizen method. only for testing
     public String printPapers(){
         StringBuffer printable = new StringBuffer("");
         for (CivicDoc doc :getPapers()){
@@ -166,7 +166,7 @@ public class Citizen
         }
         return printable.toString();
     }
-
+ */
     /**
      * Formats this ciizen's information for display in the GUI app
      * @return the citizen's information

@@ -647,12 +647,11 @@ public class SNIDApp {
         }
     }
 
-    // TODO Delete getRecords in SNIDApp method. Only for testing
+    /*/Only for testing
     public ArrayList<Citizen> getRecords() {
         return records;
     }
-
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         int choice = 0;
         String id;
         String updateID;
@@ -752,7 +751,7 @@ public class SNIDApp {
                  * System.out.println(app.search("00000004")); System.out.println("complete");
                  * System.out.println(((Citizen)(app.searchDb("00000003")).getParent('F')).
                  * getNameFull());
-                 */
+                 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -764,5 +763,5 @@ public class SNIDApp {
             }
             
         sc.close();
-    }
+    } */
 }

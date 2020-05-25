@@ -406,7 +406,7 @@ public class SNIDGUI extends JFrame {
         c.gridx = gridx;
         c.gridy = gridy;
     }
-
+/* 
     public static void main(String[] args) {
         SNIDApp appController;
         try {
@@ -415,8 +415,7 @@ public class SNIDGUI extends JFrame {
             ui.setVisible(true);
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-    }
+    } */
 }
