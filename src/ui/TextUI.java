@@ -4,6 +4,7 @@ import app.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.util.*;
 import java.util.concurrent.CompletionException;
 
@@ -21,7 +22,8 @@ public class TextUI {
      */
     public void go(SNIDApp app) {
         Scanner in = new Scanner(System.in);
-        String option;
+        String option, value, ID;
+        char tag;
         do {
             // Menu to be displayed to user
             System.out.println("Welcome to the System for National Identification\n");
@@ -33,7 +35,9 @@ public class TextUI {
             System.out.println("e. Register a Marriage");
             System.out.println("f. Generate a Mailing Label");
             System.out.println("g. Search");
-            System.out.println("h. Exit Application");
+            System.out.println("h. Add Biometric");
+            System.out.println("i. Get Biometric");
+            System.out.println("j. Exit Application");
 
             option = in.nextLine();
 
@@ -75,8 +79,13 @@ public class TextUI {
                     System.out.println("Enter last name:");
                     String lname = in.nextLine();
 
-                    app.registerBirth(gender.charAt(0), yob, fname, mname, lname);
-                    System.out.println("Request Complete. Press enter to return to the menu...");
+                    try {
+                        app.registerBirth(gender.charAt(0), yob, fname, mname, lname);
+                        System.out.println("Request Complete.");
+                    } catch (CompletionException e) {
+                        System.out.println(e.getLocalizedMessage());
+                    }
+                    System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
@@ -94,12 +103,12 @@ public class TextUI {
 
                         // Addition of parent informaation to citizen
                         app.addParentData(updateID, fatherID, motherID);
-                        System.out.println("Parent Data Updated\n");
+                        System.out.println("Parent Data Updated. Request Complete.\n");
                     } catch (CompletionException p) {
                         System.out.println("Check to ensure that ALL IDs entered are valid. Try again");
 
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
+                    System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
@@ -209,7 +218,7 @@ public class TextUI {
                         case "a":
 
                             System.out.println("Enter citizen id: ");
-                            String ID = in.nextLine();
+                            ID = in.nextLine();
 
                             // Search by id
                             if (app.search(ID).equals("")) {
@@ -230,11 +239,15 @@ public class TextUI {
                             String lastName = in.nextLine();
 
                             // search by name
-                            if (app.search(firstName, lastName).length == 0) {
-                                System.out.println("Citizen Not Found");
-                            } else {
-                                System.out
-                                        .println("Citizen Found: " + Arrays.toString(app.search(firstName, lastName)));
+                            try {
+                                if (app.search(firstName, lastName).length == 0) {
+                                    System.out.println("Citizen Not Found");
+                                } else {
+                                    System.out.println(
+                                            "Citizen Found: " + Arrays.toString(app.search(firstName, lastName)));
+                                }
+                            } catch (CompletionException e) {
+                                System.out.println(e.getLocalizedMessage());
                             }
 
                             break;
@@ -242,16 +255,33 @@ public class TextUI {
                         case "c":
 
                             System.out.println("Enter the value for the Biometric data: ");
-                            String value = in.nextLine();
+                            value = in.nextLine();
 
-                            System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
-                            char tag = in.nextLine().charAt(0);
-
+                            do {
+                                try {
+                                    System.out.println(
+                                            "Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
+                                    tag = in.nextLine().toUpperCase().charAt(0);
+                                    if (tag == 'F' || tag == 'D') {
+                                        break;
+                                    } else {
+                                        System.out.println(
+                                                "Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
+                                    }
+                                } catch (Exception e) {
+                                    System.out
+                                            .println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
+                                }
+                            } while (true);
                             // Search by biometric data
-                            if (app.search(tag, value).isBlank()) {
-                                System.out.println("Citizen Not Found");
-                            } else {
-                                System.out.println(app.search(tag, value));
+                            try {
+                                if (app.search(tag, value).isBlank()) {
+                                    System.out.println("Citizen Not Found");
+                                } else {
+                                    System.out.println(app.search(tag, value));
+                                }
+                            } catch (CompletionException e) {
+                                System.out.println(e.getLocalizedMessage());
                             }
                             break;
                     } // end of switch for case "g"
@@ -260,6 +290,54 @@ public class TextUI {
                     break;
 
                 case "h":
+                    System.out.println("Enter citizen id: ");
+                    ID = in.nextLine();
+                    do {
+                        try {
+                            System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
+                            tag = in.nextLine().toUpperCase().charAt(0);
+                            if (tag == 'F' || tag == 'D') {
+                                break;
+                            } else {
+                                System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
+                        }
+                    } while (true);
+                    System.out.println("Enter the value for the Biometric data: ");
+                    value = in.nextLine();
+                    try {
+                        app.addBiometric(ID, tag + value);
+                    } catch (InvalidParameterException e) {
+                        System.out.println(
+                                "The format of the data was incorrect. The tag must be 'F' or 'D'. Changes not saved");
+                    } catch (CompletionException ce) {
+                        System.out.println("Error. " + ce.getLocalizedMessage());
+                    }
+                    break;
+                case "i":
+                    System.out.println("Enter citizen id: ");
+                    ID = in.nextLine();
+                    do {
+                        try {
+                            System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
+                            tag = in.nextLine().toUpperCase().charAt(0);
+                            if (tag == 'F' || tag == 'D') {
+                                break;
+                            } else {
+                                System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
+                        }
+                    } while (true);
+                    try {
+                        app.getBiometric(ID, Character.toString(tag));
+                    } catch (CompletionException e) {
+                        System.out.println(e.getLocalizedMessage());
+                    }
+                case "j":
                     try {
                         app.shutdown();
                         System.out.println("Exiting Program.... Press enter to start the GUI");
@@ -274,10 +352,10 @@ public class TextUI {
 
                 default:
                     System.out.println("Invalid choice. Select from a-h\n");
-                    option = in.nextLine();
+                    break;
             }
 
-        } while (!(option.equalsIgnoreCase("h")));// end of do while loop
+        } while (!(option.equalsIgnoreCase("j")));// end of do while loop
         in.close();
 
     }
