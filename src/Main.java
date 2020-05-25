@@ -20,6 +20,9 @@ public class Main {
             SNIDApp app = new SNIDApp("data.db",',');
             TextUI ui = new TextUI();
             ui.go(app);
+            app = null;
+            SNIDGUI gui = new SNIDGUI(new SNIDApp("data.db",','));
+            gui.setVisible(true);
         }catch(InvalidParameterException | FileNotFoundException  e){
 
         }catch(IOException i){
