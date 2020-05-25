@@ -21,22 +21,22 @@ public class TextUI {
      */
     public void go(SNIDApp app) {
         Scanner in = new Scanner(System.in);
-        String option;
-        do {
-            // Menu to be displayed to user
-            System.out.println("Welcome to the System for National Identification\n");
-            System.out.println("                Main Menu\n");
-            System.out.println("a. Register a Birth");
-            System.out.println("b. Update Parent Data");
-            System.out.println("c. Update a Citizen's Address");
-            System.out.println("d. Register a Death");
-            System.out.println("e. Register a Marriage");
-            System.out.println("f. Generate a Mailing Label");
-            System.out.println("g. Search");
-            System.out.println("h. Exit Application");
 
-            option = in.nextLine();
+        // Menu to be displayed to user
+        System.out.println("Welcome to the System for National Identification\n");
+        System.out.println("                Main Menu\n");
+        System.out.println("a. Register a Birth");
+        System.out.println("b. Update Parent Data");
+        System.out.println("c. Update a Citizen's Address");
+        System.out.println("d. Register a Death");
+        System.out.println("e. Register a Marriage");
+        System.out.println("f. Generate a Mailing Label");
+        System.out.println("g. Search");
+        System.out.println("h. Exit Application");
 
+        String option = in.nextLine();
+
+        while (!(option.equalsIgnoreCase("h"))) {
             switch (option.toLowerCase()) {
 
                 case "a":
@@ -53,18 +53,16 @@ public class TextUI {
                     System.out.println("Enter year of birth");
                     int yob = 0;
 
-                    while (true) {
-                        try {
-                            yob = in.nextInt();
-                            in.nextLine();
-                            break;
-                        } catch (InputMismatchException i) {
+                    try {
+                        yob = in.nextInt();
 
-                            System.out.println(
-                                    "Incorrect entry. Please enter an integer representing the year of birth:");
-                            in.nextLine();
-                        } // to catch if user does not enter an integer
-                    }
+                    } catch (InputMismatchException i) {
+
+                        System.out.println("Incorrect entry. Please enter an integer representing the year of birth:");
+
+                    } // to catch if user does not enter an integer
+
+                    in.nextLine();
 
                     System.out.println("Enter first name: ");
                     String fname = in.nextLine();
@@ -241,14 +239,14 @@ public class TextUI {
 
                         case "c":
 
-                            System.out.println("Enter the value for the Biometric data: ");
+                            System.out.println("Enter the value for the DNA: ");
                             String value = in.nextLine();
 
                             System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
-                            char tag = in.nextLine().charAt(0);
+                            String tag = in.nextLine();
 
                             // Search by biometric data
-                            if (app.search(tag, value).isBlank()) {
+                            if (app.search(tag, value).length == 0) {
                                 System.out.println("Citizen Not Found");
                             } else {
                                 System.out.println(app.search(tag, value));
@@ -265,10 +263,10 @@ public class TextUI {
                         System.out.println("Exiting Program.... Press enter to start the GUI");
                         in.nextLine();
                     } catch (FileNotFoundException m) {
-                        m.printStackTrace();
+                        System.out.println("File Not Found");
 
                     } catch (IOException n) {
-                        n.printStackTrace();
+                        System.out.println("File Not Found");
                     }
 
                     break;
@@ -278,7 +276,21 @@ public class TextUI {
                     option = in.nextLine();
             }
 
-        } while (!(option.equalsIgnoreCase("h")));// end of do while loop
+            System.out.println("\nWelcome to the System for National Identification\n");
+            System.out.println("                Main Menu\n");
+            System.out.println("a. Register a Birth");
+            System.out.println("b. Update Parent Data");
+            System.out.println("c. Update a Citizen's Address");
+            System.out.println("d. Register a Death");
+            System.out.println("e. Register a Marriage");
+            System.out.println("f. Generate a Mailing Label");
+            System.out.println("g. Search");
+            System.out.println("h. Exit Application");
+
+            option = in.nextLine();
+
+        } // end of while loop
+
         in.close();
 
     }
