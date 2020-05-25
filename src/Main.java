@@ -55,10 +55,11 @@ public class Main {
                             System.out.println("Starting GUI....");
                             SNIDGUI gui = new SNIDGUI(new SNIDApp("data.db", ','));
                             gui.setVisible(true);
-                            
+
                             break;
                         case 0:
-                         System.out.println("Thank you for using this program! The program will exit now");
+                            System.out.println("Thank you for using this program! The program will exit now");
+                            break;
                         default:
                             System.out.println("Invalid option. Try again");
                             break;

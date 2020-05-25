@@ -2,12 +2,12 @@
 00000002,M,1972,Harry,Joseph,George,A,,,F3485&D7625&,M|00000002|00000001|02/04/2001@,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
 00000003,M,2005,Tim,Mike,George,A,00000001,00000002,D2568&F1024&,M|00000003|00000004|02/11/2020@,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
 00000004,F,2000,Annie,Marie,Bishop,A,00000001,00000002,F9097&D5026&,M|00000003|00000004|02/11/2020@,149 C Spring Rd|Denham Town|Kingston|Jamaica,EOL
-00000005,F,1978,Elaina,Freeman,Leyton,D,00000001,00000002,F0874&D2345&,M|00000006|00000005|23/12/1990@D|drowning|01/21/45|Hill and Gully@,|,EOL
+00000005,F,1978,Elaina,Freeman,Leyton,D,00000001,00000002,F0874&D2345&,M|00000006|00000005|23/12/1990@D|drowning|21/01/2006|Hill and Gully@,13 Constant Spring Road|Kingston 10|Kingston|Jamaica,EOL
 00000006,M,1987,Lester,Marion,Leyton,A,,,F4587&D7867&,M|00000006|00000005|23/12/1990@,Shop 4 Church Crescent St |St. Ann's Bay|St. Ann|Jamaica,EOL
 00000007,M,2010,Red,Casey,Shirley,A,00000006,00000005,D5236&F0333&,,58A Molynes Rd.|Kingston|Kingston|Jamaica,EOL
 00000008,F,1994,Zola,Darlene,Poindexter,A,00000005,00000006,D7836&F353&,,35 Beeston St|Kingston|Louisville|Jamaica,EOL
-00000009,F,1996,Adela,Mona,Foss,A,00000001,00000002,D4561&F4569&,M|00000011|00000009|01/02/1999@,Shop 37 Overton Plaza|Montego Bay|St. James|Jamaica,EOL
-00000010,F,2010,Lacy,James,Gibb,D,00000003,00000004,D7812&F6333&,D|suicide|01/02/2015|Barbican@,20 Constant Spring Rd|Kingston|Kingston|Jamaica,EOL
+00000009,F,1996,Adela,Mona,Foss,A,,,D4561&F4569&,M|00000011|00000009|01/02/1999@,Shop 37 Overton Plaza|Montego Bay|St. James|Jamaica,EOL
+00000010,F,2010,Lacy,James,Gibb,D,,,D7812&F6333&,D|suicide|01/02/2015|Barbican@,20 Constant Spring Rd|Kingston|Kingston|Jamaica,EOL
 00000011,M,1986,Nigel,Malachi,Foss,A,,,F0215&D8520&,M|00000011|00000009|01/02/1999@,Shop 37 Overton Plaza|Montego Bay|St. James|Jamaica,EOL
 00000012,F,2008,Evangelina,Lucius,Quincey,A,,,D9765&F0744&,,37 Lyndhurst Road|Kingston 5|Kingston|Jamaica,EOL
 00000013,F,2000,Jennifer,Maya,Potter,A,,,F8545&D4342&,,11A Cranbourne Avenue|Kingston 10|Kingston|Jamaica,EOL

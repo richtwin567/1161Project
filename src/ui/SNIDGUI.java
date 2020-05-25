@@ -291,7 +291,7 @@ public class SNIDGUI extends JFrame {
             try {
                 if (searchByIdRadioButton.isSelected()) {
                     String t = appController.searchGUI(searchValueField.getText());
-                    String[] temp = t.split(",");
+                    String[] temp = t.split("\\|");
                     String id = temp[0];
                     String info = temp[1];
                     SearchResult result = new SearchResult(id, info);
@@ -300,7 +300,7 @@ public class SNIDGUI extends JFrame {
                 } else if (searchByBiometricRadioButton.isSelected()) {
                     String t = appController.searchGUI(searchValueField.getText().charAt(0),
                             searchValueField.getText().substring(1));
-                    String[] temp = t.split(",");
+                    String[] temp = t.split("\\|");
                     String id = temp[0];
                     String info = temp[1];
                     SearchResult result = new SearchResult(id, info);
@@ -314,7 +314,7 @@ public class SNIDGUI extends JFrame {
                     }
                     String[][] temp = new String[t.length][5];
                     for (int x = 0; x < t.length; x++) {
-                        temp[x] = t[x].split(",");
+                        temp[x] = t[x].split("\\|");
                         String id = temp[x][0];
                         String info = temp[x][1];
                         SearchResult result = new SearchResult(id, info);

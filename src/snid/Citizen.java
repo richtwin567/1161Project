@@ -176,7 +176,7 @@ public class Citizen
         String tab = "&#9 ";
         String eol = "<br/>";
         String listBegin = "<ul style=\"list-style-type:none\">";
-        print.append(getId() + ",");
+        print.append(getId() + "|");
         print.append("<html><head><style> body {font-family: Dialog;font-size: 10px}</style></head><body>");
         print.append("<b>Sex:</b>" + tab + tab + (getGender()=='F'?"Female":"Male") + eol );
         print.append("<b>Year of Birth:</b>" + tab + getYOB() + eol);
@@ -184,6 +184,8 @@ public class Citizen
         print.append("<b>Middle Name:</b>" + tab + getNameAttr().getMiddleName() + eol);
         print.append("<b>Last Name:</b>" + tab + getNameAttr().getLastName() + eol);
         print.append("<b>Life Status:</b>"+tab + (getLifeStatus()=='A'?"Alive":"Deceased")+eol);
+        print.append("<b>Mother:</b>"+tab+tab+(getParent('M')==null?"N/A":((((Citizen)getParent('M')).getName()) + " - "+ getParent('M').getId())) +eol);
+        print.append("<b>Father:</b>"+tab+tab+(getParent('F')==null?"N/A":((((Citizen)getParent('F')).getName()) + " - "+ getParent('F').getId())) +eol);
         print.append("<i><b>Address</b></i>" + eol + listBegin);
         print.append("<li>" + getAddress().toGUIPrint() + "</li></ul>" + eol);
         print.append("<i><b>Civic Documents</b></i>" + eol + listBegin);
