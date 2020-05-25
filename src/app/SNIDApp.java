@@ -499,11 +499,18 @@ public class SNIDApp {
             Citizen mother = searchDb(motherID);
             Citizen father = searchDb(fatherID);
 
-            person.setParent('F', father);
-            person.setParent('M', mother);
-
+            if (person==null){
+                throw new Exception("The citizen whose parents should be added to their record was not found. ");
+            }else{
+                if (father==null || mother==null){
+                    throw new Exception("Mother or father not found. ");
+                }else{
+                person.setParent('F', father);
+                person.setParent('M', mother);
+                }
+            }
         } catch (Exception e) {
-            throw new CompletionException("One or more persons could not be found", e);
+            throw new CompletionException("An error occured, the parents could not be added. ", e);
         }
 
     }

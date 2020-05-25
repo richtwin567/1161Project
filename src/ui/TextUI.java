@@ -105,7 +105,7 @@ public class TextUI {
                         app.addParentData(updateID, fatherID, motherID);
                         System.out.println("Parent Data Updated. Request Complete.\n");
                     } catch (CompletionException p) {
-                        System.out.println("Check to ensure that ALL IDs entered are valid. Try again");
+                        System.out.println(p.getLocalizedMessage()+p.getCause().getLocalizedMessage()+" Check to ensure that ALL IDs entered are valid. Try again");
 
                     }
                     System.out.println("Press enter to return to the menu...");
@@ -132,10 +132,11 @@ public class TextUI {
                     // Update of citizen's address
                     try {
                         app.updateAddress(updateId, street, town, parish, country);
+                        System.out.println("Request Complete");
                     } catch (CompletionException r) {
                         System.out.println("Citizen ID not found. Try Again Entering a Valid ID");
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
+                    System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
@@ -160,7 +161,7 @@ public class TextUI {
                     } catch (CompletionException y) {
                         System.out.println("Invalid citizen ID. Check to ensure that correct ID was entered");
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
+                    System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
@@ -181,7 +182,7 @@ public class TextUI {
                     } catch (CompletionException w) {
                         System.out.println("Check to ensure that both groom and bride ID are valid. Try Again");
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
+                    System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
@@ -198,7 +199,7 @@ public class TextUI {
                         System.out.println("Mailing Label Generated\n");
                         System.out.println(app.mailingLabel(Id));
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
+                    System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
@@ -285,7 +286,7 @@ public class TextUI {
                             }
                             break;
                     } // end of switch for case "g"
-                    System.out.println("Request Complete. Press enter to return to the menu...");
+                    System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
@@ -309,12 +310,15 @@ public class TextUI {
                     value = in.nextLine();
                     try {
                         app.addBiometric(ID, tag + value);
+                        System.out.println("Request Complete");
                     } catch (InvalidParameterException e) {
                         System.out.println(
                                 "The format of the data was incorrect. The tag must be 'F' or 'D'. Changes not saved");
                     } catch (CompletionException ce) {
                         System.out.println("Error. " + ce.getLocalizedMessage());
                     }
+                    System.out.println("Press enter to return to the menu...");
+                    in.nextLine();
                     break;
                 case "i":
                     System.out.println("Enter citizen id: ");
@@ -334,9 +338,13 @@ public class TextUI {
                     } while (true);
                     try {
                         app.getBiometric(ID, Character.toString(tag));
+                        System.out.println("Request Complete");
                     } catch (CompletionException e) {
                         System.out.println(e.getLocalizedMessage());
                     }
+                    System.out.println("Press enter to return to the menu...");
+                    in.nextLine();
+                    break;
                 case "j":
                     try {
                         app.shutdown();

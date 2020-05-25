@@ -1,6 +1,6 @@
-00000001,F,1970,Lucy,Annie,George,D,,,,M|00000002|00000001|02/04/2001@D|Childbirth|06/07/2005|UWI hospital@,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
-00000002,M,1972,Harry,Joseph,George,A,,,,M|00000002|00000001|02/04/2001@,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
-00000003,M,2005,Tim,Mike,George,A,00000001,00000002,,,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
+00000001,F,1970,Lucy,Annie,George,D,,,F8278&D4643&,M|00000002|00000001|02/04/2001@D|Childbirth|06/07/2005|UWI hospital@,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
+00000002,M,1972,Harry,Joseph,George,A,,,F3485&D7625&,M|00000002|00000001|02/04/2001@,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
+00000003,M,2005,Tim,Mike,George,A,00000001,00000002,D2568&F1024&,,80 Hagley Park Road|Kingston|Kingston|Jamaica,EOL
 00000004,F,2000,Annie,Marie,Bishop,A,,,F9097&,,14 Hillview Avenue|14 Hillview Avenue,EOL
 00000005,F,1978,Elaina,Freeman,Leyton,A,,,,M|00000006|00000005|23/12/1990@,|,EOL
 00000006,M,1987,Lester,Marion,Leyton,A,,,,M|00000006|00000005|23/12/1990@,|,EOL
