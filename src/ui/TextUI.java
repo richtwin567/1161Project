@@ -10,15 +10,9 @@ import java.util.concurrent.CompletionException;
 /**
  * Text-based menu interface for SNID Management. Interacts with SNIDApp
  */
+
 public class TextUI {
 
-    /**
-     * Starts the TextUI and handles all user interactions. Saves changes made to
-     * the databse on shutdown.
-     * 
-     * @param app An instance of SNIDApp to be used to manipulate the database of
-     *            citizens
-     */
     public void go(SNIDApp app) {
         Scanner in = new Scanner(System.in);
 
@@ -74,8 +68,7 @@ public class TextUI {
                     String lname = in.nextLine();
 
                     app.registerBirth(gender.charAt(0), yob, fname, mname, lname);
-                    System.out.println("Request Complete. Press enter to return to the menu...");
-                    in.nextLine();
+
                     break;
 
                 case "b":
@@ -97,8 +90,6 @@ public class TextUI {
                         System.out.println("Check to ensure that ALL IDs entered are valid. Try again");
 
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
-                    in.nextLine();
                     break;
 
                 case "c":
@@ -124,8 +115,7 @@ public class TextUI {
                     } catch (CompletionException r) {
                         System.out.println("Citizen ID not found. Try Again Entering a Valid ID");
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
-                    in.nextLine();
+
                     break;
 
                 case "d":
@@ -149,8 +139,6 @@ public class TextUI {
                     } catch (CompletionException y) {
                         System.out.println("Invalid citizen ID. Check to ensure that correct ID was entered");
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
-                    in.nextLine();
                     break;
 
                 case "e":
@@ -170,8 +158,6 @@ public class TextUI {
                     } catch (CompletionException w) {
                         System.out.println("Check to ensure that both groom and bride ID are valid. Try Again");
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
-                    in.nextLine();
                     break;
 
                 case "f":
@@ -187,8 +173,7 @@ public class TextUI {
                         System.out.println("Mailing Label Generated\n");
                         System.out.println(app.mailingLabel(Id));
                     }
-                    System.out.println("Request Complete. Press enter to return to the menu...");
-                    in.nextLine();
+
                     break;
 
                 case "g":
@@ -253,15 +238,12 @@ public class TextUI {
                             }
                             break;
                     } // end of switch for case "g"
-                    System.out.println("Request Complete. Press enter to return to the menu...");
-                    in.nextLine();
+
                     break;
 
                 case "h":
                     try {
                         app.shutdown();
-                        System.out.println("Exiting Program.... Press enter to start the GUI");
-                        in.nextLine();
                     } catch (FileNotFoundException m) {
                         System.out.println("File Not Found");
 
@@ -275,6 +257,8 @@ public class TextUI {
                     System.out.println("Invalid choice. Select from a-h\n");
                     option = in.nextLine();
             }
+            System.out.println("Request Complete. Press enter to return to the menu...");
+            in.nextLine();
 
             System.out.println("\nWelcome to the System for National Identification\n");
             System.out.println("                Main Menu\n");
@@ -295,10 +279,13 @@ public class TextUI {
 
     }
 
-    /*
-     * public static void main(String[] args) { TextUI ui = new TextUI(); try {
-     * ui.go(new SNIDApp("data.db", ',')); } catch (Exception e) {
-     * e.printStackTrace(); } }
-     */
+    public static void main(String[] args) {
+        TextUI ui = new TextUI();
+        try {
+            ui.go(new SNIDApp("data.db", ','));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
