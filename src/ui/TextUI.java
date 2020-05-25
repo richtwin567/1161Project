@@ -260,22 +260,7 @@ public class TextUI {
             System.out.println("Request Complete. Press enter to return to the menu...");
             in.nextLine();
 
-            System.out.println("\nWelcome to the System for National Identification\n");
-            System.out.println("                Main Menu\n");
-            System.out.println("a. Register a Birth");
-            System.out.println("b. Update Parent Data");
-            System.out.println("c. Update a Citizen's Address");
-            System.out.println("d. Register a Death");
-            System.out.println("e. Register a Marriage");
-            System.out.println("f. Generate a Mailing Label");
-            System.out.println("g. Search");
-            System.out.println("h. Exit Application");
-
-            option = in.nextLine();
-
-        } // end of while loop
-
-        in.close();
+        in.close();}
 
     }
 
