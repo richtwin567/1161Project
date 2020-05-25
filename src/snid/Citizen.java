@@ -183,6 +183,7 @@ public class Citizen
         print.append("<b>First Name:</b>" + tab + getNameAttr().getFirstName() + eol);
         print.append("<b>Middle Name:</b>" + tab + getNameAttr().getMiddleName() + eol);
         print.append("<b>Last Name:</b>" + tab + getNameAttr().getLastName() + eol);
+        print.append("<b>Life Status:</b>"+tab + (getLifeStatus()=='A'?"Alive":"Deceased")+eol);
         print.append("<i><b>Address</b></i>" + eol + listBegin);
         print.append("<li>" + getAddress().toGUIPrint() + "</li></ul>" + eol);
         print.append("<i><b>Civic Documents</b></i>" + eol + listBegin);

@@ -176,10 +176,22 @@ public class SNIDApp {
     public void registerDeath(String id, String cause, String place, String date) {
         try {
             Citizen newlyDead = searchDb(id);
-            newlyDead.setLifeStatus(1);
-            newlyDead.addPaper(new DeathCertificate(cause, date, place));
+            if (newlyDead == null) {
+                throw new Exception(
+                        "The citizen could not be found in the database. Check to see if the correct ID was entered.");
+            } else {
+                ArrayList<Character> types = new ArrayList<>();
+                newlyDead.getPapers().forEach((n) -> types.add(n.getType()));
+                types.trimToSize();
+                if (types.contains(Character.valueOf('D'))) {
+                    throw new Exception("This citizen's death has already been registered.");
+                } else {
+                    newlyDead.setLifeStatus(1);
+                    newlyDead.addPaper(new DeathCertificate(cause, date, place));
+                }
+            }
         } catch (Exception e) {
-            throw new CompletionException("Death could not be registered", e);
+            throw new CompletionException("Death could not be registered.", e);
         }
     }
 
@@ -199,11 +211,33 @@ public class SNIDApp {
         try {
             Citizen bride = searchDb(brideId);
             Citizen groom = searchDb(groomId);
-            bride.changeLastName(groom.getNameAttr().getLastName());
-            bride.addPaper(new MarriageCertificate(groomId, brideId, date));
-            groom.addPaper(new MarriageCertificate(groomId, brideId, date));
+            if (bride == null) {
+                throw new Exception(
+                        "The bride could not be found in the database. Check the bride ID entered to ensure it is correct.");
+            } else if (groom == null) {
+                throw new Exception(
+                        "The groom could not be found in the database. Check the groom ID entered to ensure it is correct.");
+            } else {
+                ArrayList<Character> typesb = new ArrayList<>();
+                bride.getPapers().forEach((n) -> typesb.add(n.getType()));
+                typesb.trimToSize();
+                ArrayList<Character> typesg = new ArrayList<>();
+                groom.getPapers().forEach((n) -> typesg.add(n.getType()));
+                typesg.trimToSize();
+                if (typesb.contains(Character.valueOf('M')) && !typesg.contains(Character.valueOf('M'))) {
+                    throw new Exception("The selected bride is already married.");
+                } else if (!typesb.contains(Character.valueOf('M')) && typesg.contains(Character.valueOf('M'))) {
+                    throw new Exception("The selected groom is already married.");
+                } else if (typesb.contains(Character.valueOf('M')) && typesg.contains(Character.valueOf('M'))) {
+                    throw new Exception("The selected bride and groom are already married.");
+                } else {
+                    bride.changeLastName(groom.getNameAttr().getLastName());
+                    bride.addPaper(new MarriageCertificate(groomId, brideId, date));
+                    groom.addPaper(new MarriageCertificate(groomId, brideId, date));
+                }
+            }
         } catch (Exception e) {
-            throw new CompletionException("Marriage could not be registered", e);
+            throw new CompletionException("Marriage could not be registered.", e);
         }
     }
 
@@ -449,38 +483,6 @@ public class SNIDApp {
         }
     }
 
-    // /**
-    // * <p>
-    // * This method follows the algorithm of binary search but takes in only the
-    // * search id key to find the object
-    // * </p>
-    // *
-    // * @param key - ID to be search for
-    // * @return {@code positive integer} representing the index location of the id
-    // is
-    // * found and {@code negative integer} if the index location cannot be
-    // * found or the id does not exist
-    // */
-    // private int binarySearch(String key) {
-    // int low = 0;
-    // int high = records.size() - 1;
-
-    // while (low <= high) {
-    // int mid = (int) ((low + high) / 2);
-    // String midVal = (records.get(mid)).getId();
-    // int cmp = midVal.compareTo(key);
-
-    // if (cmp < 0)
-    // low = mid + 1;
-    // else if (cmp > 0)
-    // high = mid - 1;
-    // else
-    // return mid; // key found
-    // }
-
-    // return -(low + 1); // key not found
-    // }
-
     /**
      * <p>
      * This method updates the reference locations for a Citizen object using a
@@ -499,14 +501,14 @@ public class SNIDApp {
             Citizen mother = searchDb(motherID);
             Citizen father = searchDb(fatherID);
 
-            if (person==null){
+            if (person == null) {
                 throw new Exception("The citizen whose parents should be added to their record was not found. ");
-            }else{
-                if (father==null || mother==null){
+            } else {
+                if (father == null || mother == null) {
                     throw new Exception("Mother or father not found. ");
-                }else{
-                person.setParent('F', father);
-                person.setParent('M', mother);
+                } else {
+                    person.setParent('F', father);
+                    person.setParent('M', mother);
                 }
             }
         } catch (Exception e) {
@@ -556,17 +558,21 @@ public class SNIDApp {
     public void addBiometric(String id, String data) {
         try {
             Citizen citizen = searchDb(id);
-            if (citizen.getBiometric("F")!=null && data.charAt(0)=='F'){
+            if (citizen == null) {
+                throw new Exception("Citizen not found");
+            } else if (!search(data.charAt(0), data.substring(1)).isEmpty()) {
+                throw new Exception("This biometric data already exists in the database");
+            } else if (citizen.getBiometric("F") != null && data.charAt(0) == 'F') {
                 throw new Exception("The citizen already has a fingerprint registered in the database.");
-            }else if(citizen.getBiometric("D")!=null && data.charAt(0)=='D'){
+            } else if (citizen.getBiometric("D") != null && data.charAt(0) == 'D') {
                 throw new Exception("The citizen's DNA is already registered in the database.");
-            }else{
+            } else {
                 citizen.addBiometric(new BiometricData(data.charAt(0), data.substring(1)));
             }
         } catch (InvalidParameterException p) {
             throw p;
         } catch (Exception e) {
-            throw new CompletionException("The biometric data could not be added to the ciizen's record", e);
+            throw new CompletionException("The biometric data could not be added to the ciizen's record.", e);
         }
     }
 
@@ -585,7 +591,9 @@ public class SNIDApp {
             Citizen citizen = searchDb(id);
             return citizen.getBiometric(tag).getValue();
         } catch (Exception e) {
-            throw new CompletionException("Biometric data could not be retrieved", e);
+            throw new CompletionException(
+                    "Biometric data could not be retrieved. It was not found in the database. Check to see that the search data was entered correctly. If not, try again.",
+                    e);
         }
     }
 
@@ -659,121 +667,4 @@ public class SNIDApp {
         }
     }
 
-    /*/Only for testing
-    public ArrayList<Citizen> getRecords() {
-        return records;
-    }
-     public static void main(String[] args) {
-        int choice = 0;
-        String id;
-        String updateID;
-        String date;
-        Scanner sc = new Scanner(System.in);
-        
-            try {
-                SNIDApp app = new SNIDApp("data.db", ',');
-                
-                while (true) {
-                    System.out.println("");
-                    for (Citizen citizen : app.getRecords()) {
-                        System.out.println(citizen.getId() + " "+ citizen.getName());
-                    }
-                System.out.println(
-                        "1\t-\tRegister Birth\n2\t-\tRegister Marriage\n3\t-\tRegister Death\n4\t-\tGet mother\n5\t-\tGet Father\n6\t-\tSearch for citizen\n7\t-\tAdd Parent\n8\t-\tUpdate Address\n9\t-\tAdd Biometric\n10\t-\tShutdown");
-                
-                choice = sc.nextInt();
-                sc.nextLine();
-                switch (choice) {
-                    case 1:
-                        char gender = sc.nextLine().charAt(0);
-                        int yob = sc.nextInt();
-                        sc.nextLine();
-                        String fname = sc.nextLine();
-                        String mname = sc.nextLine();
-                        String lname = sc.nextLine();
-                        app.registerBirth(gender, yob, fname, mname, lname);
-                        break;
-                    case 2:
-                        String groomId = sc.nextLine();
-                        String brideId = sc.nextLine();
-                        date = sc.nextLine();
-                        app.registerMarriage(groomId, brideId, date);
-                        break;
-                    case 3:
-                        id = sc.nextLine();
-                        String cause = sc.nextLine();
-                        String place = sc.nextLine();
-                        date = sc.nextLine();
-                        app.registerDeath(id, cause, place, date);
-                        break;
-                    case 4:
-                        id = sc.nextLine();
-                        app.getMother(id);
-                        break;
-                    case 5:
-                        id = sc.nextLine();
-                        app.getFather(id);
-                        break;
-                    case 6:
-                        break;
-                    case 7:
-                        updateID = sc.nextLine();
-                        String fatherID = sc.nextLine();
-                        String motherID = sc.nextLine();
-                        app.addParentData(updateID, fatherID, motherID);
-                        break;
-                    case 8:
-                        updateID = sc.nextLine();
-                        String street = sc.nextLine();
-                        String town = sc.nextLine();
-                        String parish = sc.nextLine();
-                        String country = sc.nextLine();
-                        app.updateAddress(updateID, street, town, parish, country);
-                        break;
-                    case 9:
-                        id = sc.nextLine();
-                        String data = sc.nextLine();
-                        app.addBiometric(id, data);
-                        break;
-                    case 10:
-                        app.shutdown();
-                        break;
-                    default:
-                        break;
-
-                }
-                if (choice == 10) {
-                    break;
-                }
-            }
-
-                /*
-                 * app.registerBirth('F', 1970, "Lucy", "Annie", "George");
-                 * app.registerBirth('M', 1972, "Harry", "Joseph", "George");
-                 * app.updateAddress("00000001", "12 Test lane", "Town1", "Parish2", "Jamaica");
-                 * app.updateAddress("00000002", "12 Test lane", "Town1", "Parish2", "Jamaica");
-                 * String label = app.mailingLabel("00000001"); System.out.println(label);
-                 * app.registerMarriage("00000002", "00000001", "02/04/2001");
-                 * app.registerBirth('M', 2005, "Tim", "Mike", "George");
-                 * app.addParentData("00000003", "00000002", "00000001");
-                 * app.registerDeath("00000001", "Childbirth", "UWI hospital", "06/07/2005");
-                 * app.registerBirth('F', 2000, "Annie", "Marie", "Bishop");
-                 * app.addBiometric("00000004", "F9097");
-                 * System.out.println(app.search("00000003")); System.out.println("complete");
-                 * System.out.println(app.search("00000004")); System.out.println("complete");
-                 * System.out.println(((Citizen)(app.searchDb("00000003")).getParent('F')).
-                 * getNameFull());
-                 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                //
-                e.printStackTrace();
-                
-            }
-            
-        sc.close();
-    } */
 }

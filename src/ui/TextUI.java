@@ -5,6 +5,7 @@ import app.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletionException;
 
@@ -23,7 +24,7 @@ public class TextUI {
     public void go(SNIDApp app) {
         Scanner in = new Scanner(System.in);
         String option, value, ID;
-        char tag;
+        String tag;
         do {
             // Menu to be displayed to user
             System.out.println("Welcome to the System for National Identification\n");
@@ -44,6 +45,7 @@ public class TextUI {
             switch (option.toLowerCase()) {
 
                 case "a":
+                    System.out.println("\n----REGISTER BIRTH----\n");
                     // Input of birth information
                     System.out.println("Enter gender (M for male or F for female):");
                     String gender = in.nextLine();
@@ -90,7 +92,7 @@ public class TextUI {
                     break;
 
                 case "b":
-
+                    System.out.println("\n----UPDATE PARENT DATA----\n");
                     try {
                         System.out.println("Enter Id of citizen's whose parent data is to be updated:");
                         String updateID = in.nextLine();
@@ -105,7 +107,8 @@ public class TextUI {
                         app.addParentData(updateID, fatherID, motherID);
                         System.out.println("Parent Data Updated. Request Complete.\n");
                     } catch (CompletionException p) {
-                        System.out.println(p.getLocalizedMessage()+p.getCause().getLocalizedMessage()+" Check to ensure that ALL IDs entered are valid. Try again");
+                        System.out.println(p.getLocalizedMessage() + p.getCause().getLocalizedMessage()
+                                + " Check to ensure that ALL IDs entered are valid. Try again");
 
                     }
                     System.out.println("Press enter to return to the menu...");
@@ -113,10 +116,12 @@ public class TextUI {
                     break;
 
                 case "c":
+                    System.out.println("\n----UPDATE CITIZEN ADDRESS----\n");
 
                     System.out.println("Enter id of citizen: ");
                     String updateId = in.nextLine();
-
+                    System.out.println(
+                            "Note: to remove the address for the citizen (in the event that they become homeless, for example) enter only blank lines");
                     System.out.println("Enter street of address: ");
                     String street = in.nextLine();
 
@@ -141,7 +146,7 @@ public class TextUI {
                     break;
 
                 case "d":
-
+                    System.out.println("\n----REGISTER DEATH----\n");
                     System.out.println("Enter citizen id: ");
                     String id = in.nextLine();
 
@@ -151,43 +156,73 @@ public class TextUI {
                     System.out.println("Enter place of death: ");
                     String place = in.nextLine();
 
-                    System.out.println("Enter date of death: ");
+                    System.out.println("Enter date of death in the format dd/mm/yyyy: ");
                     String date = in.nextLine();
-
+                    while (true) {
+                        try {
+                            //check for valid date via parse
+                            Calendar dateCheck = Calendar.getInstance();
+                            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                            sdf.setLenient(false);
+                            Date d = sdf.parse(date);
+                            dateCheck.setTime(d);
+                            break;
+                        } catch (Exception e) {
+                            System.out.println(
+                                    "Invalid date. Please re-enter in a dd/mm/yyyy format and ensure that the date is possible:");
+                            date = in.nextLine();
+                        }
+                    }
                     // Registry of citizen's death
                     try {
                         app.registerDeath(id, cause, place, date);
                         System.out.println("Death Registered\n");
-                    } catch (CompletionException y) {
-                        System.out.println("Invalid citizen ID. Check to ensure that correct ID was entered");
+                    } catch (CompletionException ye) {
+                        System.out.println(ye.getLocalizedMessage()+ " "+ ye.getCause().getLocalizedMessage());
                     }
                     System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
                 case "e":
+                    System.out.println("\n----REGISTER MARRIAGE----\n");
                     try {
                         System.out.println("Enter groom id: ");
                         String groomId = in.nextLine();
-
+                        
                         System.out.println("Enter bride id: ");
                         String brideId = in.nextLine();
 
                         System.out.println("Enter date of marriage: ");
                         String date1 = in.nextLine();
 
+                        while (true) {
+                            try {
+                                //check for valid date via parse
+                                Calendar dateCheck = Calendar.getInstance();
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                                sdf.setLenient(false);
+                                Date d = sdf.parse(date1);
+                                dateCheck.setTime(d);
+                                break;
+                            } catch (Exception e) {
+                                System.out.println(
+                                        "Invalid date. Please re-enter in a dd/mm/yyyy format and ensure that the date is possible:");
+                                date1 = in.nextLine();
+                            }
+                        }
                         // Registry of marriage
                         app.registerMarriage(groomId, brideId, date1);
                         System.out.println("Marriage Registered\n");
                     } catch (CompletionException w) {
-                        System.out.println("Check to ensure that both groom and bride ID are valid. Try Again");
+                        System.out.println(w.getLocalizedMessage()+" "+w.getCause().getLocalizedMessage()+" Try Again");
                     }
                     System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
 
                 case "f":
-
+                    System.out.println("\n----GENERATE MAILING LABEL----\n");
                     System.out.println("Enter id of citizen to generate mailing label:");
                     String Id = in.nextLine();
 
@@ -204,7 +239,7 @@ public class TextUI {
                     break;
 
                 case "g":
-
+                    System.out.println("\n----SEARCH DATABASE----\n");
                     // Menu to select search criteria
                     System.out.println("\nSelect an option to search by:\n");
                     System.out.println("a. To search by id of citizen");
@@ -217,7 +252,7 @@ public class TextUI {
                     switch (choice) {
 
                         case "a":
-
+                            System.out.println("\n----SEARCH BY ID----\n");
                             System.out.println("Enter citizen id: ");
                             ID = in.nextLine();
 
@@ -232,7 +267,7 @@ public class TextUI {
                             break;
 
                         case "b":
-
+                            System.out.println("\n----SEARCH BY FIRST AND LAST NAME----\n");
                             System.out.println("Enter citizen first name: ");
                             String firstName = in.nextLine();
 
@@ -254,7 +289,7 @@ public class TextUI {
                             break;
 
                         case "c":
-
+                            System.out.println("\n----SEARCH BY BIOMETRIC----\n");
                             System.out.println("Enter the value for the Biometric data: ");
                             value = in.nextLine();
 
@@ -262,8 +297,8 @@ public class TextUI {
                                 try {
                                     System.out.println(
                                             "Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
-                                    tag = in.nextLine().toUpperCase().charAt(0);
-                                    if (tag == 'F' || tag == 'D') {
+                                    tag = in.nextLine().toUpperCase();
+                                    if (tag.equals("F") || tag.equals("D")) {
                                         break;
                                     } else {
                                         System.out.println(
@@ -276,10 +311,11 @@ public class TextUI {
                             } while (true);
                             // Search by biometric data
                             try {
-                                if (app.search(tag, value).isBlank()) {
+                                String result = app.search(tag.charAt(0), value);
+                                if (result.isEmpty() || result.isBlank()) {
                                     System.out.println("Citizen Not Found");
                                 } else {
-                                    System.out.println(app.search(tag, value));
+                                    System.out.println(result);
                                 }
                             } catch (CompletionException e) {
                                 System.out.println(e.getLocalizedMessage());
@@ -291,13 +327,14 @@ public class TextUI {
                     break;
 
                 case "h":
+                    System.out.println("\n----ADD CITIZEN BIOMETRIC DATA----\n");
                     System.out.println("Enter citizen id: ");
                     ID = in.nextLine();
                     do {
                         try {
                             System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
-                            tag = in.nextLine().toUpperCase().charAt(0);
-                            if (tag == 'F' || tag == 'D') {
+                            tag = in.nextLine().toUpperCase();
+                            if (tag.equals("F") || tag.equals("D")) {
                                 break;
                             } else {
                                 System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
@@ -315,19 +352,21 @@ public class TextUI {
                         System.out.println(
                                 "The format of the data was incorrect. The tag must be 'F' or 'D'. Changes not saved");
                     } catch (CompletionException ce) {
-                        System.out.println("Error. " + ce.getLocalizedMessage() +" "+ ce.getCause().getLocalizedMessage());
+                        System.out.println(
+                                "Error. " + ce.getLocalizedMessage() + " " + ce.getCause().getLocalizedMessage());
                     }
                     System.out.println("Press enter to return to the menu...");
                     in.nextLine();
                     break;
                 case "i":
+                    System.out.println("\n----GET CITIZEN BIOMETRIC DATA----\n");
                     System.out.println("Enter citizen id: ");
                     ID = in.nextLine();
                     do {
                         try {
                             System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
-                            tag = in.nextLine().toUpperCase().charAt(0);
-                            if (tag == 'F' || tag == 'D') {
+                            tag = in.nextLine().toUpperCase();
+                            if (tag.equals("F") || tag.equals("D")) {
                                 break;
                             } else {
                                 System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
@@ -337,7 +376,7 @@ public class TextUI {
                         }
                     } while (true);
                     try {
-                        System.out.println("Data value: "+app.getBiometric(ID, Character.toString(tag)));
+                        System.out.println("Data value: " + app.getBiometric(ID, tag));
                         System.out.println("Request Complete");
                     } catch (CompletionException e) {
                         System.out.println(e.getLocalizedMessage());
@@ -347,19 +386,22 @@ public class TextUI {
                     break;
                 case "j":
                     try {
+                        System.out.println("Shutting down and finalizing changes....");
                         app.shutdown();
-                        System.out.println("Exiting Program....Press enter to exit");
+                        System.out.println("Shutdown complete, press enter to exit the TextUI.");
                         in.nextLine();
                     } catch (FileNotFoundException m) {
                         System.out.println("File not found");
                     } catch (IOException n) {
-                        System.out.println("An unkown error occured while writing to the file.");
+                        System.out.println("An unknown error occured while writing to the file.");
                     }
 
                     break;
 
                 default:
-                    System.out.println("Invalid choice. Select from a-h\n");
+                    System.out.println("Invalid choice. Select from a-j");
+                    System.out.println("Press enter to try again...");
+                    in.nextLine();
                     break;
             }
 

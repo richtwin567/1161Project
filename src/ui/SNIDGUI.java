@@ -92,7 +92,7 @@ public class SNIDGUI extends JFrame {
         setResizable(true);
         setLayout(new GridLayout(1, 1));
         setTitle("SYSTEM FOR NATIONAL IDENTIFICATION(SNID)");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // set up the base panel
         basePanel = new MaterialPanel();

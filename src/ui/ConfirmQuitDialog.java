@@ -19,12 +19,14 @@ public class ConfirmQuitDialog extends JDialog {
     private JButton no;
     private JLabel message;
     private GridLayout grid;
+    private JFrame parent;
 
     private static final long serialVersionUID = 6300291949093588173L;
 
     public ConfirmQuitDialog(JFrame parent) {
         super(parent, "Confirm Exit", true);
         setLocationRelativeTo(parent);
+        this.parent = parent;
         init();
     }
 
@@ -81,7 +83,8 @@ public class ConfirmQuitDialog extends JDialog {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            System.exit(0);
+            parent.dispose();
+            thisDialog.dispose();
         }
         
     }
