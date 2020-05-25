@@ -639,7 +639,6 @@ public class SNIDApp {
                 data.putNext(tokens.toArray(new String[tokens.size()]));
             }
             data.close();
-            System.exit(0);
         } catch (FileNotFoundException e) {
             throw e;
         } catch (IOException e) {
