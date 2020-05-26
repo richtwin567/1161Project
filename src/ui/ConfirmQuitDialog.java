@@ -9,7 +9,12 @@ import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 
-/**A prompt to ensure that user really wants to quit the program */
+/**A prompt to ensure that user really wants to quit the program 
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
+*/
 public class ConfirmQuitDialog extends JDialog {
 
     private JDialog thisDialog = this;

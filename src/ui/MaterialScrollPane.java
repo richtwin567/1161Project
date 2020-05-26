@@ -18,8 +18,12 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 
 /**
- * Material style JScrollPane. The JScrollbar is style as well
+ * Material style JScrollPane. The JScrollbar is style as well.
  * 
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  * @see JScrollPane
  * @see JScrollBar
  */
@@ -101,12 +105,19 @@ public class MaterialScrollPane extends JScrollPane {
         @Override
         protected JButton createDecreaseButton(int orientation) {
             JButton btn = new JButton();
+            String dir = System.getProperty("user.dir");
+            String path=null;
+            if (dir.contains("bin")){
+                path = "./ui/icons/";                
+            }else{
+                path = "./src/ui/icons/";
+            }
             switch(arrow1){
                 case "UP":
-                    btn.setIcon(new ImageIcon("src/ui/icons/up_arrow.png"));
+                    btn.setIcon(new ImageIcon(path+"up_arrow.png"));
                     break;
                 case "LEFT":
-                    btn.setIcon(new ImageIcon("src/ui/icons/left_arrow.png"));
+                    btn.setIcon(new ImageIcon(path+"left_arrow.png"));
                     break;
             }
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -125,12 +136,19 @@ public class MaterialScrollPane extends JScrollPane {
         @Override
         protected JButton createIncreaseButton(int orientation) {
             JButton btn = new JButton();
+            String dir = System.getProperty("user.dir");
+            String path=null;
+            if (dir.contains("bin")){
+                path = "./ui/icons/";                
+            }else{
+                path = "./src/ui/icons/";
+            }
             switch(arrow2){
                 case "DOWN":
-                    btn.setIcon(new ImageIcon("src/ui/icons/down_arrow.png"));
+                    btn.setIcon(new ImageIcon(path+"down_arrow.png"));
                     break;
                 case "RIGHT":
-                    btn.setIcon(new ImageIcon("src/ui/icons/right_arrow.png"));
+                    btn.setIcon(new ImageIcon(path+"right_arrow.png"));
                     break;
             }
             btn.setCursor(new Cursor(Cursor.HAND_CURSOR));

@@ -5,6 +5,10 @@ import snid.CivicDoc;
 /**
  * Represents a marriage certificate which is a type of civic document. The marriage certificate stores the groom's ID, the bride's ID,
  * the date of the MarriageCertificate the unique reference number for the document.
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  * @see snid.CivicDoc
  */
 public class MarriageCertificate implements CivicDoc{
@@ -26,6 +30,21 @@ public class MarriageCertificate implements CivicDoc{
         this.date = date;
         this.groomId = groomId;
         refNo = generateID();
+    }
+
+    /**
+     * For reading the from the file.
+     * @param groomId the groom's ID number
+     * @param brideId the bride's ID number
+     * @param date the date of the marriage
+     * @param refNo the doc reference number
+     */
+    public MarriageCertificate(String refNo,String groomId, String brideId, String date) {
+        this.brideId = brideId;
+        this.date = date;
+        this.groomId = groomId;
+        this.refNo = refNo;
+        counter++;
     }
 
     /**

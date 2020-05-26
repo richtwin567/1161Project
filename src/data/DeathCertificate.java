@@ -7,6 +7,10 @@ import snid.CivicDoc;
  * certificate stores the cause of death, the date of death, the place of death
  * and the unique reference number for the document.
  * 
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  * @see snid.CivicDoc
  */
 public class DeathCertificate implements CivicDoc {
@@ -30,6 +34,21 @@ public class DeathCertificate implements CivicDoc {
         this.date = date;
         this.place = place;
         refNo = generateID();
+    }
+
+    /**
+     * For reading from the file.
+     * @param cause the cause of death
+     * @param date  the date of death
+     * @param place the place of death
+     * @param refNo the reference number for the civic doc
+     */
+    public DeathCertificate(String refNo, String cause, String date, String place) {
+        this.cause = cause;
+        this.date = date;
+        this.place = place;
+        this.refNo = refNo;
+        counter++;
     }
 
     /**

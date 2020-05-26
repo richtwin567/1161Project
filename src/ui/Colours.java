@@ -4,6 +4,10 @@ import java.awt.Color;
 
 /**
  * The set of colours to be used in this project
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public class Colours {
 

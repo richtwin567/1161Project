@@ -11,6 +11,10 @@ import java.util.concurrent.CompletionException;
 
 /**
  * Text-based menu interface for SNID Management. Interacts with SNIDApp
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public class TextUI {
 
@@ -48,12 +52,12 @@ public class TextUI {
                     System.out.println("\n----REGISTER BIRTH----\n");
                     // Input of birth information
                     System.out.println("Enter gender (M for male or F for female):");
-                    String gender = in.nextLine();
+                    String gender = in.nextLine().toUpperCase();
 
                     // to check if a valid gender is entered
-                    while (!(gender.equals("M")) && !(gender.equals("F"))) {
+                    while (!(gender.equalsIgnoreCase("M")) && !(gender.equalsIgnoreCase("F"))) {
                         System.out.println("Not a gender option. Enter M or F");
-                        gender = in.nextLine();
+                        gender = in.nextLine().toUpperCase();
                     }
 
                     System.out.println("Enter year of birth");
@@ -298,7 +302,7 @@ public class TextUI {
                                     System.out.println(
                                             "Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
                                     tag = in.nextLine().toUpperCase();
-                                    if (tag.equals("F") || tag.equals("D")) {
+                                    if (tag.equalsIgnoreCase("F") || tag.equalsIgnoreCase("D")) {
                                         break;
                                     } else {
                                         System.out.println(
@@ -334,7 +338,7 @@ public class TextUI {
                         try {
                             System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
                             tag = in.nextLine().toUpperCase();
-                            if (tag.equals("F") || tag.equals("D")) {
+                            if (tag.equalsIgnoreCase("F") || tag.equalsIgnoreCase("D")) {
                                 break;
                             } else {
                                 System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");
@@ -366,7 +370,7 @@ public class TextUI {
                         try {
                             System.out.println("Enter citizen's biometric tag (F for fingerprint or D for DNA): ");
                             tag = in.nextLine().toUpperCase();
-                            if (tag.equals("F") || tag.equals("D")) {
+                            if (tag.equalsIgnoreCase("F") || tag.equalsIgnoreCase("D")) {
                                 break;
                             } else {
                                 System.out.println("Invalid entry. Please enter 'F' for fingerprint or 'D' for DNA");

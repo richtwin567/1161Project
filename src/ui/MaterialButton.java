@@ -9,6 +9,10 @@ import java.awt.Color;
 
 /**
  * Material style JButton
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  * @see JButton
  */
 public class MaterialButton extends JButton{

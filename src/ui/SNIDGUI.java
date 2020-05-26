@@ -22,7 +22,8 @@ import javax.swing.border.MatteBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import app.SNIDApp;
-
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -33,7 +34,11 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 
 /**
- * The GUI that allows users to search the SNID database
+ * The GUI that allows users to search the SNID database.
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public class SNIDGUI extends JFrame {
 
@@ -73,7 +78,8 @@ public class SNIDGUI extends JFrame {
     private final JFrame thisFrame = this;
 
     /**
-     * Constructor for the GUI. 
+     * Constructor for the GUI.
+     * 
      * @param appController an instance of SNIDApp to access the database
      */
     public SNIDGUI(SNIDApp appController) {
@@ -164,7 +170,7 @@ public class SNIDGUI extends JFrame {
         // add button to panel
         radioButtonPanel.add(searchByIdRadioButton);
 
-        searchByNameRadioButton = new MaterialRadioButton("Search by Name");
+        searchByNameRadioButton = new MaterialRadioButton("Search by Last Name");
         radioButtonGroup.add(searchByNameRadioButton);
         radioButtonPanel.add(searchByNameRadioButton);
 
@@ -184,6 +190,7 @@ public class SNIDGUI extends JFrame {
         // Colours.onBg));
         searchValueField.setForeground(Colours.onBg);
         searchValueField.addFocusListener(new SearchValueFieldFocusListener());
+        searchValueField.addKeyListener(new EnterToSearchListener());
         configureGridBagConstraints(basePanelConstraints, 1, 5, 1, 4);
         basePanel.add(searchValueField, basePanelConstraints);
 
@@ -265,7 +272,7 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * Clearsthe search field and gives it focus
+     * Clears the search field and gives it focus
      */
     private class ClearButtonListener extends ButtonListener {
 
@@ -278,61 +285,69 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
-     * Searches for a citizen based on the criteria specified by the user. The
-     * citizen's data is added to the results list if found.
+     * Searches the database once the search button is pressed.
      */
     private class SearchButtonListener extends ButtonListener {
 
         @Override
         public void mousePressed(MouseEvent e) {
-            citizenDetailArea.setText("");
-            idListModel.clear();
-            results = new ArrayList<>();
-            try {
-                if (searchByIdRadioButton.isSelected()) {
-                    String t = appController.searchGUI(searchValueField.getText());
-                    String[] temp = t.split("\\|");
-                    String id = temp[0];
-                    String info = temp[1];
-                    SearchResult result = new SearchResult(id, info);
-                    results.add(result);
-                    idListModel.addElement(result.getId());
-                } else if (searchByBiometricRadioButton.isSelected()) {
-                    String t = appController.searchGUI(searchValueField.getText().charAt(0),
-                            searchValueField.getText().substring(1));
-                    String[] temp = t.split("\\|");
-                    String id = temp[0];
-                    String info = temp[1];
-                    SearchResult result = new SearchResult(id, info);
-                    results.add(result);
-                    idListModel.addElement(result.getId());
-                } else if (searchByNameRadioButton.isSelected()) {
-                    String ln = searchValueField.getText();
-                    String[] t = appController.searchGUI(null, ln);
-                    if (t.length==0){
-                        throw new IndexOutOfBoundsException("No persons with the last name found.");
-                    }
-                    String[][] temp = new String[t.length][5];
-                    for (int x = 0; x < t.length; x++) {
-                        temp[x] = t[x].split("\\|");
-                        String id = temp[x][0];
-                        String info = temp[x][1];
-                        SearchResult result = new SearchResult(id, info);
-                        results.add(result);
-                        idListModel.addElement(result.getId());
-                    }
-                } else {
-                    MessageDialog dialog = new MessageDialog(thisFrame, "Select a method to search by");
-                    dialog.setVisible(true);
-                    citizenDetailArea.setText("");
+            search();
+        }
+
+    }
+
+    /**
+     * Allows for searching by last name, ID or Biometric data in the GUI. Searches
+     * for a citizen based on the criteria specified by the user. The citizen's data
+     * is added to the results list if found.
+     */
+    private void search() {
+        citizenDetailArea.setText("");
+        idListModel.clear();
+        results = new ArrayList<>();
+        try {
+            if (searchByIdRadioButton.isSelected()) {
+                String t = appController.searchGUI(searchValueField.getText());
+                String[] temp = t.split("\\|");
+                String id = temp[0];
+                String info = temp[1];
+                SearchResult result = new SearchResult(id, info);
+                results.add(result);
+                idListModel.addElement(result.getId());
+            } else if (searchByBiometricRadioButton.isSelected()) {
+                String t = appController.searchGUI(searchValueField.getText().charAt(0),
+                        searchValueField.getText().substring(1));
+                String[] temp = t.split("\\|");
+                String id = temp[0];
+                String info = temp[1];
+                SearchResult result = new SearchResult(id, info);
+                results.add(result);
+                idListModel.addElement(result.getId());
+            } else if (searchByNameRadioButton.isSelected()) {
+                String ln = searchValueField.getText();
+                String[] t = appController.searchGUI(null, ln);
+                if (t.length == 0) {
+                    throw new IndexOutOfBoundsException("No persons with the last name found.");
                 }
-            } catch (Exception ex) {
-                MessageDialog dialog = new MessageDialog(thisFrame, "Not Found");
+                String[][] temp = new String[t.length][5];
+                for (int x = 0; x < t.length; x++) {
+                    temp[x] = t[x].split("\\|");
+                    String id = temp[x][0];
+                    String info = temp[x][1];
+                    SearchResult result = new SearchResult(id, info);
+                    results.add(result);
+                    idListModel.addElement(result.getId());
+                }
+            } else {
+                MessageDialog dialog = new MessageDialog(thisFrame, "Select a method to search by");
                 dialog.setVisible(true);
                 citizenDetailArea.setText("");
             }
+        } catch (Exception ex) {
+            MessageDialog dialog = new MessageDialog(thisFrame, "Not Found");
+            dialog.setVisible(true);
+            citizenDetailArea.setText("");
         }
-
     }
 
     /**
@@ -388,6 +403,19 @@ public class SNIDGUI extends JFrame {
     }
 
     /**
+     * Searches the database once the enter key is pressed while the textfield has
+     * focus.
+     */
+    private class EnterToSearchListener extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                search();
+            }
+        }
+    }
+
+    /**
      * Configures the GridBag Constraints according to the specifications passed to
      * the method
      * 
@@ -406,16 +434,4 @@ public class SNIDGUI extends JFrame {
         c.gridx = gridx;
         c.gridy = gridy;
     }
-/* 
-    public static void main(String[] args) {
-        SNIDApp appController;
-        try {
-            appController = new SNIDApp("data.db", ',');
-            SNIDGUI ui = new SNIDGUI(appController);
-            ui.setVisible(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    } */
 }

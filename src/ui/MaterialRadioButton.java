@@ -21,6 +21,10 @@ import javax.swing.plaf.basic.BasicRadioButtonUI;
 
 /**
  * A material style radio button
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public class MaterialRadioButton extends JRadioButton {
 
@@ -75,7 +79,14 @@ public class MaterialRadioButton extends JRadioButton {
             iconRect.x = iconRect.y = iconRect.width = iconRect.height = 0;
             textRect.x = textRect.y = textRect.width = textRect.height = 0;
 
-            Icon altIcon = new ImageIcon("src/ui/icons/enabled_unselected.png", "enabled unselected");
+            String dir = System.getProperty("user.dir");
+            String path=null;
+            if (dir.contains("bin")){
+                path = "./ui/icons/";                
+            }else{
+                path = "./src/ui/icons/";
+            }
+            Icon altIcon = new ImageIcon(path+"enabled_unselected.png", "enabled unselected");
 
             //place the labels beside the button icons
             String text = SwingUtilities.layoutCompoundLabel(c, fm, b.getText(),
@@ -94,20 +105,20 @@ public class MaterialRadioButton extends JRadioButton {
 
                 if (!model.isEnabled()) {
                     if (model.isSelected()) {
-                        altIcon = new ImageIcon("src/ui/icons/disabled_selected.png", "disabled selected");
+                        altIcon = new ImageIcon(path+"disabled_selected.png", "disabled selected");
                     } else {
-                        altIcon = new ImageIcon("src/ui/icons/disabled_unselected.png", "disabled unselected");
+                        altIcon = new ImageIcon(path+"disabled_unselected.png", "disabled unselected");
                     }
                 } else if (model.isPressed() && model.isArmed()) {
-                    altIcon = new ImageIcon("src/ui/icons/pressed_selected.png", "pressed selected");
+                    altIcon = new ImageIcon(path+"pressed_selected.png", "pressed selected");
                 } else if (model.isSelected()) {
                     if (b.isRolloverEnabled() && model.isRollover()) {
-                        altIcon = new ImageIcon("src/ui/icons/hover_selected.png", "hover selected");
+                        altIcon = new ImageIcon(path+"hover_selected.png", "hover selected");
                     } else {
-                        altIcon = new ImageIcon("src/ui/icons/enabled_selected.png", "enabled selected");
+                        altIcon = new ImageIcon(path+"enabled_selected.png", "enabled selected");
                     }
                 } else if (b.isRolloverEnabled() && model.isRollover()) {
-                    altIcon = new ImageIcon("src/ui/icons/hover_unselected.png", "hover unselected");
+                    altIcon = new ImageIcon(path+"hover_unselected.png", "hover unselected");
                 }
             }
 

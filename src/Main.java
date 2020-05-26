@@ -6,9 +6,9 @@ import ui.*;
 /**
  * DRIVER FOR THE SYSTEM OF NATIONAL ID (SNID))
  * 
- * @author Anakai Richards
- * @author Matthew Palmer
- * @author Michael Young
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
  * @version 1.0
  */
 public class Main {
@@ -20,7 +20,7 @@ public class Main {
      */
     public static void main(String[] args) {
         try (Scanner sc = new Scanner(System.in);) {
-            String startMessage = "\n\nWelcome! This Project has been completed by Anakai Richards, Matthew Palmer and Michael Young";
+            String startMessage = "\n\nWelcome! This Project has been completed by Anakai Richards (620132232), Matthew Palmer (620131688) and Michael Young (620131387)";
             System.out.println(startMessage);
             System.out.println("=".repeat(startMessage.length()));
             Integer ch = null;
@@ -34,7 +34,7 @@ public class Main {
                             SNIDApp app = new SNIDApp("data.db", ',');
                             TextUI ui = new TextUI();
                             System.out.println(
-                                    "Note: The citizen ID number is a number padded up to 8 digits with zeroes to the left");
+                                    "Note: The citizen ID number is a number padded up to 8 digits with zeroes to the left. However, if you enter 14 instead of 00000014 the record will still be found if it exists.");
                             System.out.println("Press enter to start the TextUI");
                             sc.nextLine();
                             System.out.println("Starting TextUI...\n\n");
@@ -49,7 +49,7 @@ public class Main {
                             System.out.println(
                                     "When searching by biometric the the tag precedes the data and there is no space between them eg. D1000.\nThe tag must be a capital F(Fingerprint) or a capital D(DNA)");
                             System.out.println(
-                                    "Also, a reminder that the format of the ID numbers is a number padded up to 8 digits with zeroes to the left");
+                                    "Also, a reminder that the format of the ID numbers is a number padded up to 8 digits with zeroes to the left.However, if you enter 14 instead of 00000014 the record will still be found if it exists.");
                             System.out.println("Press enter to start the GUI");
                             sc.nextLine();
                             System.out.println("Starting GUI....");

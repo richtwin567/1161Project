@@ -6,7 +6,12 @@ import snid.Biometric;
 
 /**
  * Biometric data class. There are two types of biometric data; Fingerprint denoted by 'F' and DNA denoted by 'D'.
- * @see snid.Biometric
+ *
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
+ *  @see snid.Biometric
  */
 public class BiometricData implements Biometric{
 

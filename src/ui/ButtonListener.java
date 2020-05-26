@@ -7,7 +7,11 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 
 /**
- * Super class for all button listeners in the SNID project
+ * Super class for all button listeners in the SNID project.
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public abstract class ButtonListener implements MouseListener {
 

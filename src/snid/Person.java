@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 /**
  * A class representing a Person.
- *
- * @author Anakai Richards
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public abstract class Person {
 
@@ -26,7 +28,6 @@ public abstract class Person {
      * @param lifeStatus
      * @param mother
      * @param father
-     * @param biodata
      */
     public Person(String id, char gender, int yob, char lifeStatus, Person mother, Person father) {
         this.id =id;

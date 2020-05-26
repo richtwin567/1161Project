@@ -3,7 +3,10 @@ package snid;
 /**
  * Represents a person's name, i.e. first,middle and last name.
  *
- * @author Anakai Richards
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public class Name {
 

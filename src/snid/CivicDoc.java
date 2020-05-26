@@ -4,7 +4,10 @@ package snid;
  * This define the interactions the system should have with a Citizen's civic
  * documents
  *
- * @author Anakai Richards
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public interface CivicDoc {
 

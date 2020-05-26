@@ -9,6 +9,13 @@ import javax.swing.JPanel;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 
+/**
+ * Allows a message to be displayed to the user in a dialog.
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
+ */
 public class MessageDialog extends JDialog {
 
     private static final long serialVersionUID = -3373577856205025419L;

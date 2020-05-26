@@ -12,7 +12,10 @@ import snid.*;
 /**
  * The app for the SNID management. Interacts with the database and the TextUI
  * and the SNIDGUI
- * 
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  * @see data.SNIDDb
  * @see ui.SNIDGUI
  */
@@ -98,7 +101,7 @@ public class SNIDApp {
                     try {
                         // separate the Civic doc tokens according to how they are stored
                         String[] docs = tokens[10].split("@");
-                        String[][] docParts = new String[docs.length][4];
+                        String[][] docParts = new String[docs.length][5];
                         for (int x = 0; x < docs.length; x++) {
                             String[] parts = docs[x].split("\\|");
                             docParts[x] = parts;
@@ -106,9 +109,9 @@ public class SNIDApp {
                         // add all CivicDoc to record
                         for (String[] doc : docParts) {
                             if (doc[0].equals("M")) {
-                                citizen.addPaper(new MarriageCertificate(doc[1], doc[2], doc[3]));
+                                citizen.addPaper(new MarriageCertificate(doc[1], doc[2], doc[3],doc[4]));
                             } else {
-                                citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3]));
+                                citizen.addPaper(new DeathCertificate(doc[1], doc[2], doc[3],doc[4]));
                             }
                         }
                     } catch (Exception e) {
@@ -139,6 +142,7 @@ public class SNIDApp {
      * @return The citizen if found or null if not found
      */
     private Citizen searchDb(String id) {
+        id = String.format("%08d", Integer.valueOf(id));
         int m, l, f;
         f = 0;
         l = records.size() - 1;
@@ -232,8 +236,9 @@ public class SNIDApp {
                     throw new Exception("The selected bride and groom are already married.");
                 } else {
                     bride.changeLastName(groom.getNameAttr().getLastName());
-                    bride.addPaper(new MarriageCertificate(groomId, brideId, date));
-                    groom.addPaper(new MarriageCertificate(groomId, brideId, date));
+                    MarriageCertificate cert = new MarriageCertificate(groomId, brideId, date);
+                    bride.addPaper(cert);
+                    groom.addPaper(cert);
                 }
             }
         } catch (Exception e) {
@@ -357,8 +362,8 @@ public class SNIDApp {
         ArrayList<String> matches = new ArrayList<>();
         try {
             for (Citizen citizen : records) {
-                if (citizen.getNameAttr().getFirstName().equals(firstName)
-                        && citizen.getNameAttr().getLastName().equals(lastName)) {
+                if (citizen.getNameAttr().getFirstName().equalsIgnoreCase(firstName)
+                        && citizen.getNameAttr().getLastName().equalsIgnoreCase(lastName)) {
                     String print = String.format("%s,%s,%s,%s,%s", citizen.getId(),
                             citizen.getGender() == 'M' ? "Male" : "Female", citizen.getNameAttr().getFirstName(),
                             citizen.getNameAttr().getMiddleName(), citizen.getNameAttr().getLastName());
@@ -386,7 +391,7 @@ public class SNIDApp {
         ArrayList<String> matches = new ArrayList<>();
         try {
             for (Citizen citizen : records) {
-                if (citizen.getNameAttr().getLastName().equals(lastName)) {
+                if (citizen.getNameAttr().getLastName().equalsIgnoreCase(lastName)) {
                     matches.add(citizen.toGUIPrint());
                 }
             }
@@ -637,11 +642,11 @@ public class SNIDApp {
                 tokens.add(biodata.toString());
                 for (CivicDoc doc : citizen.getPapers()) {
                     if (doc.getType() == 'M') {
-                        docs.append(String.format("%c|%s|%s|%s@", doc.getType(),
+                        docs.append(String.format("%c|%s|%s|%s|%s@", doc.getType(),doc.getRefNo(),
                                 ((MarriageCertificate) doc).getGroomId(), ((MarriageCertificate) doc).getBrideId(),
                                 ((MarriageCertificate) doc).getDate()));
                     } else {
-                        docs.append(String.format("%c|%s|%s|%s@", doc.getType(), ((DeathCertificate) doc).getCause(),
+                        docs.append(String.format("%c|%s|%s|%s|%s@", doc.getType(), doc.getRefNo(), ((DeathCertificate) doc).getCause(),
                                 ((DeathCertificate) doc).getDate(), ((DeathCertificate) doc).getPlace()));
                     }
                 }

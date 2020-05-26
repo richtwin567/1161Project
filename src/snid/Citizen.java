@@ -9,7 +9,10 @@ import data.BiometricData;
  * Their data can be compared to another person in the system.
  *
  * @see snid.Person Person
- * @author Anakai Richards
+ * @author Anakai Richards - ID: 620132232
+ * @author Matthew Palmer - ID: 620131688
+ * @author Michael Young - ID: 620131387
+ * @version 1.0
  */
 public class Citizen
         extends Person
@@ -152,7 +155,7 @@ public class Citizen
 
     /**
      * Adds either Marriage certificate or Death certificate to the person's record
-     * @param papers Adds a new Civic document to list of papers
+     * @param paper Adds a new Civic document to list of papers
      */
     public void addPaper(CivicDoc paper) {
         papers.add(paper);
@@ -184,8 +187,8 @@ public class Citizen
         print.append("<b>Middle Name:</b>" + tab + getNameAttr().getMiddleName() + eol);
         print.append("<b>Last Name:</b>" + tab + getNameAttr().getLastName() + eol);
         print.append("<b>Life Status:</b>"+tab + (getLifeStatus()=='A'?"Alive":"Deceased")+eol);
-        print.append("<b>Mother:</b>"+tab+tab+(getParent('M')==null?"N/A":((((Citizen)getParent('M')).getName()) + " - "+ getParent('M').getId())) +eol);
-        print.append("<b>Father:</b>"+tab+tab+(getParent('F')==null?"N/A":((((Citizen)getParent('F')).getName()) + " - "+ getParent('F').getId())) +eol);
+        print.append("<b>Mother:</b>"+tab+tab+(getParent('M')==null?"N/A":((((Citizen)getParent('M')).getName()) + eol+"<b>Mother's ID:</b>"+tab + getParent('M').getId())) +eol);
+        print.append("<b>Father:</b>"+tab+tab+(getParent('F')==null?"N/A":((((Citizen)getParent('F')).getName()) + eol+"<b>Father's ID:</b>"+tab + getParent('F').getId())) +eol);
         print.append("<i><b>Address</b></i>" + eol + listBegin);
         print.append("<li>" + getAddress().toGUIPrint() + "</li></ul>" + eol);
         print.append("<i><b>Civic Documents</b></i>" + eol + listBegin);
