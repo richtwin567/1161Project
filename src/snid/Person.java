@@ -1,7 +1,6 @@
 package snid;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * A class representing a Person.
@@ -11,14 +10,33 @@ import java.util.Random;
 public abstract class Person {
 
     private String id;
-    private static Random tail = new Random();
-    private static Random prefix = new Random();
+    private static int counter=1;
     private char gender;
     private int yob;
     private char lifeStatus;
     private Person mother;
     private Person father;
     private ArrayList<Biometric> biodata;
+
+    /**
+     * Constructor for initialziing database from file
+     * @param id
+     * @param gender
+     * @param yob
+     * @param lifeStatus
+     * @param mother
+     * @param father
+     * @param biodata
+     */
+    public Person(String id, char gender, int yob, char lifeStatus, Person mother, Person father) {
+        this.id =id;
+        this.yob = yob;
+        this.lifeStatus = lifeStatus;
+        this.gender = gender;
+        this.mother =  mother;
+        this.father = father;
+        this.biodata = new ArrayList<>();
+    }
 
     /**
      * The constructor for the Person class.
@@ -136,8 +154,7 @@ public abstract class Person {
     }
 
     /**
-     * Adds Biometric data to the person's Biometric information. This method is
-     * a stub.
+     * Adds Biometric data to the person's Biometric information. T
      *
      * @param data the biometric data to be added
      */
@@ -146,14 +163,27 @@ public abstract class Person {
     }
 
     /**
-     * The getter method for the Biometric data. This method is a stub.
+     * The getter method for the Biometric data. T
      *
-     * @param tag the tag by which to search for and select the desired set of
+     * @param tag the tag by which to select the desired set of
      * biometric information
      * @return the biometric data
      */
-    public ArrayList<Biometric> getBiometric(String tag) {
+    public Biometric getBiometric(String tag) {
+        for (Biometric data : biodata){
+            if (data.getTag().equals(tag)){
+                return data;
+            }
+        }
         return null;
+    }
+
+    /**
+     * Returns the biodata attribute. For file writng purposes
+     * @return the list of biometric data
+     */
+    public ArrayList<Biometric> getBiometricList(){
+        return biodata;
     }
 
     /**
@@ -162,11 +192,6 @@ public abstract class Person {
      * @return The person's unique ID as a String.
      */
     private String generateID() {
-        int[] arr = {prefix.ints(65, 90).findFirst().getAsInt(),
-                     prefix.ints(65, 90).findFirst().getAsInt(),
-                     prefix.ints(65, 90).findFirst().getAsInt(),
-                     prefix.ints(65, 90).findFirst().getAsInt()};//generate 4 random ints to convert to capital letters and assign them to an array
-        return String.format("%c%c%c%c%08d", (char) arr[0], (char) arr[1],
-                             (char) arr[2], (char) arr[3], tail.nextInt(100000000));//create an ID as a String  of 4 capital letters and 8 random digits
+        return String.format("%08d", counter++);//create an ID as a String  of 8 random digits
     }
 }

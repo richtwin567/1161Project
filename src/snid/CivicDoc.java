@@ -14,4 +14,16 @@ public interface CivicDoc {
      * @return the document's reference number as a String
      */
     public String getRefNo();
+
+    /**
+     * Get the type of Civic Document
+     * @return the type of Civic Document
+     */
+    public char getType();
+
+    /**
+     * Formatts the Civic Document for the GUI
+     * @return the civic document information
+     */
+    public String toGUIPrint();
 }

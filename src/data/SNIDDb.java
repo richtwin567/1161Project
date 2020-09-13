@@ -2,8 +2,6 @@ package data;
 
 import java.io.*;
 import java.util.regex.PatternSyntaxException;
-//import java.util.ArrayList;
-//import java.util.Arrays;
 
 public class SNIDDb {
 
@@ -19,11 +17,16 @@ public class SNIDDb {
     /**
      * SNIDDb Constructor
      * 
-     * <p>Default Constructor for SNIDDb Object. An object which opens specified file for reading</p>
+     * <p>
+     * Default Constructor for SNIDDb Object. An object which opens specified file
+     * for reading
+     * </p>
+     * 
      * @param fileName - The name of the file to be opened for reading
-     * @param delimit - char which is used to seperate data in the file
+     * @param delimit  - char which is used to seperate data in the file
+     * @throws FileNotFoundException if the file cannot be found
      */
-    public SNIDDb(String fileName, char delimit){
+    public SNIDDb(String fileName, char delimit) throws FileNotFoundException {
         try{
             this.delimiter = delimit;
             this.fileName = fileName;
@@ -34,14 +37,13 @@ public class SNIDDb {
             reader = new BufferedReader(open);
 
         }catch(FileNotFoundException f){
-            System.err.println("Message: " + f.getMessage());
-            f.printStackTrace();
+            throw f;
         }
     }
 
     //Getter Method for Attributes
     /**
-     * 
+     * Gets the delimiter
      * @return charcter representing how the lines of data are separated
      */
     public char getDelimiter(){
@@ -49,23 +51,23 @@ public class SNIDDb {
     }
 
     /**
-     * 
+     * Gets the file name
      * @return String representing the file name
      */
     public String getFileName(){ 
         return fileName;
     }
-    // public BufferedReader getBFReader(){ return null;}
-    // public FileReader getFReader(){ return null;}
-    // public FileWriter getFWriter(){ return null;}
     
     /**
-     * <p>Returns a boolean expression. If there is more data to be read in the file, it will return true otherwise it will
-     * return false</p>
+     * <p>
+     * Returns a boolean expression. If there is more data to be read in the file,
+     * it will return true otherwise it will return false
+     * </p>
      * 
-     * @return {@code boolean} 
+     * @return {@code boolean}
+     * @throws IOException if something goes wrong while trying to asses whether or no the file has more data to be processed
      */
-    public boolean hasNext(){
+    public boolean hasNext() throws IOException {
         try{
             
             currentLine = reader.readLine();
@@ -73,8 +75,7 @@ public class SNIDDb {
                 return true;
 
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            throw i;
         }
         
         return false;
@@ -85,6 +86,8 @@ public class SNIDDb {
      * the delimiter that was given to the constructor</p>
      * 
      * @return String Array of tokens
+     * @throws PatternSyntaxException if the delimeter is invalid
+     * @throws Exception if something else goes wrong
      */
     public String[] getNext(){
 
@@ -92,22 +95,21 @@ public class SNIDDb {
             return (currentLine.split(Character.toString(getDelimiter())));
 
         }catch(PatternSyntaxException p){
-            System.out.println("Message: " + p.getMessage());
-            p.printStackTrace();
+            throw p;
         }catch(Exception e){
-            System.out.println("Message: " + e.getMessage());
-            e.printStackTrace();
+            throw e;
         }
-
-        return (new String[1]);
-
     }
 
     /**
-     * <p>closes the file for reading.
-     * Reopens the file for writing [not appending]</p>
+     * <p>
+     * closes the file for reading. Reopens the file for writing [not appending]
+     * </p>
+     * 
+     * @throws IOException if something goes wrong while trying to close the file
+     * @throws FileNotFoundException if the file cannot be found
      */
-    public void rewrite(){
+    public void rewrite() throws FileNotFoundException, IOException {
         try{
 
             reader.close(); //closes the Buffered Reader
@@ -123,44 +125,49 @@ public class SNIDDb {
             writer = new BufferedWriter(opener);
 
         }catch(FileNotFoundException f){
-            System.out.println(f.getMessage());
-            f.printStackTrace();
+            throw f;
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            throw i;
         }
-        
     }
 
     /**
-     * <p>Writes a line based on the array of Sting in the file separated by the delimiter</p>
+     * <p>
+     * Writes a line based on the array of Sting in the file separated by the
+     * delimiter
+     * </p>
+     * 
      * @param tokens - String Array full of tokens from a Citizen object
+     * @throws IOException if something goes wrong while writing to the file
      */
-    //assumes that the data is in the same order as it would be when it is read
-    public void putNext(String[] tokens){
+    // assumes that the data is in the same order as it would be when it is read
+    public void putNext(String[] tokens) throws IOException {
         try{
             
             //places the data into the line format for storage using StringBuffer
             StringBuffer line = new StringBuffer();
-            for(int i= 0; i < tokens.length-1;i++)
+            for(int i= 0; i < tokens.length;i++)
                 line.append(tokens[i] + Character.toString(getDelimiter()));
-            line.append(tokens[tokens.length-1]);
-
+            //line.append(tokens[tokens.length-1]);
+            line.append("EOL");
             writer.write(line.toString());
             writer.newLine();
             writer.flush();
 
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            throw i;
         }
 
     }
 
     /**
-     * <p>This method closes the file for writing. It sets the attributes back to null</p>
+     * <p>
+     * This method closes the file for writing. It sets the attributes back to null
+     * </p>
+     * 
+     * @throws IOException if something goes wrong while trying to close the file
      */
-    public void closeFile(){
+    public void close() throws IOException {
         try{
             writer.close(); //closes the BufferedWriter object
             opener.close(); //closes the FileWriter object
@@ -171,52 +178,8 @@ public class SNIDDb {
             currentLine = null;
             
         }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
+            throw i;
         }
     }
-
-
-    /*
-    public static void main(String[] args){
-
-        try{
-            File pas = new File("pas");
-            if(pas.createNewFile()){
-                System.out.println("File created");
-            }else{
-                System.out.println("File already exists");
-            }
-        }catch(FileNotFoundException f){
-            System.out.println(f.getMessage());
-            f.printStackTrace();
-        }catch(IOException i){
-            System.out.println(i.getMessage());
-            i.printStackTrace();
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-        
-        SNIDDb test = new SNIDDb("test",':');
-        ArrayList<String[]> testlst = new ArrayList<>();
-        while(test.hasNext()){
-            testlst.add(test.getNext());
-        }
-
-        for(String[] i: testlst){
-            System.out.println(Arrays.toString(i));
-        }
-        String[] obj = {"newitem","reallynew","2014","bounce"};
-        testlst.add(obj);
-        test.rewrite();
-        for(String[] i: testlst){
-            test.putNext(i);
-        }
-        test.closeFile();
-
-    }
-    */
-
 
 }
